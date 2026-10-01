@@ -4,7 +4,7 @@ Personal developer portfolio and technical showcase for **Farman Yousaf**, Senio
 
 ## 🚀 Live Demo
 Visit the live portfolio on GitHub Pages:
-`https://<your-github-username>.github.io/portfolio/`
+**[https://farmankk.github.io/](https://farmankk.github.io/)**
 
 ## 💼 Core Competencies
 - **Backend & Architecture:** Core PHP (OOP), RESTful APIs, MVC .NET, Java SE
