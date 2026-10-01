@@ -893,18 +893,18 @@
         </div>
 
         <!-- Project 7: School Management ERP -->
-        <div class="project-card erp glass-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5">
+        <div class="project-card erp glass-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5 border border-purple-500/30">
           <div class="space-y-4">
             <!-- Thumbnail Preview -->
             <div class="relative h-44 w-full rounded-xl overflow-hidden bg-slate-900 group cursor-pointer border border-slate-800" onclick="openGallery('school-erp')">
-              <img src="assets/projects/erp-fairdeals.jpg" alt="School Management ERP" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+              <img src="assets/projects/school-1.png" alt="School Management ERP" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
               <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
               <div class="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-md bg-slate-950/85 backdrop-blur-md text-[11px] font-mono text-slate-300 border border-slate-700/60 flex items-center gap-1.5">
                 <i data-lucide="images" class="w-3.5 h-3.5 text-purple-400"></i>
-                <span>3 Screens</span>
+                <span>4 Screens</span>
               </div>
               <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-xs text-slate-300">
-                <span class="font-mono text-[11px] text-purple-300">Student & Fee Portals</span>
+                <span class="font-mono text-[11px] text-purple-300">Admission, Attendance & Payroll</span>
                 <span class="flex items-center gap-1 text-[11px] font-medium text-white group-hover:text-purple-400 transition-colors">
                   View Screenshots <i data-lucide="maximize-2" class="w-3 h-3"></i>
                 </span>
@@ -919,7 +919,7 @@
               Comprehensive School Management ERP
             </h3>
             <p class="text-sm text-slate-400 leading-relaxed">
-              Multi-role portal catering to administrators, teachers, students, accountants, and parents. Features automated student billing, fee collection slips, grade reports, and digital attendance tracking.
+              Multi-role academic management system catering to administrators, teachers, students, and accountants. Features complete student admission lifecycle, automated attendance register, teacher coursework assignments, and faculty HRM payroll with detailed monthly payslips.
             </p>
           </div>
 
@@ -927,13 +927,15 @@
             <div class="flex flex-wrap gap-1.5">
               <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Core PHP</span>
               <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">MySQL</span>
-              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Fee Engine</span>
-              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">PDF Reports</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Student Admission</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Attendance Register</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Teacher Assignments</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">HRM & Faculty Payslip</span>
             </div>
             <div class="pt-3 border-t border-slate-800">
               <button onclick="openGallery('school-erp')" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-purple-600/20 hover:bg-purple-600 text-purple-300 hover:text-white border border-purple-500/40 font-semibold text-xs tracking-wide transition shadow-lg shadow-purple-600/10">
                 <i data-lucide="images" class="w-4 h-4"></i>
-                <span>View Screenshots & Portals (3)</span>
+                <span>View Screenshots & Academic Portals (4)</span>
               </button>
             </div>
           </div>
@@ -1399,22 +1401,27 @@
       },
       'school-erp': {
         title: 'Comprehensive School Management ERP',
-        category: 'Institutional Portal & Academic Records',
+        category: 'Institutional Portal & Academic Administration',
         images: [
           {
-            src: 'assets/projects/erp-alpha.jpg',
-            title: 'Multi-Campus Student & Staff Portal',
-            desc: 'Centralized administration for admissions, enrollments, section assignments, and teacher schedules.'
+            src: 'assets/projects/school-1.png',
+            title: 'Student Admission & Registration Panel',
+            desc: 'Complete student enrollment workflow capturing personal data, guardian information, CNIC, blood group, religion, class, and section mapping.'
           },
           {
-            src: 'assets/projects/erp-fairdeals.jpg',
-            title: 'Automated Fee Voucher Generation & Bank Reconciliation',
-            desc: 'Automated monthly fee bill calculation with discount scholarships, fine penalties, and bank deposit slips.'
+            src: 'assets/projects/school-2.png',
+            title: 'Student Daily Attendance Register & Batch Controls',
+            desc: 'Class-wise daily attendance sheet featuring real-time status markers (Present, Absent, Holiday, Late) with one-click batch action buttons.'
           },
           {
-            src: 'assets/projects/finac-erp-2.jpg',
-            title: 'Examination Grade Books & Digital Report Cards',
-            desc: 'Weighted percentage exam tabulation, GPA calculation, and one-click printable student progress reports.'
+            src: 'assets/projects/school-3.png',
+            title: 'Teacher Assignment & Academic Coursework Manager',
+            desc: 'Faculty coursework repository allowing teachers to publish homework assignments, class syllabus, and study files with direct student downloads.'
+          },
+          {
+            src: 'assets/projects/school-4.png',
+            title: 'HRM / Faculty Payroll & Monthly Employee Payslips',
+            desc: 'Teaching and staff compensation ledger calculating base pay, bonuses, classroom deductions, and automated net salary payslip vouchers.'
           }
         ]
       }
