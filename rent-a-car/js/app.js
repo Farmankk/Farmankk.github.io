@@ -1,4 +1,4 @@
-// Car4Rent Pakistan - Main App Logic (PKR Currency & Dynamic Admin Data)
+﻿// Car4Rent Pakistan - Main App Logic (PKR Currency & Dynamic Admin Data)
 
 let appState = {
   settings: {},
@@ -633,7 +633,7 @@ function renderFleet() {
             loading="lazy"
             decoding="async"
             class="w-full h-full object-cover rounded-2xl car-img-zoom group-hover:scale-105 transition-transform duration-500"
-            onerror="this.src='/uploads/seo-car-1789727514573.jpg'"
+            onerror="this.src='./uploads/seo-car-1789727514573.jpg'"
           >
         </a>
       </div>
@@ -1891,4 +1891,5 @@ document.addEventListener('click', (e) => {
     }
   }
 });
+
 

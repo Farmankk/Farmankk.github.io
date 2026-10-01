@@ -1,4 +1,4 @@
-// Car4Rent Pakistan - Central Data Layer & Resilient API Bridge
+﻿// Car4Rent Pakistan - Central Data Layer & Resilient API Bridge
 
 // Smart API endpoint detector: works with http://localhost:3000, 127.0.0.1, or direct file:/// double-click
 const getApiBase = () => {
@@ -19,7 +19,7 @@ const DEFAULT_INITIAL_DB = {
     "tagline": "Karachi's Trusted Self-Drive Car Rental Company",
     "logoDisplayMode": "logo_only",
     "logoText": "",
-    "logoUrl": "/uploads/logo.jpg",
+    "logoUrl": "./uploads/logo.jpg",
     "currency": "PKR",
     "currencySymbol": "Rs.",
     "emergencyPhone": "+92 302 3650000",
@@ -40,7 +40,7 @@ const DEFAULT_INITIAL_DB = {
       "address": "Airport Handover | DHA Phase 6 | Gulistan-e-Johar, Karachi",
       "copyright": "© 2026 CAR 4 RENT (Pvt. Ltd.). All rights reserved."
     },
-    "heroCarImage": "/uploads/seo-car-1789727514573.jpg"
+    "heroCarImage": "./uploads/seo-car-1789727514573.jpg"
   },
   "users": [
     {
@@ -93,7 +93,7 @@ const DEFAULT_INITIAL_DB = {
       "category": "sportutilityvehicle",
       "categoryName": "Crossover SUV",
       "dailyPrice": 14900,
-      "image": "/uploads/cars/sportage-2026.jpg",
+      "image": "./uploads/cars/sportage-2026.jpg",
       "hp": "2000 CC",
       "speed": "180 km/h",
       "accel": "11s",
@@ -111,7 +111,7 @@ const DEFAULT_INITIAL_DB = {
       "category": "pickuptruck",
       "categoryName": "Rugged 4x4 / Luxury Utility SUV",
       "dailyPrice": 24900,
-      "image": "/uploads/cars/hilux-revo-rocco.jpg",
+      "image": "./uploads/cars/hilux-revo-rocco.jpg",
       "hp": "2800 CC",
       "speed": "175 km/h",
       "accel": "11s",
@@ -129,7 +129,7 @@ const DEFAULT_INITIAL_DB = {
       "category": "pickuptruck",
       "categoryName": "Rugged 4x4 / Luxury Utility SUV",
       "dailyPrice": 18500,
-      "image": "/uploads/cars/hilux-revo.jpg",
+      "image": "./uploads/cars/hilux-revo.jpg",
       "hp": "2800 CC",
       "speed": "175 km/h",
       "accel": "11s",
@@ -147,7 +147,7 @@ const DEFAULT_INITIAL_DB = {
       "category": "hatchback",
       "categoryName": "Economy Hatchback",
       "dailyPrice": 6900,
-      "image": "/uploads/cars/swift.jpg",
+      "image": "./uploads/cars/swift.jpg",
       "hp": "1200 CC",
       "speed": "180 km/h",
       "accel": "12s",
@@ -165,7 +165,7 @@ const DEFAULT_INITIAL_DB = {
       "category": "hatchback",
       "categoryName": "Economy Hatchback",
       "dailyPrice": 5300,
-      "image": "/uploads/cars/alto-auto.jpg",
+      "image": "./uploads/cars/alto-auto.jpg",
       "hp": "660 CC",
       "speed": "140 km/h",
       "accel": "20s",
@@ -183,7 +183,7 @@ const DEFAULT_INITIAL_DB = {
       "category": "sedans",
       "categoryName": "Executive Sedan",
       "dailyPrice": 6900,
-      "image": "/uploads/cars/yaris-2026.jpg",
+      "image": "./uploads/cars/yaris-2026.jpg",
       "hp": "1300 CC",
       "speed": "180 km/h",
       "accel": "12s",
@@ -201,7 +201,7 @@ const DEFAULT_INITIAL_DB = {
       "category": "sedans",
       "categoryName": "Executive Sedan",
       "dailyPrice": 6900,
-      "image": "/uploads/cars/yaris-ativ.jpg",
+      "image": "./uploads/cars/yaris-ativ.jpg",
       "hp": "1300 CC",
       "speed": "180 km/h",
       "accel": "12s",
@@ -219,7 +219,7 @@ const DEFAULT_INITIAL_DB = {
       "category": "hatchback",
       "categoryName": "Economy Hatchback",
       "dailyPrice": 3900,
-      "image": "/uploads/cars/alto-manual.jpg",
+      "image": "./uploads/cars/alto-manual.jpg",
       "hp": "660 CC",
       "speed": "140 km/h",
       "accel": "20s",
@@ -980,3 +980,4 @@ function formatPKR(amount) {
   if (isNaN(amount)) return 'Rs. 0';
   return 'Rs. ' + Math.round(amount).toLocaleString('en-PK');
 }
+
