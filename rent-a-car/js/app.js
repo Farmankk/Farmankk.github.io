@@ -1,4 +1,4 @@
-﻿// Car4Rent Pakistan - Main App Logic (PKR Currency & Dynamic Admin Data)
+// Car4Rent Pakistan - Main App Logic (PKR Currency & Dynamic Admin Data)
 
 let appState = {
   settings: {},
@@ -12,6 +12,19 @@ let activeCategory = 'all';
 let appliedDiscountPercent = 0;
 let appliedPromoCode = '';
 let activeDurationSlotDays = 3;
+
+function fixImagePath(path) {
+  if (!path) return '';
+  if (path.startsWith('data:')) return path;
+  let p = path.replace(/https?:\/\/car4rent\.com\.pk\/?/g, './');
+  if (p.startsWith('/uploads/')) {
+    p = '.' + p;
+  } else if (p.startsWith('uploads/')) {
+    p = './' + p;
+  }
+  p = p.replace('/logo.jpg', '/logo.webp').replace(/seo-car-1789727514573\.jpg/g, 'seo-car-1789727514573.webp');
+  return p;
+}
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => loadAndRenderSite());
@@ -67,6 +80,18 @@ function renderAllSiteSections() {
 
 // Load public data with instant synchronous hydration + background refresh
 async function loadAndRenderSite() {
+  // Auto-migrate localStorage if it contains old root paths or broken domain
+  try {
+    let raw = localStorage.getItem('dream_drive_db');
+    if (raw && (raw.includes('"/uploads/') || raw.includes('car4rent.com.pk') || raw.includes('logo.jpg'))) {
+      raw = raw.replace(/"\/uploads\//g, '"./uploads/')
+               .replace(/https?:\/\/car4rent\.com\.pk\/uploads\//g, './uploads/')
+               .replace(/logo\.jpg/g, 'logo.webp')
+               .replace(/seo-car-1789727514573\.jpg/g, 'seo-car-1789727514573.webp');
+      localStorage.setItem('dream_drive_db', raw);
+    }
+  } catch (e) {}
+
   // Step 1: INSTANT HYDRATION (0ms) from inlined server data or local cache
   if (window.__INITIAL_DATA__ && window.__INITIAL_DATA__.cars && window.__INITIAL_DATA__.cars.length > 0) {
     appState = { ...appState, ...window.__INITIAL_DATA__ };
@@ -155,11 +180,12 @@ function renderBranding() {
   const siteName = settings.siteName || 'Car4Rent';
   const tagline = settings.tagline || '';
   const logoText = (settings.logoText || '').trim();
-  const rawLogoUrl = (settings.logoUrl || '').trim();
+  const rawLogoUrl = fixImagePath((settings.logoUrl || './uploads/logo.webp').trim());
   const v = settings.updated_at || (appState && appState.lastUpdated) || Date.now();
   const logoUrl = rawLogoUrl && !rawLogoUrl.startsWith('data:') && !rawLogoUrl.includes('v=')
     ? `${rawLogoUrl}${rawLogoUrl.includes('?') ? '&' : '?'}v=${v}`
     : rawLogoUrl;
+  const cleanLogoUrl = fixImagePath(logoUrl);
   const mode = settings.logoDisplayMode || (rawLogoUrl ? 'logo_only' : (logoText ? 'icon_and_text' : 'text_only'));
 
   const fullTitle = `${siteName} | ${tagline || 'Enjoy The pleasure of self drive'}`;
@@ -167,7 +193,7 @@ function renderBranding() {
   if (titleEl) titleEl.textContent = fullTitle;
   document.title = fullTitle;
 
-  if (logoUrl) {
+  if (cleanLogoUrl) {
     let favicon = document.getElementById('siteFavicon');
     if (!favicon) {
       favicon = document.createElement('link');
@@ -175,7 +201,7 @@ function renderBranding() {
       favicon.rel = 'icon';
       document.head.appendChild(favicon);
     }
-    favicon.href = logoUrl;
+    favicon.href = cleanLogoUrl;
   }
 
   const navBrand = document.getElementById('navbarBrandLink');
@@ -184,25 +210,25 @@ function renderBranding() {
   let navHtml = '';
   let footerHtml = '';
 
-  if (mode === 'logo_only' && logoUrl) {
+  if (mode === 'logo_only' && cleanLogoUrl) {
     // Mode 1: Only Logo Image (No extra text, No 'D' box!)
     navHtml = `
-      <img src="${logoUrl}" alt="${siteName}" width="200" height="48" class="h-10 sm:h-12 w-auto max-w-[260px] object-contain group-hover:opacity-90 transition-opacity">
+      <img src="${cleanLogoUrl}" alt="${siteName}" width="200" height="48" class="h-10 sm:h-12 w-auto max-w-[260px] object-contain group-hover:opacity-90 transition-opacity">
     `;
     footerHtml = `
-      <img src="${logoUrl}" alt="${siteName}" width="180" height="44" class="h-9 sm:h-11 w-auto max-w-[220px] object-contain">
+      <img src="${cleanLogoUrl}" alt="${siteName}" width="180" height="44" class="h-9 sm:h-11 w-auto max-w-[220px] object-contain">
     `;
-  } else if (mode === 'logo_and_text' && logoUrl) {
+  } else if (mode === 'logo_and_text' && cleanLogoUrl) {
     // Mode 2: Logo Image + Text
     navHtml = `
-      <img src="${logoUrl}" alt="${siteName}" width="50" height="40" class="h-9 sm:h-10 w-auto max-w-[55px] object-contain rounded-lg">
+      <img src="${cleanLogoUrl}" alt="${siteName}" width="50" height="40" class="h-9 sm:h-10 w-auto max-w-[55px] object-contain rounded-lg">
       <div class="flex flex-col">
         <span class="text-2xl font-bold font-heading tracking-tight text-black group-hover:text-zinc-700 transition-colors">${siteName}</span>
         ${tagline ? `<span class="text-[9px] uppercase tracking-widest text-zinc-400 font-bold -mt-1">${tagline}</span>` : ''}
       </div>
     `;
     footerHtml = `
-      <img src="${logoUrl}" alt="${siteName}" width="45" height="32" class="h-8 w-auto max-w-[45px] object-contain rounded-lg">
+      <img src="${cleanLogoUrl}" alt="${siteName}" width="45" height="32" class="h-8 w-auto max-w-[45px] object-contain rounded-lg">
       <div class="flex flex-col">
         <span class="text-2xl font-bold font-heading text-white">${siteName}</span>
         ${tagline ? `<span class="text-[9px] uppercase tracking-widest text-zinc-400 font-bold -mt-1">${tagline}</span>` : ''}
@@ -604,6 +630,7 @@ function renderFleet() {
 
   container.innerHTML = filtered.map(car => {
     const carSlug = getCarSlug(car);
+    const carImg = fixImagePath(car.image);
     const carWaText = encodeURIComponent(`Hi CAR 4 RENT, I am interested in renting ${car.name} on self-drive.`);
     const carWaUrl = `https://wa.me/923023650000?text=${carWaText}`;
 
@@ -626,14 +653,14 @@ function renderFleet() {
         <!-- Car Image -->
         <a href="/cars/${carSlug}" aria-label="View details for ${car.name}" class="w-full h-full block">
           <img 
-            src="${car.image}" 
+            src="${carImg}" 
             alt="${car.name} on Rent in Karachi" 
             width="400"
             height="240"
             loading="lazy"
             decoding="async"
             class="w-full h-full object-cover rounded-2xl car-img-zoom group-hover:scale-105 transition-transform duration-500"
-            onerror="this.src='./uploads/seo-car-1789727514573.jpg'"
+            onerror="this.src='./uploads/seo-car-1789727514573.webp'"
           >
         </a>
       </div>
@@ -1682,8 +1709,9 @@ function renderSeoHeroContent() {
     subEl.textContent = seo.heroSubtitle;
   }
   const heroImg = document.getElementById('heroCarImg');
-  if (heroImg && (seo.ogImage || appState.settings?.heroCarImage)) {
-    heroImg.src = seo.ogImage || appState.settings?.heroCarImage;
+  if (heroImg) {
+    const rawHero = seo.ogImage || appState.settings?.heroCarImage || './uploads/seo-car-1789727514573.webp';
+    heroImg.src = fixImagePath(rawHero);
   }
   if (seo.siteTitle) {
     document.title = seo.siteTitle;

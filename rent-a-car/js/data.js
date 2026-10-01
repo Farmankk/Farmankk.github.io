@@ -19,7 +19,7 @@ const DEFAULT_INITIAL_DB = {
     "tagline": "Karachi's Trusted Self-Drive Car Rental Company",
     "logoDisplayMode": "logo_only",
     "logoText": "",
-    "logoUrl": "./uploads/logo.jpg",
+    "logoUrl": "./uploads/logo.webp",
     "currency": "PKR",
     "currencySymbol": "Rs.",
     "emergencyPhone": "+92 302 3650000",
@@ -40,7 +40,7 @@ const DEFAULT_INITIAL_DB = {
       "address": "Airport Handover | DHA Phase 6 | Gulistan-e-Johar, Karachi",
       "copyright": "© 2026 CAR 4 RENT (Pvt. Ltd.). All rights reserved."
     },
-    "heroCarImage": "./uploads/seo-car-1789727514573.jpg"
+    "heroCarImage": "./uploads/seo-car-1789727514573.webp"
   },
   "users": [
     {
@@ -430,7 +430,7 @@ const DEFAULT_INITIAL_DB = {
     "businessName": "Car 4 Rent Karachi",
     "priceRange": "₨₨",
     "openingHours": "Mo-Su 00:00-23:59",
-    "ogImage": "https://car4rent.com.pk/uploads/seo-car-1789727514573.jpg",
+    "ogImage": "./uploads/seo-car-1789727514573.webp",
     "customRobotsTxt": "User-agent: *\nAllow: /\nDisallow: /admin.html\nDisallow: /api/admin/\nDisallow: /wp-admin/\nDisallow: /wp-content/\nDisallow: /feed/\nDisallow: /comments/feed/\n\nSitemap: https://car4rent.com.pk/sitemap.xml"
   },
   "seoLandingPages": [
@@ -980,4 +980,5 @@ function formatPKR(amount) {
   if (isNaN(amount)) return 'Rs. 0';
   return 'Rs. ' + Math.round(amount).toLocaleString('en-PK');
 }
+
 
