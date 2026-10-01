@@ -648,7 +648,56 @@
           </div>
         </div>
 
-        <!-- Project 3: WooCommerce, Shopify & Printer Settings Integration -->
+        <!-- Project: Multi-Company Enterprise Payroll & Invoicing System (HCMS Global) -->
+        <div class="project-card erp glass-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5 border border-indigo-500/30">
+          <div class="space-y-4">
+            <!-- Thumbnail Preview -->
+            <div class="relative h-44 w-full rounded-xl overflow-hidden bg-slate-900 group cursor-pointer border border-slate-800" onclick="openGallery('payroll-system')">
+              <img src="assets/projects/payroll-1.png" alt="Multi-Company Enterprise Payroll" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+              <div class="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-md bg-slate-950/85 backdrop-blur-md text-[11px] font-mono text-indigo-300 border border-indigo-700/60 flex items-center gap-1.5">
+                <i data-lucide="images" class="w-3.5 h-3.5 text-indigo-400"></i>
+                <span>5 Screens</span>
+              </div>
+              <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-xs text-slate-300">
+                <span class="font-mono text-[11px] text-indigo-300">Multi-Company & 7-Day Cycle</span>
+                <span class="flex items-center gap-1 text-[11px] font-medium text-white group-hover:text-indigo-400 transition-colors">
+                  View Screenshots <i data-lucide="maximize-2" class="w-3 h-3"></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <span class="tag-badge bg-indigo-950 text-indigo-300 border border-indigo-800">Enterprise Payroll</span>
+              <span class="text-xs font-mono text-slate-400">HCMS Global</span>
+            </div>
+            <h3 class="text-xl font-bold text-white hover:text-indigo-400 transition-colors cursor-pointer" onclick="openGallery('payroll-system')">
+              Multi-Company Enterprise Payroll & Invoicing System
+            </h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              High-throughput multi-tenant Payroll system engineered to process complex 7-day payroll cycles across multiple corporate entities (Agility Logistics, MRB, etc.). Features automated Sales Tax Invoices, Bank Invoices, Recon Invoices, Salary Control, Excel bulk upload, and custom formula salary calculations with EOBI & SESSI deductions.
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            <div class="flex flex-wrap gap-1.5">
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Core PHP</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">MySQL</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Multi-Company Tenant</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">7-Day Payroll Engine</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Sales Tax & Bank Invoices</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">EOBI / SESSI Tax</span>
+            </div>
+            <div class="pt-3 border-t border-slate-800">
+              <button onclick="openGallery('payroll-system')" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600 text-indigo-300 hover:text-white border border-indigo-500/40 font-semibold text-xs tracking-wide transition shadow-lg shadow-indigo-600/10">
+                <i data-lucide="images" class="w-4 h-4"></i>
+                <span>View Payroll & Invoicing Suite (5)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 4: WooCommerce, Shopify & Printer Settings Integration -->
         <div class="project-card hardware ecommerce glass-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5 border border-purple-500/30">
           <div class="space-y-4">
             <!-- Thumbnail Preview -->
@@ -1215,6 +1264,37 @@
             src: 'assets/projects/honaiz.png',
             title: 'Barcode & Adhesive Label Printer Configuration (4x6 & 2x1)',
             desc: 'High-speed barcode label generator formatting Code128 barcodes, product pricing, SKU tags, and courier shipping labels.'
+          }
+        ]
+      },
+      'payroll-system': {
+        title: 'Multi-Company Enterprise Payroll & Invoicing System (HCMS Global)',
+        category: 'Enterprise Payroll & Automated Invoicing Engine',
+        images: [
+          {
+            src: 'assets/projects/payroll-1.png',
+            title: 'Multi-Company Enterprise Portal & Client Selection',
+            desc: 'Centralized administration managing distinct client companies (MRB Pvt Ltd, Agility Logistics, Imperial Grammar School, MK Technologies) under HCMS Global with individual payroll settings.'
+          },
+          {
+            src: 'assets/projects/payroll-2.png',
+            title: 'Enterprise Admin HR Dashboard & Workforce Metrics',
+            desc: 'Real-time workforce management dashboard monitoring employee counts (95+ personnel), master transaction records, and upload status queues.'
+          },
+          {
+            src: 'assets/projects/payroll-3.png',
+            title: 'Employee 360 Setup & Bulk Excel Upload Engine',
+            desc: 'Comprehensive employee profile registry covering personal records, references, nominations, and insured hospital setups with one-click Excel bulk employee uploading.'
+          },
+          {
+            src: 'assets/projects/payroll-4.png',
+            title: 'Salary Control Panel & Dynamic Deduction Engine',
+            desc: 'Granular salary formula configuration calculating basic allowances, EOBI employer/employee contributions, SESSI deductions, and progressive income tax brackets.'
+          },
+          {
+            src: 'assets/projects/payroll-5.png',
+            title: '7-Day Net Payroll Register, Sales Tax & Bank Invoices',
+            desc: '7-day payroll processing engine with attendance, paid leave, gross salary, cash on short delivery adjustments, Bank Advice detail exports, and Service Sales Tax Invoicing.'
           }
         ]
       },
