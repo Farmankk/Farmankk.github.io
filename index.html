@@ -71,6 +71,18 @@
       font-weight: 500;
       letter-spacing: 0.025em;
     }
+    .animate-scale-in {
+      animation: scaleIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .thumb-active {
+      border-color: #6366f1 !important;
+      transform: scale(1.05);
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.6);
+    }
   </style>
 </head>
 
@@ -543,13 +555,29 @@
 
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="projects-grid">
         <!-- Project 1: Finac ERP -->
-        <div class="project-card erp hardware glass-card rounded-2xl p-6 flex flex-col justify-between space-y-6">
+        <div class="project-card erp hardware glass-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5">
           <div class="space-y-4">
+            <!-- Thumbnail Preview -->
+            <div class="relative h-44 w-full rounded-xl overflow-hidden bg-slate-900 group cursor-pointer border border-slate-800" onclick="openGallery('finac-erp')">
+              <img src="assets/projects/finac-erp-1.png" alt="Finac ERP" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+              <div class="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-md bg-slate-950/85 backdrop-blur-md text-[11px] font-mono text-slate-300 border border-slate-700/60 flex items-center gap-1.5">
+                <i data-lucide="images" class="w-3.5 h-3.5 text-brand-400"></i>
+                <span>4 Screens</span>
+              </div>
+              <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-xs text-slate-300">
+                <span class="font-mono text-[11px] text-brand-300">Architecture & Ledger</span>
+                <span class="flex items-center gap-1 text-[11px] font-medium text-white group-hover:text-brand-400 transition-colors">
+                  View Screenshots <i data-lucide="maximize-2" class="w-3 h-3"></i>
+                </span>
+              </div>
+            </div>
+
             <div class="flex items-center justify-between">
               <span class="tag-badge bg-brand-950 text-brand-300 border border-brand-800">ERP & CRM</span>
               <span class="text-xs font-mono text-slate-400">3DM Solutions</span>
             </div>
-            <h3 class="text-xl font-bold text-white hover:text-brand-400 transition-colors">
+            <h3 class="text-xl font-bold text-white hover:text-brand-400 transition-colors cursor-pointer" onclick="openGallery('finac-erp')">
               Finac ERP Software & CRM Suite
             </h3>
             <p class="text-sm text-slate-400 leading-relaxed">
@@ -564,21 +592,86 @@
               <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Bootstrap 5</span>
               <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">REST APIs</span>
             </div>
-            <div class="pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 font-mono">
-              <span>Status: <strong class="text-emerald-400">Live Enterprise</strong></span>
-              <span class="flex items-center gap-1 text-brand-400"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Production</span>
+            <div class="pt-3 border-t border-slate-800">
+              <button onclick="openGallery('finac-erp')" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-brand-600/20 hover:bg-brand-600 text-brand-300 hover:text-white border border-brand-500/40 font-semibold text-xs tracking-wide transition shadow-lg shadow-brand-600/10">
+                <i data-lucide="images" class="w-4 h-4"></i>
+                <span>View Screenshots & Workflow (4)</span>
+              </button>
             </div>
           </div>
         </div>
 
-        <!-- Project 2: FBR & POS Hardware Middleware -->
-        <div class="project-card hardware glass-card rounded-2xl p-6 flex flex-col justify-between space-y-6">
+        <!-- Project 2: Al-Qasr Enterprise ERP -->
+        <div class="project-card erp glass-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5">
           <div class="space-y-4">
+            <!-- Thumbnail Preview -->
+            <div class="relative h-44 w-full rounded-xl overflow-hidden bg-slate-900 group cursor-pointer border border-slate-800" onclick="openGallery('al-qasr')">
+              <img src="assets/projects/alqasr-1.jpg" alt="Al-Qasr Commercial Enterprise" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+              <div class="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-md bg-slate-950/85 backdrop-blur-md text-[11px] font-mono text-slate-300 border border-slate-700/60 flex items-center gap-1.5">
+                <i data-lucide="images" class="w-3.5 h-3.5 text-accent-cyan"></i>
+                <span>4 Screens</span>
+              </div>
+              <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-xs text-slate-300">
+                <span class="font-mono text-[11px] text-accent-cyan">Supply Chain & BOM</span>
+                <span class="flex items-center gap-1 text-[11px] font-medium text-white group-hover:text-accent-cyan transition-colors">
+                  View Screenshots <i data-lucide="maximize-2" class="w-3 h-3"></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <span class="tag-badge bg-cyan-950 text-cyan-300 border border-cyan-800">Commercial ERP</span>
+              <span class="text-xs font-mono text-slate-400">Enterprise Suite</span>
+            </div>
+            <h3 class="text-xl font-bold text-white hover:text-accent-cyan transition-colors cursor-pointer" onclick="openGallery('al-qasr')">
+              Al-Qasr Commercial Management ERP
+            </h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              Industrial commercial enterprise system handling multi-branch wholesale operations, raw material procurement, Bill of Materials (BOM), production cycles, and vendor reconciliations.
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            <div class="flex flex-wrap gap-1.5">
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Core PHP</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">MySQL Transactions</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">BOM Engine</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Wholesale Billing</span>
+            </div>
+            <div class="pt-3 border-t border-slate-800">
+              <button onclick="openGallery('al-qasr')" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-cyan-600/20 hover:bg-cyan-600 text-cyan-300 hover:text-white border border-cyan-500/40 font-semibold text-xs tracking-wide transition shadow-lg shadow-cyan-600/10">
+                <i data-lucide="images" class="w-4 h-4"></i>
+                <span>View Screenshots & Workflow (4)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 3: FBR & POS Hardware Middleware -->
+        <div class="project-card hardware glass-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5">
+          <div class="space-y-4">
+            <!-- Thumbnail Preview -->
+            <div class="relative h-44 w-full rounded-xl overflow-hidden bg-slate-900 group cursor-pointer border border-slate-800" onclick="openGallery('fbr-pos')">
+              <img src="assets/projects/fbr-pos-1.jpg" alt="FBR & POS Middleware" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+              <div class="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-md bg-slate-950/85 backdrop-blur-md text-[11px] font-mono text-slate-300 border border-slate-700/60 flex items-center gap-1.5">
+                <i data-lucide="images" class="w-3.5 h-3.5 text-rose-400"></i>
+                <span>4 Screens</span>
+              </div>
+              <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-xs text-slate-300">
+                <span class="font-mono text-[11px] text-rose-300">Thermal Print & FBR API</span>
+                <span class="flex items-center gap-1 text-[11px] font-medium text-white group-hover:text-rose-400 transition-colors">
+                  View Screenshots <i data-lucide="maximize-2" class="w-3 h-3"></i>
+                </span>
+              </div>
+            </div>
+
             <div class="flex items-center justify-between">
               <span class="tag-badge bg-rose-950 text-rose-300 border border-rose-800">Hardware & POS</span>
               <span class="text-xs font-mono text-slate-400">3DM Solutions</span>
             </div>
-            <h3 class="text-xl font-bold text-white hover:text-brand-400 transition-colors">
+            <h3 class="text-xl font-bold text-white hover:text-rose-400 transition-colors cursor-pointer" onclick="openGallery('fbr-pos')">
               POS Hardware & FBR Tax Middleware
             </h3>
             <p class="text-sm text-slate-400 leading-relaxed">
@@ -593,50 +686,39 @@
               <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">PHP Sockets</span>
               <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Barcode Engine</span>
             </div>
-            <div class="pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 font-mono">
-              <span>Hardware: <strong class="text-white">Thermal & Scanners</strong></span>
-              <span class="flex items-center gap-1 text-emerald-400"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> FBR Certified</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Project 3: School Management ERP -->
-        <div class="project-card erp glass-card rounded-2xl p-6 flex flex-col justify-between space-y-6">
-          <div class="space-y-4">
-            <div class="flex items-center justify-between">
-              <span class="tag-badge bg-accent-cyan/20 text-accent-cyan border border-cyan-800">School ERP</span>
-              <span class="text-xs font-mono text-slate-400">MK Technologies</span>
-            </div>
-            <h3 class="text-xl font-bold text-white hover:text-brand-400 transition-colors">
-              Comprehensive School Management ERP
-            </h3>
-            <p class="text-sm text-slate-400 leading-relaxed">
-              Multi-role portal catering to administrators, teachers, students, accountants, and parents. Features automated student billing, fee collection slips, grade reports, and digital attendance tracking.
-            </p>
-          </div>
-
-          <div class="space-y-4">
-            <div class="flex flex-wrap gap-1.5">
-              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Core PHP</span>
-              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">MySQL</span>
-              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">jQuery/Ajax</span>
-              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">PDF Reports</span>
-            </div>
-            <div class="pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 font-mono">
-              <span>Users: <strong class="text-white">5,000+ Students</strong></span>
-              <span class="flex items-center gap-1 text-brand-400"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Deployed</span>
+            <div class="pt-3 border-t border-slate-800">
+              <button onclick="openGallery('fbr-pos')" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-500/40 font-semibold text-xs tracking-wide transition shadow-lg shadow-rose-600/10">
+                <i data-lucide="images" class="w-4 h-4"></i>
+                <span>View Screenshots & Hardware Setup (4)</span>
+              </button>
             </div>
           </div>
         </div>
 
         <!-- Project 4: Car4Rent Self Drive Platform -->
-        <div class="project-card ecommerce glass-card rounded-2xl p-6 flex flex-col justify-between space-y-6 border border-emerald-500/30">
+        <div class="project-card ecommerce glass-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5 border border-emerald-500/30">
           <div class="space-y-4">
+            <!-- Thumbnail Preview -->
+            <div class="relative h-44 w-full rounded-xl overflow-hidden bg-slate-900 group cursor-pointer border border-emerald-500/20" onclick="openGallery('rent-a-car')">
+              <img src="assets/projects/rentacar-1.webp" alt="Car4Rent Platform" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+              <div class="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-md bg-slate-950/85 backdrop-blur-md text-[11px] font-mono text-emerald-300 border border-emerald-700/60 flex items-center gap-1.5">
+                <i data-lucide="images" class="w-3.5 h-3.5 text-emerald-400"></i>
+                <span>7 Screens</span>
+              </div>
+              <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-xs text-slate-300">
+                <span class="font-mono text-[11px] text-emerald-400">Live Booking Web App</span>
+                <span class="flex items-center gap-1 text-[11px] font-medium text-white group-hover:text-emerald-400 transition-colors">
+                  Open Gallery <i data-lucide="maximize-2" class="w-3 h-3"></i>
+                </span>
+              </div>
+            </div>
+
             <div class="flex items-center justify-between">
               <span class="tag-badge bg-emerald-950 text-emerald-300 border border-emerald-800">Live Web App</span>
               <span class="text-xs font-mono text-emerald-400 font-semibold flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Online</span>
             </div>
-            <h3 class="text-xl font-bold text-white hover:text-brand-400 transition-colors">
+            <h3 class="text-xl font-bold text-white hover:text-brand-400 transition-colors cursor-pointer" onclick="openGallery('rent-a-car')">
               Car4Rent — Self-Drive Rental Platform
             </h3>
             <p class="text-sm text-slate-400 leading-relaxed">
@@ -651,98 +733,156 @@
               <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Fleet Engine</span>
               <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">SEO Schema</span>
             </div>
-            <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
-              <a href="./rent-a-car/" target="_blank" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs tracking-wide shadow-lg shadow-emerald-600/30 transition">
-                <span>Open Live Project</span>
-                <i data-lucide="external-link" class="w-4 h-4"></i>
+            <div class="pt-3 border-t border-slate-800 grid grid-cols-2 gap-2">
+              <button onclick="openGallery('rent-a-car')" class="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs tracking-wide transition">
+                <i data-lucide="images" class="w-3.5 h-3.5 text-brand-400"></i>
+                <span>Screenshots (7)</span>
+              </button>
+              <a href="./rent-a-car/" target="_blank" class="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs tracking-wide shadow-lg shadow-emerald-600/30 transition">
+                <span>Live Demo</span>
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
               </a>
             </div>
           </div>
         </div>
 
-        <!-- Project 5: Omnichannel E-Commerce & Courier Automation -->
-        <div class="project-card ecommerce glass-card rounded-2xl p-6 flex flex-col justify-between space-y-6">
+        <!-- Project 5: Tech Bazaar & Cutting Order System -->
+        <div class="project-card ecommerce erp glass-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5">
           <div class="space-y-4">
-            <div class="flex items-center justify-between">
-              <span class="tag-badge bg-emerald-950 text-emerald-300 border border-emerald-800">E-Commerce Sync</span>
-              <span class="text-xs font-mono text-slate-400">Enterprise Connector</span>
+            <!-- Thumbnail Preview -->
+            <div class="relative h-44 w-full rounded-xl overflow-hidden bg-slate-900 group cursor-pointer border border-slate-800" onclick="openGallery('tech-bazaar')">
+              <img src="assets/projects/tech-bazaar-1.jpg" alt="Tech Bazaar Cutting Order" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+              <div class="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-md bg-slate-950/85 backdrop-blur-md text-[11px] font-mono text-slate-300 border border-slate-700/60 flex items-center gap-1.5">
+                <i data-lucide="images" class="w-3.5 h-3.5 text-amber-400"></i>
+                <span>3 Screens</span>
+              </div>
+              <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-xs text-slate-300">
+                <span class="font-mono text-[11px] text-amber-300">Cutting Order & Dispatch</span>
+                <span class="flex items-center gap-1 text-[11px] font-medium text-white group-hover:text-amber-400 transition-colors">
+                  View Screenshots <i data-lucide="maximize-2" class="w-3 h-3"></i>
+                </span>
+              </div>
             </div>
-            <h3 class="text-xl font-bold text-white hover:text-brand-400 transition-colors">
-              Omnichannel E-Commerce & Courier Automation
+
+            <div class="flex items-center justify-between">
+              <span class="tag-badge bg-amber-950 text-amber-300 border border-amber-800">Order Fulfillment</span>
+              <span class="text-xs font-mono text-slate-400">Production Engine</span>
+            </div>
+            <h3 class="text-xl font-bold text-white hover:text-amber-400 transition-colors cursor-pointer" onclick="openGallery('tech-bazaar')">
+              Tech Bazaar / Order Fulfillment & Cutting Order
             </h3>
             <p class="text-sm text-slate-400 leading-relaxed">
-              Bi-directional inventory and order synchronization between Shopify/WooCommerce stores and centralized back-office ERP with real-time webhook listeners and courier booking (TCS, Trax).
+              Specialized garment & e-commerce order management system controlling cutting orders, fabric allotment, multi-stage manufacturing pipelines, and automated courier consignment dispatch.
             </p>
           </div>
 
           <div class="space-y-4">
             <div class="flex flex-wrap gap-1.5">
-              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">WordPress</span>
-              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Shopify API</span>
-              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Webhooks</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Core PHP</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Cutting Orders</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">MySQL</span>
               <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Courier APIs</span>
             </div>
-            <div class="pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 font-mono">
-              <span>Latency: <strong class="text-emerald-400">&lt; 2s Sync</strong></span>
-              <span class="flex items-center gap-1 text-emerald-400"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Live</span>
+            <div class="pt-3 border-t border-slate-800">
+              <button onclick="openGallery('tech-bazaar')" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-amber-600/20 hover:bg-amber-600 text-amber-300 hover:text-white border border-amber-500/40 font-semibold text-xs tracking-wide transition shadow-lg shadow-amber-600/10">
+                <i data-lucide="images" class="w-4 h-4"></i>
+                <span>View Screenshots & Workflow (3)</span>
+              </button>
             </div>
           </div>
         </div>
 
-        <!-- Project 5: Travel & Tour Booking System -->
-        <div class="project-card erp glass-card rounded-2xl p-6 flex flex-col justify-between space-y-6">
+        <!-- Project 6: Mobile App API & Customer Tracking Gateway -->
+        <div class="project-card ecommerce glass-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5">
           <div class="space-y-4">
-            <div class="flex items-center justify-between">
-              <span class="tag-badge bg-purple-950 text-purple-300 border border-purple-800">Booking Engine</span>
-              <span class="text-xs font-mono text-slate-400">Aptech Capstone</span>
+            <!-- Thumbnail Preview -->
+            <div class="relative h-44 w-full rounded-xl overflow-hidden bg-slate-900 group cursor-pointer border border-slate-800" onclick="openGallery('mobile-app')">
+              <img src="assets/projects/finac-erp-2.jpg" alt="Mobile App API" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+              <div class="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-md bg-slate-950/85 backdrop-blur-md text-[11px] font-mono text-slate-300 border border-slate-700/60 flex items-center gap-1.5">
+                <i data-lucide="images" class="w-3.5 h-3.5 text-indigo-400"></i>
+                <span>3 Screens</span>
+              </div>
+              <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-xs text-slate-300">
+                <span class="font-mono text-[11px] text-indigo-300">REST APIs & Customer Tracking</span>
+                <span class="flex items-center gap-1 text-[11px] font-medium text-white group-hover:text-indigo-400 transition-colors">
+                  View Screenshots <i data-lucide="maximize-2" class="w-3 h-3"></i>
+                </span>
+              </div>
             </div>
-            <h3 class="text-xl font-bold text-white hover:text-brand-400 transition-colors">
-              Travel & Tour Booking Engine
+
+            <div class="flex items-center justify-between">
+              <span class="tag-badge bg-indigo-950 text-indigo-300 border border-indigo-800">REST API / Mobile</span>
+              <span class="text-xs font-mono text-slate-400">Microservice Gateway</span>
+            </div>
+            <h3 class="text-xl font-bold text-white hover:text-indigo-400 transition-colors cursor-pointer" onclick="openGallery('mobile-app')">
+              Mobile App API & Customer Tracking Gateway
             </h3>
             <p class="text-sm text-slate-400 leading-relaxed">
-              Dynamic travel-package reservation and ticket management system architected in MVC .NET, featuring multi-role authentication for tour operators, booking agents, and customers.
+              High-throughput RESTful JSON endpoints powering customer mobile applications with real-time order tracking, delivery verification, offline sync, and push notifications.
             </p>
           </div>
 
           <div class="space-y-4">
             <div class="flex flex-wrap gap-1.5">
-              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">MVC .NET</span>
-              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">C#</span>
-              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">MS SQL Server</span>
-              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Razor</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">RESTful JSON</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">JWT Auth</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Customer Tracker</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">High Concurrency</span>
             </div>
-            <div class="pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 font-mono">
-              <span>Architecture: <strong class="text-white">MVC Pattern</strong></span>
-              <span class="flex items-center gap-1 text-purple-400"><i data-lucide="award" class="w-3.5 h-3.5"></i> Distinction</span>
+            <div class="pt-3 border-t border-slate-800">
+              <button onclick="openGallery('mobile-app')" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600 text-indigo-300 hover:text-white border border-indigo-500/40 font-semibold text-xs tracking-wide transition shadow-lg shadow-indigo-600/10">
+                <i data-lucide="images" class="w-4 h-4"></i>
+                <span>View Screenshots & API Architecture (3)</span>
+              </button>
             </div>
           </div>
         </div>
 
-        <!-- Project 6: Attendance Management System -->
-        <div class="project-card erp glass-card rounded-2xl p-6 flex flex-col justify-between space-y-6">
+        <!-- Project 7: School Management ERP -->
+        <div class="project-card erp glass-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5">
           <div class="space-y-4">
-            <div class="flex items-center justify-between">
-              <span class="tag-badge bg-amber-950 text-amber-300 border border-amber-800">Desktop / SE</span>
-              <span class="text-xs font-mono text-slate-400">Java SE</span>
+            <!-- Thumbnail Preview -->
+            <div class="relative h-44 w-full rounded-xl overflow-hidden bg-slate-900 group cursor-pointer border border-slate-800" onclick="openGallery('school-erp')">
+              <img src="assets/projects/erp-fairdeals.jpg" alt="School Management ERP" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+              <div class="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-md bg-slate-950/85 backdrop-blur-md text-[11px] font-mono text-slate-300 border border-slate-700/60 flex items-center gap-1.5">
+                <i data-lucide="images" class="w-3.5 h-3.5 text-purple-400"></i>
+                <span>3 Screens</span>
+              </div>
+              <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-xs text-slate-300">
+                <span class="font-mono text-[11px] text-purple-300">Student & Fee Portals</span>
+                <span class="flex items-center gap-1 text-[11px] font-medium text-white group-hover:text-purple-400 transition-colors">
+                  View Screenshots <i data-lucide="maximize-2" class="w-3 h-3"></i>
+                </span>
+              </div>
             </div>
-            <h3 class="text-xl font-bold text-white hover:text-brand-400 transition-colors">
-              Enterprise Attendance Tracker
+
+            <div class="flex items-center justify-between">
+              <span class="tag-badge bg-purple-950 text-purple-300 border border-purple-800">School ERP</span>
+              <span class="text-xs font-mono text-slate-400">MK Technologies</span>
+            </div>
+            <h3 class="text-xl font-bold text-white hover:text-purple-400 transition-colors cursor-pointer" onclick="openGallery('school-erp')">
+              Comprehensive School Management ERP
             </h3>
             <p class="text-sm text-slate-400 leading-relaxed">
-              Standalone Java SE desktop application engineered with biometric record integration, automated timesheet generation, and fine-grained role controls for administrators and staff.
+              Multi-role portal catering to administrators, teachers, students, accountants, and parents. Features automated student billing, fee collection slips, grade reports, and digital attendance tracking.
             </p>
           </div>
 
           <div class="space-y-4">
             <div class="flex flex-wrap gap-1.5">
-              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Java SE</span>
-              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Swing / AWT</span>
-              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">JDBC</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Core PHP</span>
               <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">MySQL</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Fee Engine</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">PDF Reports</span>
             </div>
-            <div class="pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 font-mono">
-              <span>Interface: <strong class="text-white">Desktop Client</strong></span>
-              <span class="flex items-center gap-1 text-amber-400"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Verified</span>
+            <div class="pt-3 border-t border-slate-800">
+              <button onclick="openGallery('school-erp')" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-purple-600/20 hover:bg-purple-600 text-purple-300 hover:text-white border border-purple-500/40 font-semibold text-xs tracking-wide transition shadow-lg shadow-purple-600/10">
+                <i data-lucide="images" class="w-4 h-4"></i>
+                <span>View Screenshots & Portals (3)</span>
+              </button>
             </div>
           </div>
         </div>
@@ -894,6 +1034,62 @@
     </div>
   </footer>
 
+  <!-- Interactive Screenshot Gallery Modal -->
+  <div id="galleryModal" class="fixed inset-0 z-[100] bg-slate-950/90 backdrop-blur-md hidden flex-col items-center justify-center p-2 sm:p-6" onclick="handleBackdropClick(event)">
+    <div class="relative w-full max-w-5xl bg-slate-900/95 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] animate-scale-in" onclick="event.stopPropagation()">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-800 bg-slate-950/70">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-brand-500/20 text-brand-400 flex items-center justify-center">
+            <i data-lucide="image" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 id="modalProjectTitle" class="text-base sm:text-lg font-bold text-white leading-tight">Project Title</h3>
+            <p id="modalCategory" class="text-xs font-mono text-slate-400">Category</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span id="modalCounter" class="text-xs font-mono px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700">1 / 4</span>
+          <button onclick="closeGallery()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition" title="Close (Esc)">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Main Stage -->
+      <div class="relative flex-1 min-h-[300px] max-h-[58vh] bg-slate-950/80 flex items-center justify-center overflow-hidden p-2 sm:p-4 select-none">
+        <!-- Prev Button -->
+        <button onclick="prevGalleryImage()" class="absolute left-3 sm:left-5 z-20 p-2.5 sm:p-3 rounded-full bg-slate-900/80 hover:bg-brand-600 text-white border border-slate-700 transition shadow-xl hover:scale-105" title="Previous (Left Arrow)">
+          <i data-lucide="chevron-left" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+        </button>
+
+        <!-- Current Image -->
+        <img id="modalMainImage" src="" alt="Project Screenshot" class="max-h-[52vh] max-w-full object-contain rounded-lg shadow-2xl transition duration-200">
+
+        <!-- Next Button -->
+        <button onclick="nextGalleryImage()" class="absolute right-3 sm:right-5 z-20 p-2.5 sm:p-3 rounded-full bg-slate-900/80 hover:bg-brand-600 text-white border border-slate-700 transition shadow-xl hover:scale-105" title="Next (Right Arrow)">
+          <i data-lucide="chevron-right" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+        </button>
+      </div>
+
+      <!-- Caption & Info Bar -->
+      <div class="px-5 py-3 border-t border-slate-800 bg-slate-950/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div class="space-y-0.5">
+          <h4 id="modalImageCaption" class="text-sm font-semibold text-white">Image Caption</h4>
+          <p id="modalImageSubtext" class="text-xs text-slate-400">Detailed explanation of the feature and architecture.</p>
+        </div>
+        <div id="modalActionContainer" class="flex items-center gap-2 shrink-0">
+          <!-- Live link button injected if available -->
+        </div>
+      </div>
+
+      <!-- Thumbnails Strip -->
+      <div id="modalThumbnails" class="px-4 py-3 bg-slate-900/90 border-t border-slate-800/80 flex items-center gap-2.5 overflow-x-auto">
+        <!-- Thumbnails generated by JS -->
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script>
     // Initialize Lucide Icons
@@ -938,6 +1134,309 @@
       const mailtoUrl = `mailto:farmankk10@gmail.com?subject=${encodeURIComponent(subject + ' - ' + name)}&body=${encodeURIComponent("Sender: " + name + "\nEmail: " + email + "\n\nMessage:\n" + message)}`;
       window.location.href = mailtoUrl;
     }
+
+    // Project Galleries Data
+    const projectGalleries = {
+      'finac-erp': {
+        title: 'Finac ERP Software & CRM Suite',
+        category: 'Enterprise ERP & Business Management',
+        images: [
+          {
+            src: 'assets/projects/finac-erp-1.png',
+            title: 'Executive Financial Dashboard & Transaction Center',
+            desc: 'Real-time overview of cash flows, receivable balances, sales trends, and module navigation.'
+          },
+          {
+            src: 'assets/projects/finac-erp-2.jpg',
+            title: 'General Ledger Voucher & Transaction Entry',
+            desc: 'ACID-compliant double-entry ledger with instant debit/credit balance validation and account lookup.'
+          },
+          {
+            src: 'assets/projects/erp-fairdeals.jpg',
+            title: 'Purchase & Sales Order Lifecycle Management',
+            desc: 'Automated order approval, pricing tiers, customer credit limit alerts, and delivery challans.'
+          },
+          {
+            src: 'assets/projects/erp-alpha.jpg',
+            title: 'Multi-Warehouse Inventory & Stock Valuation',
+            desc: 'FIFO/Weighted average stock valuation, batch serial tracking, and automated reorder alerts.'
+          }
+        ]
+      },
+      'al-qasr': {
+        title: 'Al-Qasr Commercial Management ERP',
+        category: 'Commercial ERP & Supply Chain System',
+        images: [
+          {
+            src: 'assets/projects/alqasr-1.jpg',
+            title: 'Al-Qasr Commercial Enterprise Platform',
+            desc: 'Full-featured enterprise suite managing large-scale wholesale operations, vendor ledgers, and billing.'
+          },
+          {
+            src: 'assets/projects/erp-pakistan-sg.jpg',
+            title: 'Manufacturing BOM & Assembly Routing',
+            desc: 'Bill of Materials calculations, raw material issuance, labor costs, and finished goods assembly logs.'
+          },
+          {
+            src: 'assets/projects/erp-royal-plastic.jpg',
+            title: 'Commercial Billing & Accounts Receivable Engine',
+            desc: 'Automated statement generation, aging analysis reports, and multi-currency billing reconciliations.'
+          },
+          {
+            src: 'assets/projects/erp-maj.jpg',
+            title: 'Warehouse Bin Management & Stock Ledgers',
+            desc: 'Bin-level item locations, automated stock transfer vouchers, and physical stock count audit tools.'
+          }
+        ]
+      },
+      'fbr-pos': {
+        title: 'POS Hardware & FBR Tax Middleware',
+        category: 'Hardware Integration & Fiscal Compliance',
+        images: [
+          {
+            src: 'assets/projects/fbr-pos-1.jpg',
+            title: 'FBR Digital Invoicing & Fiscal QR Generation',
+            desc: 'Real-time HTTPS REST connection to FBR server, generating cryptographic QR codes and FBR invoice numbers.'
+          },
+          {
+            src: 'assets/projects/ab-electronics.png',
+            title: 'Thermal ESC/POS Receipt Printing Engine',
+            desc: 'Direct hardware socket communication with 80mm/58mm thermal printers without browser print dialog delay.'
+          },
+          {
+            src: 'assets/projects/honaiz.png',
+            title: 'Barcode Scanner & Fast-Lane POS Terminal',
+            desc: 'Rapid keyboard-wedge barcode reader integration with instant sound feedback and 1-second item addition.'
+          },
+          {
+            src: 'assets/projects/erp-bdc.jpg',
+            title: 'POS Transaction Audit Trail & Daily Cash Reconciliation',
+            desc: 'Shift-close cash drawer reconciliation, cashier counter reports, and void invoice tracking.'
+          }
+        ]
+      },
+      'rent-a-car': {
+        title: 'Car4Rent — Self-Drive Rental Platform',
+        category: 'Live Web Application & Fleet Engine',
+        liveUrl: './rent-a-car/',
+        images: [
+          {
+            src: 'assets/projects/rentacar-1.webp',
+            title: 'Car4Rent Homepage & Real-Time Booking Engine',
+            desc: 'Interactive booking calculator with dynamic pickup/dropoff date selector and automatic discount computation.'
+          },
+          {
+            src: 'assets/projects/rentacar-2.webp',
+            title: 'Fleet Showcase — Kia Sportage 2026',
+            desc: 'Interactive specs display with engine, transmission, passenger capacity, and instant rental pricing.'
+          },
+          {
+            src: 'assets/projects/rentacar-3.webp',
+            title: 'Fleet Showcase — Toyota Hilux Revo Rocco 4x4',
+            desc: 'Heavy-duty 4WD vehicle booking with safety features, transmission tags, and instant WhatsApp booking action.'
+          },
+          {
+            src: 'assets/projects/rentacar-4.webp',
+            title: 'Fleet Showcase — Toyota Yaris Sedan',
+            desc: 'Economical city sedan fleet card with daily/weekly discount structures and verified customer ratings.'
+          },
+          {
+            src: 'assets/projects/rentacar-5.webp',
+            title: 'Fleet Showcase — Suzuki Alto Automatic',
+            desc: 'Budget-friendly fleet option with low fuel consumption specs and instant online reservation.'
+          },
+          {
+            src: 'assets/projects/rentacar-6.webp',
+            title: 'Fleet Showcase — Toyota Yaris ATIV Executive',
+            desc: 'Executive class rental option with automatic transmission and full insurance options.'
+          },
+          {
+            src: 'assets/projects/rentacar-7.webp',
+            title: 'Fleet Showcase — Suzuki Swift Hatchback',
+            desc: 'Compact sporty hatchback featuring responsive handling and flexible duration rentals.'
+          }
+        ]
+      },
+      'tech-bazaar': {
+        title: 'Tech Bazaar / Order Fulfillment & Cutting Order',
+        category: 'E-Commerce Fulfillment & Manufacturing Operations',
+        images: [
+          {
+            src: 'assets/projects/tech-bazaar-1.jpg',
+            title: 'Cutting Order & Production Batch Control',
+            desc: 'Industrial cutting order scheduling, fabric/material allocation tracking, and status pipeline.'
+          },
+          {
+            src: 'assets/projects/tech-bazaar-2.jpg',
+            title: 'Multi-Stage Processing & Stage Verification',
+            desc: 'Step-by-step progress tracking from cutting, stitching, quality audit to final packing.'
+          },
+          {
+            src: 'assets/projects/honaiz.png',
+            title: 'Automated Dispatch & Courier Tracking Integration',
+            desc: 'Automatic label generation and courier sync for instant consignment number booking.'
+          }
+        ]
+      },
+      'mobile-app': {
+        title: 'Mobile App API & Customer Tracking Gateway',
+        category: 'RESTful Microservices & Mobile Backend',
+        images: [
+          {
+            src: 'assets/projects/finac-erp-1.png',
+            title: 'High-Throughput RESTful API Architecture',
+            desc: 'Stateless JWT-authenticated endpoints providing JSON responses for mobile apps with sub-80ms response times.'
+          },
+          {
+            src: 'assets/projects/fbr-pos-1.jpg',
+            title: 'Customer Tracking & Real-Time Status Engine',
+            desc: 'Live customer milestone updates, delivery stages, and push notification triggers.'
+          },
+          {
+            src: 'assets/projects/erp-maj.jpg',
+            title: 'Field Agent Sync & Offline Reconciliation',
+            desc: 'Two-way synchronization algorithm syncing offline field records back to central database upon reconnecting.'
+          }
+        ]
+      },
+      'school-erp': {
+        title: 'Comprehensive School Management ERP',
+        category: 'Institutional Portal & Academic Records',
+        images: [
+          {
+            src: 'assets/projects/erp-alpha.jpg',
+            title: 'Multi-Campus Student & Staff Portal',
+            desc: 'Centralized administration for admissions, enrollments, section assignments, and teacher schedules.'
+          },
+          {
+            src: 'assets/projects/erp-fairdeals.jpg',
+            title: 'Automated Fee Voucher Generation & Bank Reconciliation',
+            desc: 'Automated monthly fee bill calculation with discount scholarships, fine penalties, and bank deposit slips.'
+          },
+          {
+            src: 'assets/projects/finac-erp-2.jpg',
+            title: 'Examination Grade Books & Digital Report Cards',
+            desc: 'Weighted percentage exam tabulation, GPA calculation, and one-click printable student progress reports.'
+          }
+        ]
+      }
+    };
+
+    let activeGalleryKey = null;
+    let activeImageIndex = 0;
+
+    function openGallery(key) {
+      const gallery = projectGalleries[key];
+      if (!gallery || !gallery.images.length) return;
+
+      activeGalleryKey = key;
+      activeImageIndex = 0;
+
+      const modal = document.getElementById('galleryModal');
+      document.getElementById('modalProjectTitle').textContent = gallery.title;
+      document.getElementById('modalCategory').textContent = gallery.category;
+
+      const actionContainer = document.getElementById('modalActionContainer');
+      actionContainer.innerHTML = '';
+      if (gallery.liveUrl) {
+        actionContainer.innerHTML = `
+          <a href="${gallery.liveUrl}" target="_blank" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs tracking-wide shadow-md flex items-center gap-1.5 transition">
+            <span>Open Live App</span>
+            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+          </a>
+        `;
+      }
+
+      renderThumbnails(gallery.images);
+      updateModalView();
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    }
+
+    function renderThumbnails(images) {
+      const container = document.getElementById('modalThumbnails');
+      container.innerHTML = images.map((img, idx) => `
+        <button onclick="setGalleryImage(${idx})" class="thumb-btn shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 border-slate-700 hover:border-brand-400 transition" data-index="${idx}">
+          <img src="${img.src}" alt="${img.title}" class="w-full h-full object-cover">
+        </button>
+      `).join('');
+    }
+
+    function updateModalView() {
+      const gallery = projectGalleries[activeGalleryKey];
+      if (!gallery) return;
+
+      const current = gallery.images[activeImageIndex];
+      const mainImg = document.getElementById('modalMainImage');
+      mainImg.src = current.src;
+      mainImg.alt = current.title;
+
+      document.getElementById('modalImageCaption').textContent = current.title;
+      document.getElementById('modalImageSubtext').textContent = current.desc;
+      document.getElementById('modalCounter').textContent = `${activeImageIndex + 1} / ${gallery.images.length}`;
+
+      // Highlight active thumbnail
+      document.querySelectorAll('#modalThumbnails .thumb-btn').forEach((btn, idx) => {
+        if (idx === activeImageIndex) {
+          btn.classList.add('thumb-active');
+          btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        } else {
+          btn.classList.remove('thumb-active');
+        }
+      });
+    }
+
+    function setGalleryImage(idx) {
+      const gallery = projectGalleries[activeGalleryKey];
+      if (!gallery || idx < 0 || idx >= gallery.images.length) return;
+      activeImageIndex = idx;
+      updateModalView();
+    }
+
+    function nextGalleryImage() {
+      const gallery = projectGalleries[activeGalleryKey];
+      if (!gallery) return;
+      activeImageIndex = (activeImageIndex + 1) % gallery.images.length;
+      updateModalView();
+    }
+
+    function prevGalleryImage() {
+      const gallery = projectGalleries[activeGalleryKey];
+      if (!gallery) return;
+      activeImageIndex = (activeImageIndex - 1 + gallery.images.length) % gallery.images.length;
+      updateModalView();
+    }
+
+    function closeGallery() {
+      const modal = document.getElementById('galleryModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = '';
+      activeGalleryKey = null;
+    }
+
+    function handleBackdropClick(e) {
+      if (e.target.id === 'galleryModal') {
+        closeGallery();
+      }
+    }
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      const modal = document.getElementById('galleryModal');
+      if (!modal || modal.classList.contains('hidden')) return;
+
+      if (e.key === 'Escape') {
+        closeGallery();
+      } else if (e.key === 'ArrowRight') {
+        nextGalleryImage();
+      } else if (e.key === 'ArrowLeft') {
+        prevGalleryImage();
+      }
+    });
   </script>
 </body>
 </html>
