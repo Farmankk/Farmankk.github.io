@@ -1,0 +1,21 @@
+{
+  "name": "dream-drive-car-rental",
+  "version": "1.0.0",
+  "description": "Ultra-modern luxury car rental one-page web with real-time quotation calculator and admin panel",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "car-rental",
+    "luxury",
+    "quotation-calculator",
+    "admin-panel"
+  ],
+  "author": "Dream Drive",
+  "license": "MIT",
+  "devDependencies": {
+    "javascript-obfuscator": "^5.7.0",
+    "tailwindcss": "^3.4.17"
+  }
+}

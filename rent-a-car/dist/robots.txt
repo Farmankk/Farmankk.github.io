@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /api/admin/
+Disallow: /wp-admin/
+Disallow: /wp-content/
+Disallow: /feed/
+Disallow: /comments/feed/
+
+Sitemap: https://car4rent.com.pk/sitemap.xml

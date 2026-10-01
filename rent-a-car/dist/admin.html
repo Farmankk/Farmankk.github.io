@@ -1,0 +1,2969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    (function(){
+      fetch('/api/license-status').then(function(r){return r.json();}).then(function(d){
+        if(d && d.isLicensed === false){ window.location.href = '/activate'; }
+      }).catch(function(){});
+    })();
+  </script>
+  <title id="adminPageTitle">Car4Rent | Executive Admin Portal</title>
+  <link rel="icon" id="siteFavicon" type="image/x-icon" href="/favicon.ico">
+  
+  <!-- Tailwind CSS -->
+  <script src="/js/tailwind.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              black: '#0c0d0e',
+              dark: '#16181b',
+              accent: '#e11d48',
+              gold: '#c29b38'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="/js/lucide.min.js"></script>
+  
+  <!-- Fonts & Custom Styles -->
+  <link rel="stylesheet" href="/css/fonts.css">
+  <link rel="stylesheet" href="css/styles.css?v=3.0">
+</head>
+<body class="bg-[#0e1014] text-zinc-100 min-h-screen font-sans antialiased">
+
+  <!-- ==================================================== -->
+  <!-- 5. SECURE LOGIN MODAL (Username & Password) -->
+  <!-- ==================================================== -->
+  <div id="loginModal" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-[#161820] border border-white/10 rounded-3xl p-8 max-w-md w-full shadow-2xl text-center">
+      <div class="w-14 h-14 bg-rose-600/20 text-rose-500 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-rose-500/30">
+        <i data-lucide="shield-check" class="w-7 h-7"></i>
+      </div>
+      <h2 id="loginModalTitle" class="text-2xl font-bold font-heading text-white">Car4Rent Admin Portal</h2>
+      <p class="text-xs text-zinc-400 mt-2">Enter your administrator credentials to access the central database.</p>
+      
+      <form onsubmit="handleAdminLogin(event)" class="mt-6 space-y-4 text-left" autocomplete="off">
+        <div>
+          <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Username</label>
+          <input 
+            type="text" 
+            id="adminUsernameInput" 
+            placeholder="Enter your username" 
+            required 
+            autocomplete="username"
+            class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:ring-2 focus:ring-rose-500 focus:outline-none"
+          >
+        </div>
+        <div>
+          <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Password</label>
+          <div class="relative">
+            <input 
+              type="password" 
+              id="adminPasswordInput" 
+              placeholder="Enter your password" 
+              required 
+              autocomplete="current-password"
+              class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-3 pr-11 text-white text-sm focus:ring-2 focus:ring-rose-500 focus:outline-none"
+            >
+            <button 
+              type="button" 
+              onclick="togglePasswordInput('adminPasswordInput', 'loginEyeIcon')" 
+              class="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white p-1" 
+              title="Show / Hide Password">
+              <i data-lucide="eye" id="loginEyeIcon" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <div id="loginError" class="text-rose-500 text-xs font-semibold hidden text-center">
+          Invalid username or password.
+        </div>
+
+        <button 
+          type="submit" 
+          class="w-full py-3.5 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-sm mt-2">
+          <span>Authenticate & Access</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </form>
+
+      <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-zinc-500">
+        <span class="flex items-center gap-1.5 text-emerald-400 font-mono text-[11px]"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> 256-bit Encrypted Session</span>
+        <a href="index.html" class="text-zinc-400 hover:text-white transition-colors">Return to Site &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================================================== -->
+  <!-- MAIN ADMIN CONSOLE APP -->
+  <!-- ==================================================== -->
+  <div id="adminApp" class="hidden min-h-screen flex flex-col">
+    
+    <!-- Top Header -->
+    <header class="bg-[#14161f] border-b border-white/10 sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        
+        <div id="adminHeaderBrandContainer" class="flex items-center gap-3">
+          <div id="adminHeaderLogoIcon" class="w-10 h-10 bg-rose-600 text-white rounded-xl flex items-center justify-center font-black">
+            <span class="text-xl font-heading">D</span>
+          </div>
+          <div>
+            <div class="text-lg font-bold font-heading text-white flex items-center gap-2">
+              <span id="adminSiteNameDisplay">Car4Rent</span>
+              <span class="text-[10px] font-mono text-zinc-400 bg-white/10 px-2 py-0.5 rounded">Central Database Active</span>
+            </div>
+            <div class="text-[11px] text-zinc-400">Logged in as: <strong id="loggedInUserDisplay" class="text-white">Admin</strong></div>
+          </div>
+        </div>
+
+        <!-- Right Header Items -->
+        <div class="flex items-center gap-2.5">
+          <a href="/proposal" id="btnClientProposal" target="_blank" class="hidden px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-purple-950/40 transition-all items-center gap-1.5" title="Open Client Commercial Valuation & Module Pricing">
+            <i data-lucide="file-text" class="w-3.5 h-3.5"></i> Client Proposal & Pricing
+          </a>
+          <a href="index.html" target="_blank" class="px-4 py-2 bg-white/10 hover:bg-white/15 text-xs font-semibold rounded-xl text-zinc-200 transition-all flex items-center gap-1.5">
+            <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Open Live Site
+          </a>
+          <button onclick="handleAdminLogout()" class="px-4 py-2 bg-rose-950/40 hover:bg-rose-900/60 border border-rose-800/50 text-rose-300 text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5">
+            <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Sign Out
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Navigation Subheader (Tabs) -->
+    <div class="bg-[#171a24] border-b border-white/10 overflow-x-auto">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 py-2.5">
+        <button onclick="switchTab('fleet')" id="tabBtn-fleet" class="admin-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all bg-white text-black shadow">
+          🚗 Cars Inventory
+        </button>
+        <button onclick="switchTab('categories')" id="tabBtn-categories" class="admin-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all text-zinc-400 hover:text-white">
+          📁 Categories
+        </button>
+        <button onclick="switchTab('brands')" id="tabBtn-brands" class="admin-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all text-zinc-400 hover:text-white">
+          🏷️ Brands
+        </button>
+        <button onclick="switchTab('offerEmergency')" id="tabBtn-offerEmergency" class="admin-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all text-zinc-400 hover:text-white">
+          🚨 Offer & Emergency
+        </button>
+        <button onclick="switchTab('brandingFooter')" id="tabBtn-brandingFooter" class="admin-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all text-zinc-400 hover:text-white">
+          🎨 Logo, Name & Footer
+        </button>
+        <button onclick="switchTab('reviews')" id="tabBtn-reviews" class="admin-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all text-zinc-400 hover:text-white">
+          ⭐ Client Reviews
+        </button>
+        <button onclick="switchTab('users')" id="tabBtn-users" class="admin-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all text-zinc-400 hover:text-white">
+          👥 Admin Users
+        </button>
+        <button onclick="switchTab('quotes')" id="tabBtn-quotes" class="admin-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all text-zinc-400 hover:text-white flex items-center gap-1.5">
+          <span>📋 Quotations</span>
+          <span id="quotesCountBadge" class="bg-rose-600 text-white text-[10px] font-mono px-1.5 py-0.5 rounded-full">0</span>
+        </button>
+        <button onclick="switchTab('menus')" id="tabBtn-menus" class="admin-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all text-zinc-400 hover:text-white">
+          🧭 Navigation Menus
+        </button>
+        <button onclick="switchTab('seo')" id="tabBtn-seo" class="admin-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all text-rose-300 hover:text-white flex items-center gap-1.5 bg-rose-950/40 border border-rose-800/40">
+          <span>🎯 SEO & Rankings (Karachi)</span>
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        </button>
+        <button onclick="switchTab('blogs')" id="tabBtn-blogs" class="admin-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all text-sky-300 hover:text-white flex items-center gap-1.5 bg-sky-950/30 border border-sky-800/40">
+          <span>📰 Blog & Guides</span>
+          <span id="blogsCountBadge" class="bg-sky-600 text-white text-[10px] font-mono px-1.5 py-0.5 rounded-full">3</span>
+        </button>
+        <button onclick="switchTab('content')" id="tabBtn-content" class="admin-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all text-purple-300 hover:text-white flex items-center gap-1.5 bg-purple-950/30 border border-purple-800/40">
+          <span>🔤 Typography & Site Content</span>
+        </button>
+        <button onclick="switchTab('calculator')" id="tabBtn-calculator" class="admin-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all text-amber-300 hover:text-white flex items-center gap-1.5 bg-amber-950/30 border border-amber-800/40">
+          <span>🧮 Calculator & Estimation</span>
+        </button>
+        <button onclick="switchTab('license')" id="tabBtn-license" class="admin-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all text-emerald-300 hover:text-white flex items-center gap-1.5 bg-emerald-950/30 border border-emerald-800/40">
+          <span>🛡️ License & Security</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-8">
+      
+      <!-- Top Metrics Bar -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div class="bg-[#161822] border border-white/10 rounded-2xl p-4">
+          <div class="text-[11px] uppercase tracking-wider text-zinc-400">Total Cars</div>
+          <div class="text-2xl font-bold font-heading text-white mt-1" id="kpiCars">0</div>
+        </div>
+        <div class="bg-[#161822] border border-white/10 rounded-2xl p-4">
+          <div class="text-[11px] uppercase tracking-wider text-zinc-400">Categories</div>
+          <div class="text-2xl font-bold font-heading text-blue-400 mt-1" id="kpiCategories">0</div>
+        </div>
+        <div class="bg-[#161822] border border-white/10 rounded-2xl p-4">
+          <div class="text-[11px] uppercase tracking-wider text-zinc-400">Active Brands</div>
+          <div class="text-2xl font-bold font-heading text-amber-400 mt-1" id="kpiBrands">0</div>
+        </div>
+        <div class="bg-[#161822] border border-white/10 rounded-2xl p-4">
+          <div class="text-[11px] uppercase tracking-wider text-zinc-400">Client Reviews</div>
+          <div class="text-2xl font-bold font-heading text-emerald-400 mt-1" id="kpiReviews">0</div>
+        </div>
+        <div class="bg-[#161822] border border-white/10 rounded-2xl p-4 col-span-2 sm:col-span-1">
+          <div class="text-[11px] uppercase tracking-wider text-zinc-400">Received Quotes</div>
+          <div class="text-2xl font-bold font-heading text-rose-500 mt-1" id="kpiQuotes">0</div>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 1: CARS INVENTORY (PKR Rates & Photo Upload) -->
+      <!-- ============================================== -->
+      <div id="tabContent-fleet" class="tab-pane space-y-6">
+        
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <h3 class="text-xl font-bold font-heading text-white">Fleet Inventory (PKR)</h3>
+            <p class="text-xs text-zinc-400 mt-0.5">Manage luxury cars, specs, upload photos, and set daily rates in Pakistani Rupees.</p>
+          </div>
+          <button onclick="openCarModal('add')" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center gap-1.5 self-start sm:self-auto">
+            <i data-lucide="plus" class="w-4 h-4"></i> Add New Vehicle
+          </button>
+        </div>
+
+        <div class="bg-[#161822] border border-white/10 rounded-2xl overflow-hidden shadow-xl">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-zinc-300">
+              <thead class="bg-[#1f2330] text-xs uppercase tracking-wider text-zinc-400 border-b border-white/10">
+                <tr>
+                  <th class="px-6 py-4">Vehicle</th>
+                  <th class="px-6 py-4">Category</th>
+                  <th class="px-6 py-4">Daily Rate (PKR)</th>
+                  <th class="px-6 py-4">Key Specs</th>
+                  <th class="px-6 py-4">Featured</th>
+                  <th class="px-6 py-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="fleetTableBody" class="divide-y divide-white/5">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 2: CATEGORIES (Add / View / Edit / Delete) -->
+      <!-- ============================================== -->
+      <div id="tabContent-categories" class="tab-pane hidden space-y-6">
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-xl font-bold font-heading text-white">Categories Management</h3>
+            <p class="text-xs text-zinc-400 mt-0.5">Add, edit, or delete categories. They immediately update filter tabs on the homepage.</p>
+          </div>
+          <button onclick="openCategoryModal('add')" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl transition-all flex items-center gap-1.5">
+            <i data-lucide="plus" class="w-4 h-4"></i> Add Category
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5" id="categoriesGrid">
+          <!-- Dynamically populated categories -->
+        </div>
+
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 3: BRAND PARTNERS (Add / Edit / Delete) -->
+      <!-- ============================================== -->
+      <div id="tabContent-brands" class="tab-pane hidden space-y-6">
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-xl font-bold font-heading text-white">Brand Partners Ticker</h3>
+            <p class="text-xs text-zinc-400 mt-0.5">Manage the brands displayed in the prestigious brand partner ticker.</p>
+          </div>
+        </div>
+
+        <!-- Add Brand Input Box -->
+        <div class="bg-[#161822] p-5 rounded-2xl border border-white/10 flex items-center gap-3 max-w-lg">
+          <input 
+            type="text" 
+            id="newBrandInput" 
+            placeholder="Enter Brand Name (e.g. FERRARI, BENTLEY)..." 
+            class="flex-1 bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-sm uppercase text-white focus:outline-none"
+          >
+          <button onclick="handleAddBrand()" class="px-5 py-2.5 bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs rounded-xl transition-all">
+            + Add Brand
+          </button>
+        </div>
+
+        <div class="flex flex-wrap gap-3" id="brandsListContainer">
+          <!-- Dynamically rendered brand tags -->
+        </div>
+
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 4: LIMITED OFFER & EMERGENCY NUMBER & WHATSAPP -->
+      <!-- ============================================== -->
+      <div id="tabContent-offerEmergency" class="tab-pane hidden space-y-8">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          
+          <!-- Emergency & WhatsApp Settings -->
+          <div class="bg-[#161822] border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
+            <div class="border-b border-white/10 pb-4">
+              <h3 class="text-lg font-bold font-heading text-white flex items-center gap-2">
+                <i data-lucide="phone-call" class="w-5 h-5 text-rose-500"></i> Emergency & WhatsApp Numbers
+              </h3>
+              <p class="text-xs text-zinc-400 mt-1">Updates the 24/7 hotline and WhatsApp concierge on website header & mobile.</p>
+            </div>
+
+            <form onsubmit="handleSaveEmergencySettings(event)" class="space-y-4">
+              <div>
+                <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Emergency Dial Number (For tel: link)</label>
+                <input 
+                  type="text" 
+                  id="settingEmergencyPhone" 
+                  placeholder="+92 300 5557433" 
+                  required 
+                  class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-3 text-white font-mono text-sm focus:ring-2 focus:ring-rose-500 focus:outline-none"
+                >
+              </div>
+
+              <div>
+                <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Emergency Display Text</label>
+                <input 
+                  type="text" 
+                  id="settingEmergencyDisplay" 
+                  placeholder="+92 300 555-RIDE" 
+                  required 
+                  class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-3 text-white font-mono text-sm focus:ring-2 focus:ring-rose-500 focus:outline-none"
+                >
+              </div>
+
+              <div>
+                <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">WhatsApp Concierge Number (with country code, no +)</label>
+                <input 
+                  type="text" 
+                  id="settingWhatsappNumber" 
+                  placeholder="923005557433" 
+                  required 
+                  class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-3 text-white font-mono text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                >
+              </div>
+
+              <div>
+                <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">WhatsApp Default Welcome Message</label>
+                <textarea 
+                  id="settingWhatsappHelpText" 
+                  rows="2" 
+                  class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-3 text-white text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none"></textarea>
+              </div>
+
+              <button type="submit" class="px-6 py-3 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl text-xs transition-all flex items-center gap-1.5">
+                <i data-lucide="check" class="w-4 h-4"></i> Save Emergency & WhatsApp Settings
+              </button>
+            </form>
+          </div>
+
+          <!-- Limited Offer Banner Settings -->
+          <div class="bg-[#161822] border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
+            <div class="border-b border-white/10 pb-4 flex items-center justify-between">
+              <div>
+                <h3 class="text-lg font-bold font-heading text-white flex items-center gap-2">
+                  <i data-lucide="sparkles" class="w-5 h-5 text-amber-400"></i> Top Offer Banner Settings
+                </h3>
+                <p class="text-xs text-zinc-400 mt-1">Configure announcement ticker, promo code, and discount %.</p>
+              </div>
+            </div>
+
+            <form onsubmit="handleSaveOfferSettings(event)" class="space-y-4">
+              <!-- Active Toggle -->
+              <div class="flex items-center gap-3 p-3 bg-[#202430] rounded-xl border border-white/10">
+                <input type="checkbox" id="settingOfferActive" class="w-4 h-4 rounded text-rose-600 focus:ring-rose-500 bg-zinc-800 border-zinc-600">
+                <label for="settingOfferActive" class="text-xs font-bold text-white cursor-pointer">
+                  Display Top Offer Banner on Live Website
+                </label>
+              </div>
+
+              <div>
+                <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Badge Title</label>
+                <input 
+                  type="text" 
+                  id="settingOfferBadge" 
+                  placeholder="Limited Offer" 
+                  class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none"
+                >
+              </div>
+
+              <div>
+                <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Offer Announcement Text</label>
+                <input 
+                  type="text" 
+                  id="settingOfferText" 
+                  placeholder="Get 20% OFF on 3+ days rentals! Use promo code:" 
+                  class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none"
+                >
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Promo Code</label>
+                  <input 
+                    type="text" 
+                    id="settingOfferPromoCode" 
+                    placeholder="LUXURY20" 
+                    class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-3 text-white font-mono uppercase text-sm focus:outline-none"
+                  >
+                </div>
+                <div>
+                  <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Discount %</label>
+                  <input 
+                    type="number" 
+                    id="settingOfferDiscountPercent" 
+                    placeholder="20" 
+                    min="1" 
+                    max="90" 
+                    class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-3 text-white font-mono text-sm focus:outline-none"
+                  >
+                </div>
+              </div>
+
+              <button type="submit" class="px-6 py-3 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-xl text-xs transition-all flex items-center gap-1.5">
+                <i data-lucide="check" class="w-4 h-4"></i> Save Offer Settings
+              </button>
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 5: LOGO, NAME & FOOTER MANAGEMENT -->
+      <!-- ============================================== -->
+      <div id="tabContent-brandingFooter" class="tab-pane hidden space-y-8">
+        
+        <form onsubmit="handleSaveBrandingAndFooter(event)" class="bg-[#161822] border border-white/10 rounded-3xl p-6 sm:p-10 space-y-8 max-w-4xl mx-auto shadow-2xl">
+          
+          <!-- Section A: Logo & Brand Name -->
+          <div class="space-y-5">
+            <div class="border-b border-white/10 pb-3 flex items-center justify-between">
+              <div>
+                <h3 class="text-lg font-bold font-heading text-white flex items-center gap-2">
+                  <i data-lucide="award" class="w-5 h-5 text-rose-500"></i> Website Logo & Brand Display Options
+                </h3>
+                <p class="text-xs text-zinc-400 mt-0.5">Choose whether to display only your logo image, only text, or a combination.</p>
+              </div>
+            </div>
+
+            <!-- Logo Display Mode Selector -->
+            <div class="p-4 bg-[#202430] rounded-2xl border border-white/10">
+              <label class="block text-xs uppercase font-bold text-zinc-300 mb-2">
+                Header & Footer Logo Display Mode *
+              </label>
+              <select 
+                id="settingLogoDisplayMode" 
+                onchange="handleLogoDisplayModeChange(this.value)" 
+                class="w-full bg-[#181a24] border border-white/15 rounded-xl px-4 py-3 text-white text-sm font-semibold focus:ring-2 focus:ring-rose-500 focus:outline-none cursor-pointer">
+                <option value="logo_only">🖼️ Only Logo Image (No extra text, no 'D' box)</option>
+                <option value="text_only">✍️ Site Name & Tagline Only (Clean text, no icon box)</option>
+                <option value="logo_and_text">✨ Logo Image + Site Name & Tagline</option>
+                <option value="icon_and_text">🔤 Custom Letter Icon Box + Site Name & Tagline</option>
+              </select>
+              <p class="text-[11px] text-zinc-400 mt-2" id="logoModeHint">
+                If you choose "Only Logo Image", your uploaded logo image will appear alone with no extra text or 'D' icon box.
+              </p>
+            </div>
+
+            <!-- Logo Image Upload & URL Box -->
+            <div class="p-5 bg-[#1a1d27] rounded-2xl border border-white/10 space-y-3" id="logoImageSection">
+              <label class="block text-xs uppercase font-bold text-zinc-300">
+                Upload Logo Image (File or Web Link)
+              </label>
+              
+              <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
+                <div class="md:col-span-8 space-y-3">
+                  <!-- File input -->
+                  <div class="flex items-center gap-3">
+                    <input 
+                      type="file" 
+                      id="logoFileInput" 
+                      accept="image/*" 
+                      onchange="handleLogoFileUpload(event)" 
+                      class="text-xs text-zinc-400 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:bg-white/10 file:text-white file:font-semibold hover:file:bg-white/20 cursor-pointer"
+                    >
+                  </div>
+                  <!-- URL input -->
+                  <div>
+                    <span class="text-[10px] uppercase tracking-wider text-zinc-400 block mb-1">Or Paste Direct Logo Image URL:</span>
+                    <input 
+                      type="text" 
+                      id="settingLogoUrl" 
+                      oninput="handleLogoUrlInput(this.value)" 
+                      placeholder="https://... or /uploads/... (Leave empty if using file upload)" 
+                      class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white font-mono focus:outline-none"
+                    >
+                  </div>
+                </div>
+
+                <!-- Live Preview of Logo -->
+                <div class="md:col-span-4 flex flex-col items-center">
+                  <span class="text-[10px] uppercase tracking-wider text-zinc-400 block mb-1.5 self-start">Logo Preview</span>
+                  <div class="h-20 w-full bg-[#13151c] rounded-xl border border-white/10 p-2 flex items-center justify-center relative overflow-hidden">
+                    <img id="logoImagePreview" src="" alt="No Logo Selected" class="max-h-full max-w-full object-contain hidden">
+                    <span id="logoNoPreviewText" class="text-xs text-zinc-600 italic">No image uploaded</span>
+                  </div>
+                  <button 
+                    type="button" 
+                    onclick="removeLogoImage()" 
+                    id="removeLogoBtn" 
+                    class="text-[11px] text-rose-400 hover:text-rose-300 mt-1.5 hidden">
+                    Remove Logo Image
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Site / Company Name</label>
+                <input 
+                  type="text" 
+                  id="settingSiteName" 
+                  placeholder="e.g. Car4Rent" 
+                  class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none"
+                >
+              </div>
+
+              <div>
+                <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Tagline</label>
+                <input 
+                  type="text" 
+                  id="settingTagline" 
+                  placeholder="e.g. Enjoy The pleasure of self drive" 
+                  class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none"
+                >
+              </div>
+            </div>
+
+            <!-- Optional Letter Icon (Only shown if user chose icon_and_text) -->
+            <div id="logoIconSection">
+              <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">
+                Custom Icon Letter / Text (Leave blank to hide icon box)
+              </label>
+              <input 
+                type="text" 
+                id="settingLogoText" 
+                placeholder="Leave blank to completely hide the icon box" 
+                maxlength="5" 
+                class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm font-mono focus:outline-none"
+              >
+              <p class="text-[11px] text-zinc-500 mt-1">If empty, no square box or letter will appear on the website.</p>
+            </div>
+          </div>
+
+          <!-- Section B: Complete Footer Content -->
+          <div class="space-y-4 pt-4 border-t border-white/10">
+            <h3 class="text-lg font-bold font-heading text-white border-b border-white/10 pb-3 flex items-center gap-2">
+              <i data-lucide="layout" class="w-5 h-5 text-blue-400"></i> Complete Footer Settings
+            </h3>
+
+            <div>
+              <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Footer About Description</label>
+              <textarea 
+                id="settingFooterAbout" 
+                rows="3" 
+                class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none"></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Footer Support Phone</label>
+                <input 
+                  type="text" 
+                  id="settingFooterPhone" 
+                  class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none"
+                >
+              </div>
+
+              <div>
+                <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Footer Official Email</label>
+                <input 
+                  type="email" 
+                  id="settingFooterEmail" 
+                  class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none"
+                >
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Physical Office Addresses</label>
+              <input 
+                type="text" 
+                id="settingFooterAddress" 
+                placeholder="Main Boulevard, Gulberg III, Lahore / Clifton, Karachi" 
+                class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none"
+              >
+            </div>
+
+            <div>
+              <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Copyright Line</label>
+              <input 
+                type="text" 
+                id="settingFooterCopyright" 
+                placeholder="© 2026 Car4Rent PVT LTD. All rights reserved." 
+                class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none"
+              >
+            </div>
+          </div>
+
+          <div class="pt-4 flex justify-end">
+            <button type="submit" class="px-8 py-3.5 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl text-sm transition-all flex items-center gap-2">
+              <i data-lucide="check" class="w-4 h-4"></i> Save All Branding & Footer Changes
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 6: CLIENT REVIEWS (Add / Active / Disable) -->
+      <!-- ============================================== -->
+      <div id="tabContent-reviews" class="tab-pane hidden space-y-6">
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-xl font-bold font-heading text-white">Client Reviews Management</h3>
+            <p class="text-xs text-zinc-400 mt-0.5">Control client testimonials. Toggle any review Active or Inactive to show/hide on homepage.</p>
+          </div>
+          <button onclick="openReviewModal('add')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition-all flex items-center gap-1.5">
+            <i data-lucide="plus" class="w-4 h-4"></i> Add Review
+          </button>
+        </div>
+
+        <div class="bg-[#161822] border border-white/10 rounded-2xl overflow-hidden shadow-xl">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-zinc-300">
+              <thead class="bg-[#1f2330] text-xs uppercase tracking-wider text-zinc-400 border-b border-white/10">
+                <tr>
+                  <th class="px-6 py-4">Client</th>
+                  <th class="px-6 py-4">City / Location</th>
+                  <th class="px-6 py-4">Rating</th>
+                  <th class="px-6 py-4">Review Text</th>
+                  <th class="px-6 py-4">Display Status</th>
+                  <th class="px-6 py-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="reviewsTableBody" class="divide-y divide-white/5">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 7: ADMIN USERS (Add New User / Manage) -->
+      <!-- ============================================== -->
+      <div id="tabContent-users" class="tab-pane hidden space-y-6">
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-xl font-bold font-heading text-white">Admin Users Management</h3>
+            <p class="text-xs text-zinc-400 mt-0.5">Create administrative logins for your staff or managers to manage the fleet.</p>
+          </div>
+          <button onclick="openUserModal()" class="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl transition-all flex items-center gap-1.5">
+            <i data-lucide="user-plus" class="w-4 h-4"></i> + Add New Admin User
+          </button>
+        </div>
+
+        <div class="bg-[#161822] border border-white/10 rounded-2xl overflow-hidden shadow-xl">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-zinc-300">
+              <thead class="bg-[#1f2330] text-xs uppercase tracking-wider text-zinc-400 border-b border-white/10">
+                <tr>
+                  <th class="px-5 py-4">Full Name</th>
+                  <th class="px-5 py-4">Username</th>
+                  <th class="px-5 py-4">Security</th>
+                  <th class="px-5 py-4">Role</th>
+                  <th class="px-5 py-4">Status</th>
+                  <th class="px-5 py-4">Created Date</th>
+                  <th class="px-5 py-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody" class="divide-y divide-white/5">
+                <!-- Dynamically rendered users -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 8: CLIENT QUOTATIONS & LEADS -->
+      <!-- ============================================== -->
+      <div id="tabContent-quotes" class="tab-pane hidden space-y-6">
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-xl font-bold font-heading text-white">Client Quotations & Leads (PKR)</h3>
+            <p class="text-xs text-zinc-400 mt-0.5">Inquiries submitted via the live calculator on the homepage.</p>
+          </div>
+          <button onclick="clearAllQuotes()" class="text-xs text-rose-400 hover:text-rose-300 px-3 py-1.5 rounded-lg border border-rose-800/40 bg-rose-950/20 transition-colors">
+            Clear History
+          </button>
+        </div>
+
+        <div class="bg-[#161822] border border-white/10 rounded-2xl overflow-hidden shadow-xl">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-zinc-300">
+              <thead class="bg-[#1f2330] text-xs uppercase tracking-wider text-zinc-400 border-b border-white/10">
+                <tr>
+                  <th class="px-6 py-4">Date & Time</th>
+                  <th class="px-6 py-4">Client</th>
+                  <th class="px-6 py-4">Vehicle</th>
+                  <th class="px-6 py-4">Window</th>
+                  <th class="px-6 py-4">Add-ons</th>
+                  <th class="px-6 py-4">Total (PKR)</th>
+                  <th class="px-6 py-4">Status</th>
+                  <th class="px-6 py-4 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="quotesTableBody" class="divide-y divide-white/5">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 9: NAVIGATION MENUS (Add / Edit / Delete) -->
+      <!-- ============================================== -->
+      <div id="tabContent-menus" class="tab-pane hidden space-y-6">
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-xl font-bold font-heading text-white">Navigation Menus</h3>
+            <p class="text-xs text-zinc-400 mt-0.5">Manage all top navigation links. Add, edit, or delete menus. Changes reflect live on the website.</p>
+          </div>
+          <button onclick="openMenuModal('add')" class="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl transition-all flex items-center gap-1.5">
+            <i data-lucide="plus" class="w-4 h-4"></i> Add Menu Item
+          </button>
+        </div>
+
+        <div class="bg-[#161822] border border-white/10 rounded-2xl overflow-hidden shadow-xl">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-zinc-300">
+              <thead class="bg-[#1f2330] text-xs uppercase tracking-wider text-zinc-400 border-b border-white/10">
+                <tr>
+                  <th class="px-6 py-4">#</th>
+                  <th class="px-6 py-4">Menu Label</th>
+                  <th class="px-6 py-4">URL / Anchor</th>
+                  <th class="px-6 py-4">Highlight Style</th>
+                  <th class="px-6 py-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="menusTableBody" class="divide-y divide-white/5">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 10: SEO & RANKINGS ENGINE (Karachi Plan)   -->
+      <!-- ============================================== -->
+      <div id="tabContent-seo" class="tab-pane hidden space-y-8">
+        
+        <!-- Header & Quick Metrics -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-rose-500/20 border border-rose-500/30 rounded-full text-rose-400 text-xs font-bold uppercase tracking-wider mb-2">
+              <i data-lucide="target" class="w-3.5 h-3.5"></i> Karachi Local SEO Engine
+            </div>
+            <h3 class="text-2xl font-bold font-heading text-white">Karachi SEO & Search Rankings Hub</h3>
+            <p class="text-xs text-zinc-400 mt-1">Manage all on-page SEO, landing pages, Karachi neighborhoods matrix, schema markup, sitemap & robots.txt dynamically.</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <a href="/sitemap.xml" target="_blank" class="px-4 py-2 bg-[#202430] hover:bg-[#282d3d] border border-white/10 rounded-xl text-xs font-bold text-zinc-200 transition-all flex items-center gap-1.5">
+              <i data-lucide="file-code" class="w-3.5 h-3.5 text-blue-400"></i> View Sitemap.xml
+            </a>
+            <a href="/robots.txt" target="_blank" class="px-4 py-2 bg-[#202430] hover:bg-[#282d3d] border border-white/10 rounded-xl text-xs font-bold text-zinc-200 transition-all flex items-center gap-1.5">
+              <i data-lucide="shield" class="w-3.5 h-3.5 text-emerald-400"></i> View Robots.txt
+            </a>
+          </div>
+        </div>
+
+        <!-- SEO Sub-Tabs Navigation -->
+        <div class="flex items-center gap-2 border-b border-white/10 pb-3 overflow-x-auto">
+          <button type="button" onclick="switchSeoSubTab('global')" id="seoSubBtn-global" class="seo-sub-btn px-4 py-2 rounded-xl text-xs font-bold transition-all bg-white text-black shadow">
+            🌐 Global SEO & SERP Simulator
+          </button>
+          <button type="button" onclick="switchSeoSubTab('pages')" id="seoSubBtn-pages" class="seo-sub-btn px-4 py-2 rounded-xl text-xs font-bold transition-all text-zinc-400 hover:text-white">
+            📄 Dedicated Landing Pages (<span id="seoPagesCount">0</span>)
+          </button>
+          <button type="button" onclick="switchSeoSubTab('areas')" id="seoSubBtn-areas" class="seo-sub-btn px-4 py-2 rounded-xl text-xs font-bold transition-all text-zinc-400 hover:text-white">
+            📍 Karachi Local Areas (<span id="seoAreasCount">0</span>)
+          </button>
+          <button type="button" onclick="switchSeoSubTab('faqs')" id="seoSubBtn-faqs" class="seo-sub-btn px-4 py-2 rounded-xl text-xs font-bold transition-all text-zinc-400 hover:text-white">
+            ❓ Homepage FAQs & Schema (<span id="seoFaqsCount">0</span>)
+          </button>
+          <button type="button" onclick="switchSeoSubTab('technical')" id="seoSubBtn-technical" class="seo-sub-btn px-4 py-2 rounded-xl text-xs font-bold transition-all text-zinc-400 hover:text-white">
+            ⚙️ Sitemap & Robots.txt
+          </button>
+        </div>
+
+        <!-- SUB-TAB 1: Global SEO & SERP Simulator -->
+        <div id="seoSubContent-global" class="seo-sub-pane space-y-6">
+          
+          <!-- Live Google Search Result Simulator -->
+          <div class="bg-[#161822] border border-white/10 rounded-2xl p-6 shadow-xl">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs uppercase tracking-wider text-zinc-400 font-bold flex items-center gap-2">
+                <i data-lucide="eye" class="w-4 h-4 text-emerald-400"></i> Google Karachi SERP Snippet Preview
+              </span>
+              <span class="text-[10px] text-zinc-500 font-mono">Live Google Desktop/Mobile Simulator</span>
+            </div>
+            
+            <div class="bg-white rounded-xl p-5 border border-zinc-200 text-left max-w-2xl">
+              <div class="flex items-start justify-between gap-4">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1.5">
+                    <div id="serpPreviewFaviconWrap" class="w-6 h-6 rounded-full bg-zinc-900 border border-zinc-200 overflow-hidden flex items-center justify-center text-[10px] font-bold text-white shadow-sm flex-shrink-0">C</div>
+                    <div>
+                      <div class="text-[11px] text-zinc-800 font-sans leading-none" id="serpPreviewDomain">car4rent.pk</div>
+                      <div class="text-[10px] text-zinc-500 leading-none mt-0.5" id="serpPreviewUrl">https://car4rent.pk/</div>
+                    </div>
+                  </div>
+                  <h4 class="text-[#1a0dab] hover:underline text-lg font-medium cursor-pointer leading-snug" id="serpPreviewTitle">
+                    Rent a Car in Karachi | Car 4 Rent
+                  </h4>
+                  <p class="text-[#4d5156] text-xs mt-1.5 leading-relaxed" id="serpPreviewSnippet">
+                    Car 4 Rent provides reliable rent a car in Karachi. Daily, weekly & monthly car rental on self-drive with zero deposit. 24/7 Karachi Airport pickup & doorstep delivery.
+                  </p>
+                </div>
+                <div id="serpPreviewImageWrap" class="w-24 h-24 rounded-xl overflow-hidden border border-zinc-200 flex-shrink-0 bg-zinc-100 hidden sm:block">
+                  <img id="serpPreviewImage" src="" alt="Google Thumbnail" class="w-full h-full object-cover">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Global Settings Form -->
+          <form id="globalSeoForm" onsubmit="handleSaveGlobalSeo(event)" class="bg-[#161822] border border-white/10 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-4 gap-2">
+              <h3 class="text-lg font-bold font-heading text-white flex items-center gap-2">
+                <i data-lucide="sliders" class="w-5 h-5 text-rose-500"></i> Meta Tags & Homepage SEO Setup
+              </h3>
+              <span id="aiScoreBadge" class="px-3 py-1 rounded-full text-xs font-bold font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5 self-start sm:self-auto">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                AI SEO Score: <span id="aiScoreNumber">96</span>/100 (<span id="aiScoreStatus">Market Ready</span>)
+              </span>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- AI SEO COPILOT & MARKET AUDITOR TOOLBAR -->
+            <!-- ============================================== -->
+            <div class="bg-gradient-to-br from-[#1a172c] via-[#161826] to-[#1e1528] border border-purple-500/30 rounded-2xl p-5 shadow-2xl relative overflow-hidden">
+              <div class="absolute -right-10 -top-10 w-40 h-40 bg-purple-500/10 rounded-full blur-2xl pointer-events-none"></div>
+              
+              <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-white/10">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-purple-600/30 border border-purple-500/40 flex items-center justify-center text-purple-300 shadow-inner">
+                    <i data-lucide="sparkles" class="w-5 h-5 text-purple-400"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-white tracking-wide flex items-center gap-2">
+                      AI SEO Copilot (Karachi Market 2026)
+                      <span class="px-2 py-0.5 rounded text-[9px] font-bold uppercase bg-purple-500/20 text-purple-300 border border-purple-500/30">Live Advisor</span>
+                    </h4>
+                    <p class="text-xs text-zinc-400 mt-0.5">Google ranking aur customer demand ke mutabiq live recommendations aur auto-optimization.</p>
+                  </div>
+                </div>
+
+                <!-- 1-Click Optimize Button & Strategy Picker -->
+                <div class="flex flex-wrap items-center gap-2">
+                  <select id="aiMarketStrategySelect" onchange="previewAiStrategyHint()" class="bg-[#202438] border border-purple-500/40 text-zinc-200 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-purple-400">
+                    <option value="all_rounder">🏆 Strategy: Market Leader (All-Rounder)</option>
+                    <option value="airport_express">✈️ Strategy: Airport & 24/7 Transfers</option>
+                    <option value="budget_economy">💰 Strategy: Budget & Sasti Cars</option>
+                    <option value="luxury_wedding">👑 Strategy: Luxury & VIP Weddings</option>
+                  </select>
+                  <button 
+                    type="button" 
+                    onclick="handleApplyAiStrategy()"
+                    id="btnApplyAiStrategy"
+                    class="px-4 py-2.5 bg-gradient-to-r from-purple-600 via-rose-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white text-xs font-bold rounded-xl shadow-lg transition-all flex items-center gap-2">
+                    <i data-lucide="zap" class="w-4 h-4"></i>
+                    <span>⚡ 1-Click Auto-Optimize</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Live AI Recommendations: Dos & Don'ts Grid -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 text-xs">
+                
+                <!-- Yeh Zaroor Likhein (Dos & Missing Keywords) -->
+                <div class="bg-[#10121a]/80 border border-emerald-500/20 rounded-xl p-3.5 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-emerald-400 flex items-center gap-1.5 uppercase text-[11px] tracking-wider">
+                      <i data-lucide="check-circle-2" class="w-4 h-4"></i> Recommended Practices (Dos)
+                    </span>
+                    <span class="text-[10px] text-zinc-500 font-mono">Market Match</span>
+                  </div>
+                  <ul id="aiDosList" class="space-y-1.5 text-zinc-300 text-[11px]">
+                    <!-- Dynamically populated -->
+                  </ul>
+                  
+                  <!-- Click-to-add High-Volume Market Tags -->
+                  <div id="aiMissingKeywordsContainer" class="pt-2 border-t border-white/5 hidden">
+                    <div class="text-[10px] text-zinc-400 font-semibold mb-1.5">Missing High-Search Keywords (Click to add):</div>
+                    <div id="aiMissingChips" class="flex flex-wrap gap-1.5">
+                      <!-- Dynamic chips -->
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mistakes to Avoid (Don'ts) -->
+                <div class="bg-[#10121a]/80 border border-rose-500/20 rounded-xl p-3.5 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-rose-400 flex items-center gap-1.5 uppercase text-[11px] tracking-wider">
+                      <i data-lucide="alert-triangle" class="w-4 h-4"></i> Mistakes to Avoid (Don'ts)
+                    </span>
+                    <span class="text-[10px] text-zinc-500 font-mono">Google Penalties</span>
+                  </div>
+                  <ul id="aiDontsList" class="space-y-1.5 text-zinc-300 text-[11px]">
+                    <!-- Dynamically populated -->
+                  </ul>
+
+                  <!-- Market Insight Box -->
+                  <div class="pt-2 border-t border-white/5">
+                    <div class="text-[10px] text-purple-300 font-semibold mb-1 flex items-center gap-1">
+                      <i data-lucide="lightbulb" class="w-3 h-3 text-purple-400"></i> Karachi Market Insight:
+                    </div>
+                    <p id="aiMarketInsightText" class="text-[11px] text-zinc-400 leading-relaxed">
+                      Over 60% of high-intent organic searches in Karachi target "without driver" and "airport rent a car".
+                    </p>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div class="sm:col-span-2">
+                <div class="flex justify-between items-center mb-1">
+                  <div class="flex items-center gap-2">
+                    <label class="block text-xs uppercase font-bold text-zinc-400">Homepage SEO Meta Title *</label>
+                    <button type="button" onclick="aiFillField('title')" class="text-[10px] text-purple-400 hover:text-purple-300 hover:underline flex items-center gap-1">
+                      <i data-lucide="sparkles" class="w-3 h-3"></i> AI Suggest Title
+                    </button>
+                  </div>
+                  <span class="text-[11px] text-zinc-500 font-mono" id="metaTitleCounter">0 / 60 Chars</span>
+                </div>
+                <input 
+                  type="text" 
+                  id="seoSiteTitleInput" 
+                  oninput="onSeoInputChanged()"
+                  required 
+                  class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:ring-2 focus:ring-rose-500 focus:outline-none"
+                >
+                <p class="text-[11px] text-zinc-500 mt-1">Recommended format: Primary Keyword + City | Brand Name (50–60 characters)</p>
+              </div>
+
+              <div class="sm:col-span-2">
+                <div class="flex justify-between items-center mb-1">
+                  <div class="flex items-center gap-2">
+                    <label class="block text-xs uppercase font-bold text-zinc-400">Homepage Meta Description *</label>
+                    <button type="button" onclick="aiFillField('desc')" class="text-[10px] text-purple-400 hover:text-purple-300 hover:underline flex items-center gap-1">
+                      <i data-lucide="sparkles" class="w-3 h-3"></i> AI Suggest Description
+                    </button>
+                  </div>
+                  <span class="text-[11px] text-zinc-500 font-mono" id="metaDescCounter">0 / 160 Chars</span>
+                </div>
+                <textarea 
+                  id="seoMetaDescInput" 
+                  oninput="onSeoInputChanged()"
+                  rows="3" 
+                  required 
+                  class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:ring-2 focus:ring-rose-500 focus:outline-none"></textarea>
+                <p class="text-[11px] text-zinc-500 mt-1">Include Karachi, Airport pickup, with/without driver, and high-converting CTA (140–160 characters)</p>
+              </div>
+
+              <div class="sm:col-span-2">
+                <div class="flex justify-between items-center mb-1">
+                  <label class="block text-xs uppercase font-bold text-zinc-400">Primary Target Keywords (Comma separated)</label>
+                  <button type="button" onclick="aiFillField('keywords')" class="text-[10px] text-purple-400 hover:text-purple-300 hover:underline flex items-center gap-1">
+                    <i data-lucide="sparkles" class="w-3 h-3"></i> AI Fill Keywords
+                  </button>
+                </div>
+                <textarea 
+                  id="seoMetaKeywordsInput" 
+                  oninput="onSeoInputChanged()"
+                  rows="2" 
+                  class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-white text-xs font-mono focus:outline-none"></textarea>
+              </div>
+
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <label class="block text-xs uppercase font-bold text-zinc-400">Homepage H1 Heading *</label>
+                  <button type="button" onclick="aiFillField('h1')" class="text-[10px] text-purple-400 hover:text-purple-300 hover:underline flex items-center gap-1">
+                    <i data-lucide="sparkles" class="w-3 h-3"></i> AI Suggest H1
+                  </button>
+                </div>
+                <input 
+                  type="text" 
+                  id="seoH1HeadingInput" 
+                  oninput="onSeoInputChanged()"
+                  required 
+                  class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none"
+                >
+              </div>
+
+              <div>
+                <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Canonical Domain URL</label>
+                <input 
+                  type="text" 
+                  id="seoCanonicalUrlInput" 
+                  placeholder="https://car4rent.pk" 
+                  class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm font-mono focus:outline-none"
+                >
+              </div>
+
+              <div class="sm:col-span-2">
+                <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Homepage Hero Subtitle</label>
+                <textarea 
+                  id="seoHeroSubtitleInput" 
+                  rows="2" 
+                  class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none"></textarea>
+              </div>
+            </div>
+
+            <!-- Section: Local Karachi Geo Coordinates & Google Business -->
+            <div class="pt-6 border-t border-white/10 space-y-4">
+              <h4 class="text-sm font-bold uppercase text-zinc-300 flex items-center gap-2">
+                <i data-lucide="map-pin" class="w-4 h-4 text-emerald-400"></i> Karachi Local SEO & Business Schema
+              </h4>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-xs text-zinc-400 mb-1">Target City</label>
+                  <input type="text" id="seoTargetCityInput" value="Karachi" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2 text-white text-xs">
+                </div>
+                <div>
+                  <label class="block text-xs text-zinc-400 mb-1">Latitude</label>
+                  <input type="text" id="seoLatitudeInput" value="24.8607" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2 text-white text-xs font-mono">
+                </div>
+                <div>
+                  <label class="block text-xs text-zinc-400 mb-1">Longitude</label>
+                  <input type="text" id="seoLongitudeInput" value="67.0011" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2 text-white text-xs font-mono">
+                </div>
+                <div class="sm:col-span-3">
+                  <label class="block text-xs text-zinc-400 mb-1">Google Business Profile (GBP) Link</label>
+                  <input type="text" id="seoGbpUrlInput" placeholder="https://maps.google.com/?q=..." class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2 text-white text-xs font-mono">
+                </div>
+              </div>
+            </div>
+
+            <!-- Section: Verification & Analytics Tracking -->
+            <div class="pt-6 border-t border-white/10 space-y-4">
+              <h4 class="text-sm font-bold uppercase text-zinc-300 flex items-center gap-2">
+                <i data-lucide="activity" class="w-4 h-4 text-blue-400"></i> Google Search Console & GA4 Tracking
+              </h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs text-zinc-400 mb-1">Google Search Console Verification Code</label>
+                  <input type="text" id="seoGoogleVerifInput" placeholder="e.g. AbCdEf1234567890..." class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2 text-white text-xs font-mono">
+                  <p class="text-[10px] text-zinc-500 mt-1">Value of &lt;meta name="google-site-verification" content="..."&gt;</p>
+                </div>
+                <div>
+                  <label class="block text-xs text-zinc-400 mb-1">Google Analytics 4 (GA4) Measurement ID</label>
+                  <input type="text" id="seoGa4Input" placeholder="e.g. G-XXXXXXXXXX" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2 text-white text-xs font-mono">
+                </div>
+                <div>
+                  <label class="block text-xs text-zinc-400 mb-1">Bing Webmaster Code</label>
+                  <input type="text" id="seoBingVerifInput" placeholder="e.g. 5E6B63B2F9F0D177ECC206357E67704A" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2 text-white text-xs font-mono">
+                  <p class="text-[10px] text-zinc-500 mt-1">Enter 32-character verification code: Value of &lt;meta name="msvalidate.01" content="..."&gt;</p>
+                </div>
+                <div class="sm:col-span-2 p-5 bg-[#141722] rounded-2xl border border-white/10 space-y-4">
+                  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/5 pb-3">
+                    <div>
+                      <label class="block text-xs uppercase font-bold text-white flex items-center gap-2">
+                        <i data-lucide="image" class="w-4 h-4 text-purple-400"></i>
+                        Google Search Snippet & Social Share Thumbnail (OG Image)
+                      </label>
+                      <p class="text-[11px] text-zinc-400 mt-0.5">
+                        This car image will appear next to your website in Google Search Results and WhatsApp/Facebook link previews.
+                      </p>
+                    </div>
+                    <span class="text-[10px] text-emerald-400 bg-emerald-950/60 border border-emerald-800/40 px-2.5 py-1 rounded-full font-mono flex items-center gap-1 self-start sm:self-auto">
+                      <i data-lucide="shield-check" class="w-3 h-3"></i> Hosted On Your Own Domain
+                    </span>
+                  </div>
+
+                  <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
+                    <div class="md:col-span-8 space-y-3">
+                      <!-- File upload button -->
+                      <div>
+                        <input 
+                          type="file" 
+                          id="seoOgImageFileInput" 
+                          accept="image/jpeg,image/png,image/webp" 
+                          onchange="handleSeoOgImageFileUpload(event)" 
+                          class="hidden"
+                        >
+                        <button 
+                          type="button" 
+                          onclick="document.getElementById('seoOgImageFileInput').click()" 
+                          id="btnUploadOgImage"
+                          class="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg transition-all flex items-center gap-2 cursor-pointer"
+                        >
+                          <i data-lucide="upload-cloud" class="w-4 h-4"></i>
+                          <span id="uploadOgBtnText">Upload Car Photo From Computer / Phone</span>
+                        </button>
+                        <span class="text-[10px] text-zinc-500 block mt-1.5">
+                          Click to upload any car photo (Fortuner, Prado, Civic, etc.). It will automatically be saved to your own website host!
+                        </span>
+                      </div>
+
+                      <!-- Direct URL Input (Auto-filled upon upload) -->
+                      <div>
+                        <div class="flex items-center justify-between mb-1">
+                          <span class="text-[10px] uppercase tracking-wider text-zinc-400">Live Image Link (On Your Domain):</span>
+                          <button 
+                            type="button" 
+                            onclick="clearSeoOgImage()" 
+                            id="btnClearOgImage" 
+                            class="text-[10px] text-rose-400 hover:underline flex items-center gap-1 hidden"
+                          >
+                            <i data-lucide="trash-2" class="w-3 h-3"></i> Remove Image
+                          </button>
+                        </div>
+                        <input 
+                          type="text" 
+                          id="seoOgImageInput" 
+                          oninput="onSeoOgImageUrlChanged(this.value)" 
+                          placeholder="https://car4rent.com.pk/uploads/seo-og-car.jpg or /uploads/..." 
+                          class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        >
+                      </div>
+                    </div>
+
+                    <!-- Live Image Preview Box -->
+                    <div class="md:col-span-4 flex flex-col items-center">
+                      <span class="text-[10px] uppercase tracking-wider text-zinc-400 block mb-1.5 self-start">Google Snippet Preview</span>
+                      <div class="h-24 w-full bg-[#0d0f15] rounded-xl border border-white/10 p-1 flex items-center justify-center relative overflow-hidden">
+                        <img id="seoOgImagePreview" src="" alt="SEO Thumbnail" class="h-full w-full object-cover rounded-lg hidden">
+                        <div id="seoOgNoPreviewText" class="text-center p-2 text-[11px] text-zinc-600">
+                          <i data-lucide="image" class="w-5 h-5 mx-auto mb-1 opacity-40"></i>
+                          No car image uploaded
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-4 flex justify-end">
+              <button type="submit" class="px-8 py-3.5 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl text-sm transition-all flex items-center gap-2 shadow-lg">
+                <i data-lucide="check" class="w-4 h-4"></i> Save Global SEO Configuration
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- SUB-TAB 2: Dedicated Landing Pages Manager -->
+        <div id="seoSubContent-pages" class="seo-sub-pane hidden space-y-6">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <h3 class="text-xl font-bold font-heading text-white">Dedicated Landing Pages (Airport, Luxury, Self Drive, Monthly)</h3>
+              <p class="text-xs text-zinc-400 mt-0.5">Landing pages required by your SEO plan. Each has its own URL, meta tags, schema, FAQs and content.</p>
+            </div>
+            <button onclick="openSeoPageModal('add')" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center gap-1.5">
+              <i data-lucide="plus" class="w-4 h-4"></i> Add New Landing Page
+            </button>
+          </div>
+
+          <div class="bg-[#161822] border border-white/10 rounded-2xl overflow-hidden shadow-xl">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-sm text-zinc-300">
+                <thead class="bg-[#1f2330] text-xs uppercase tracking-wider text-zinc-400 border-b border-white/10">
+                  <tr>
+                    <th class="px-6 py-4">Page Title & H1</th>
+                    <th class="px-6 py-4">Slug / Live URL</th>
+                    <th class="px-6 py-4">Status</th>
+                    <th class="px-6 py-4">FAQs</th>
+                    <th class="px-6 py-4">Sitemap Priority</th>
+                    <th class="px-6 py-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="seoLandingPagesTableBody" class="divide-y divide-white/5">
+                  <!-- Dynamically rendered -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB-TAB 3: Karachi Local Areas Matrix -->
+        <div id="seoSubContent-areas" class="seo-sub-pane hidden space-y-6">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <h3 class="text-xl font-bold font-heading text-white">Karachi Neighborhoods & Internal Linking Hub</h3>
+              <p class="text-xs text-zinc-400 mt-0.5">Manage target areas (DHA, Clifton, Gulshan, Malir, Saddar, etc.) displayed on the homepage for internal linking and topical relevance.</p>
+            </div>
+            <button onclick="openKarachiAreaModal('add')" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center gap-1.5">
+              <i data-lucide="plus" class="w-4 h-4"></i> Add Karachi Area
+            </button>
+          </div>
+
+          <div class="bg-[#161822] border border-white/10 rounded-2xl overflow-hidden shadow-xl">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-sm text-zinc-300">
+                <thead class="bg-[#1f2330] text-xs uppercase tracking-wider text-zinc-400 border-b border-white/10">
+                  <tr>
+                    <th class="px-6 py-4">Area Name</th>
+                    <th class="px-6 py-4">SEO Title / Anchor</th>
+                    <th class="px-6 py-4">Description</th>
+                    <th class="px-6 py-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="karachiAreasTableBody" class="divide-y divide-white/5">
+                  <!-- Dynamically rendered -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB-TAB 4: Homepage FAQs & Google FAQPage Schema -->
+        <div id="seoSubContent-faqs" class="seo-sub-pane hidden space-y-6">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <h3 class="text-xl font-bold font-heading text-white">Homepage FAQs & Google FAQPage Schema</h3>
+              <p class="text-xs text-zinc-400 mt-0.5">Manage questions and answers displayed on the homepage. Automatically builds valid Schema.org FAQPage JSON-LD.</p>
+            </div>
+            <button onclick="openSeoFaqModal('add')" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center gap-1.5">
+              <i data-lucide="plus" class="w-4 h-4"></i> Add FAQ
+            </button>
+          </div>
+
+          <div class="bg-[#161822] border border-white/10 rounded-2xl overflow-hidden shadow-xl">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-sm text-zinc-300">
+                <thead class="bg-[#1f2330] text-xs uppercase tracking-wider text-zinc-400 border-b border-white/10">
+                  <tr>
+                    <th class="px-6 py-4">#</th>
+                    <th class="px-6 py-4">Question</th>
+                    <th class="px-6 py-4">Answer</th>
+                    <th class="px-6 py-4">Schema Status</th>
+                    <th class="px-6 py-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="seoFaqsTableBody" class="divide-y divide-white/5">
+                  <!-- Dynamically rendered -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB-TAB 5: Technical SEO (Sitemap & Robots.txt) -->
+        <div id="seoSubContent-technical" class="seo-sub-pane hidden space-y-6">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Robots.txt Box -->
+            <div class="bg-[#161822] border border-white/10 rounded-2xl p-6 shadow-xl space-y-4">
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h4 class="font-bold text-base text-white font-heading flex items-center gap-2">
+                  <i data-lucide="shield" class="w-5 h-5 text-emerald-400"></i> Robots.txt Editor
+                </h4>
+                <a href="/robots.txt" target="_blank" class="text-xs text-rose-400 hover:underline flex items-center gap-1">
+                  <span>Open Live /robots.txt</span> &rarr;
+                </a>
+              </div>
+              <p class="text-xs text-zinc-400">Configure bot crawlers directives and sitemap reference.</p>
+              <textarea id="seoCustomRobotsTxt" rows="8" class="w-full bg-[#202430] border border-white/10 rounded-xl p-4 text-white text-xs font-mono focus:outline-none"></textarea>
+              <div class="flex justify-end">
+                <button type="button" onclick="saveRobotsTxt()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow transition-all">
+                  Save Robots.txt
+                </button>
+              </div>
+            </div>
+
+            <!-- XML Sitemap Box -->
+            <div class="bg-[#161822] border border-white/10 rounded-2xl p-6 shadow-xl space-y-4">
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h4 class="font-bold text-base text-white font-heading flex items-center gap-2">
+                  <i data-lucide="file-code" class="w-5 h-5 text-blue-400"></i> Live Dynamic XML Sitemap
+                </h4>
+                <a href="/sitemap.xml" target="_blank" class="text-xs text-blue-400 hover:underline flex items-center gap-1">
+                  <span>Open Live /sitemap.xml</span> &rarr;
+                </a>
+              </div>
+              <p class="text-xs text-zinc-400">Your sitemap is generated dynamically in real time from database records:</p>
+              <div class="p-4 bg-[#14161f] rounded-xl border border-white/5 space-y-2 text-xs text-zinc-300">
+                <div class="flex items-center justify-between">
+                  <span>Homepage URL:</span>
+                  <span class="text-emerald-400 font-mono font-bold">1 URL</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>Active Landing Pages:</span>
+                  <span class="text-rose-400 font-mono font-bold" id="sitemapLandingCount">0 URLs</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>Car Fleet Deep Links:</span>
+                  <span class="text-blue-400 font-mono font-bold" id="sitemapCarsCount">0 URLs</span>
+                </div>
+                <div class="pt-2 border-t border-white/10 flex items-center justify-between font-bold text-white">
+                  <span>Format:</span>
+                  <span class="font-mono text-amber-400">Standard Sitemaps.org 0.9 XML</span>
+                </div>
+              </div>
+              <div class="pt-2">
+                <a href="/sitemap.xml" target="_blank" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all">
+                  <i data-lucide="external-link" class="w-4 h-4"></i> Inspect Live XML in Browser
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB: TYPOGRAPHY & SITE CONTENT MANAGEMENT      -->
+      <!-- ============================================== -->
+      <div id="tabContent-content" class="tab-pane hidden space-y-8">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-400 text-xs font-bold uppercase tracking-wider mb-2">
+              <i data-lucide="type" class="w-3.5 h-3.5"></i> Typography & Content Engine
+            </div>
+            <h3 class="text-2xl font-black font-heading text-white">Typography & Site Content Management</h3>
+            <p class="text-xs text-zinc-400 mt-1">Manage Google Font families, independent desktop & mobile font sizes, and all core section texts in one place.</p>
+          </div>
+          <button onclick="saveContentAndTypography()" class="px-6 py-3 bg-purple-600 hover:bg-purple-500 text-white rounded-xl font-bold text-sm shadow-lg shadow-purple-600/30 flex items-center gap-2 transition-all">
+            <i data-lucide="save" class="w-4 h-4"></i> Save All Changes
+          </button>
+        </div>
+
+        <!-- Section 1: Typography & Font Sizing -->
+        <div class="bg-[#161822] border border-white/10 rounded-2xl p-6 space-y-6">
+          <div class="flex items-center justify-between border-b border-white/5 pb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-purple-400">
+                <i data-lucide="type" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h4 class="text-base font-bold text-white">Font Families & Responsive Sizes</h4>
+                <p class="text-xs text-zinc-400">Choose luxury Google Fonts and fine-tune desktop & mobile font sizes.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Font Families & Letter Casing Dropdowns -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label class="block text-xs font-bold text-zinc-300 uppercase tracking-wider mb-2">
+                Heading Font Family (Titles)
+              </label>
+              <select id="contentHeadingFont" onchange="updateTypographyPreview()" class="w-full bg-[#1e222d] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-purple-500">
+                <option value="Syne" selected>Syne (Bold Luxury Display - Default)</option>
+                <option value="Plus Jakarta Sans">Plus Jakarta Sans (Modern & Clean)</option>
+                <option value="Inter">Inter (Ultra Legible & Sleek)</option>
+                <option value="Outfit">Outfit (Trendy Luxury Geometric)</option>
+                <option value="Montserrat">Montserrat (Bold & Elegant)</option>
+                <option value="Poppins">Poppins (Contemporary Geometric)</option>
+                <option value="Manrope">Manrope (Modern Clean)</option>
+                <option value="Space Grotesk">Space Grotesk (Tech Modern)</option>
+                <option value="Playfair Display">Playfair Display (Luxury Serif)</option>
+                <option value="Cinzel">Cinzel (Royal Classical Serif)</option>
+              </select>
+              <span class="text-[11px] text-zinc-500 mt-1 block">Default: Syne. Fits cleanly on mobile with slider.</span>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-zinc-300 uppercase tracking-wider mb-2">
+                Body Font Family (Text & Buttons)
+              </label>
+              <select id="contentBodyFont" onchange="updateTypographyPreview()" class="w-full bg-[#1e222d] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-purple-500">
+                <option value="Plus Jakarta Sans" selected>Plus Jakarta Sans (Clean & Modern)</option>
+                <option value="Inter">Inter (Ultra Clean Swiss Style)</option>
+                <option value="Outfit">Outfit (Trendy Modern)</option>
+                <option value="Montserrat">Montserrat (Classic Sans)</option>
+                <option value="Poppins">Poppins (Soft Geometric)</option>
+                <option value="Manrope">Manrope (Clear Body Text)</option>
+              </select>
+              <span class="text-[11px] text-zinc-500 mt-1 block">Used for body text, badges, and descriptions.</span>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-zinc-300 uppercase tracking-wider mb-2">
+                Headlines Letter Case (Capital / Small)
+              </label>
+              <select id="contentHeadingTransform" onchange="updateTypographyPreview()" class="w-full bg-[#1e222d] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-purple-500">
+                <option value="uppercase" selected>🔠 ALL CAPITAL / UPPERCASE (PREMIER RENT A CAR)</option>
+                <option value="none">🔡 Normal Case / As Typed (Premier Rent a Car)</option>
+                <option value="capitalize">🔤 Capitalize Each Word (Premier Rent A Car)</option>
+              </select>
+              <span class="text-[11px] text-zinc-500 mt-1 block">Toggle between ALL CAPITAL letters or Normal case.</span>
+            </div>
+          </div>
+
+          <!-- Responsive Font Sizes (Desktop vs Mobile) -->
+          <div class="space-y-4 pt-2">
+            <h5 class="text-xs font-bold uppercase tracking-wider text-purple-300">Responsive Font Sizes (px)</h5>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <!-- H1 Hero Headline -->
+              <div class="bg-[#1c1f2b] border border-white/5 rounded-xl p-4 space-y-4">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-white">Hero H1 Headline</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono">Main Title</span>
+                </div>
+                
+                <div>
+                  <div class="flex justify-between text-xs text-zinc-400 mb-1">
+                    <span>Desktop Size</span>
+                    <span id="labelH1Desktop" class="font-mono text-purple-300 font-bold">56px</span>
+                  </div>
+                  <input type="range" id="contentH1Desktop" min="28" max="76" value="56" oninput="updateTypographyPreview()" class="w-full accent-purple-500">
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-xs text-zinc-400 mb-1">
+                    <span>Mobile Size (Phones)</span>
+                    <span id="labelH1Mobile" class="font-mono text-amber-300 font-bold">30px</span>
+                  </div>
+                  <input type="range" id="contentH1Mobile" min="18" max="44" value="30" oninput="updateTypographyPreview()" class="w-full accent-amber-500">
+                </div>
+              </div>
+
+              <!-- H2 Section Titles -->
+              <div class="bg-[#1c1f2b] border border-white/5 rounded-xl p-4 space-y-4">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-white">H2 Section Titles</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono">Section Headers</span>
+                </div>
+                
+                <div>
+                  <div class="flex justify-between text-xs text-zinc-400 mb-1">
+                    <span>Desktop Size</span>
+                    <span id="labelH2Desktop" class="font-mono text-purple-300 font-bold">40px</span>
+                  </div>
+                  <input type="range" id="contentH2Desktop" min="24" max="52" value="40" oninput="updateTypographyPreview()" class="w-full accent-purple-500">
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-xs text-zinc-400 mb-1">
+                    <span>Mobile Size (Phones)</span>
+                    <span id="labelH2Mobile" class="font-mono text-amber-300 font-bold">24px</span>
+                  </div>
+                  <input type="range" id="contentH2Mobile" min="16" max="36" value="24" oninput="updateTypographyPreview()" class="w-full accent-amber-500">
+                </div>
+              </div>
+
+              <!-- Body / Paragraphs -->
+              <div class="bg-[#1c1f2b] border border-white/5 rounded-xl p-4 space-y-4">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-white">Body & Paragraphs</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono">Standard Text</span>
+                </div>
+                
+                <div>
+                  <div class="flex justify-between text-xs text-zinc-400 mb-1">
+                    <span>Desktop Size</span>
+                    <span id="labelBodyDesktop" class="font-mono text-purple-300 font-bold">17px</span>
+                  </div>
+                  <input type="range" id="contentBodyDesktop" min="13" max="22" value="17" oninput="updateTypographyPreview()" class="w-full accent-purple-500">
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-xs text-zinc-400 mb-1">
+                    <span>Mobile Size (Phones)</span>
+                    <span id="labelBodyMobile" class="font-mono text-amber-300 font-bold">14px</span>
+                  </div>
+                  <input type="range" id="contentBodyMobile" min="12" max="18" value="14" oninput="updateTypographyPreview()" class="w-full accent-amber-500">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Interactive Typography Preview -->
+          <div class="border border-purple-500/20 rounded-2xl bg-zinc-950 p-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-purple-400 flex items-center gap-1.5">
+                <i data-lucide="eye" class="w-3.5 h-3.5"></i> Live Typography Preview
+              </span>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="setPreviewMode('desktop')" id="previewModeDesktop" class="px-3 py-1 text-xs rounded-lg font-bold bg-purple-600 text-white transition-all">Desktop View</button>
+                <button type="button" onclick="setPreviewMode('mobile')" id="previewModeMobile" class="px-3 py-1 text-xs rounded-lg font-bold bg-white/5 text-zinc-400 hover:text-white transition-all">Mobile View (375px)</button>
+              </div>
+            </div>
+
+            <div id="typographyPreviewBox" class="bg-[#0e1017] rounded-xl p-6 border border-white/5 transition-all duration-300 max-w-full">
+              <span id="previewBadge" class="text-[10px] uppercase tracking-widest text-zinc-400 font-bold block mb-1">Unrivaled Excellence</span>
+              <h1 id="previewH1" class="font-extrabold text-white leading-tight mb-2">Premier Rent a Car Service in Karachi</h1>
+              <p id="previewBody" class="text-zinc-400 leading-relaxed">Car 4 Rent offers latest model vehicles on self-drive across Karachi with zero security deposit and transparent pricing.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Hero Section CTA Buttons -->
+        <div class="bg-[#161822] border border-white/10 rounded-2xl p-6 space-y-6">
+          <div class="flex items-center gap-3 border-b border-white/5 pb-4">
+            <div class="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center text-blue-400">
+              <i data-lucide="mouse-pointer" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h4 class="text-base font-bold text-white">Hero Call-To-Action Buttons</h4>
+              <p class="text-xs text-zinc-400">Edit the labels on the two main buttons at the top of the homepage.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-xs font-bold text-zinc-300 uppercase tracking-wider mb-2">
+                Primary Button Label (Scrolls to Calculator)
+              </label>
+              <input type="text" id="contentHeroBtn1" placeholder="Book Your Ride" class="w-full bg-[#1e222d] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-zinc-300 uppercase tracking-wider mb-2">
+                Secondary Button Label (Scrolls to Fleet)
+              </label>
+              <input type="text" id="contentHeroBtn2" placeholder="Browse Our Fleet" class="w-full bg-[#1e222d] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500">
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3: About Section -->
+        <div class="bg-[#161822] border border-white/10 rounded-2xl p-6 space-y-6">
+          <div class="flex items-center gap-3 border-b border-white/5 pb-4">
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+              <i data-lucide="info" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h4 class="text-base font-bold text-white">About Section ("Drive Luxury Live Freedom")</h4>
+              <p class="text-xs text-zinc-400">Customize the badge, main heading, and narrative paragraph.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-xs font-bold text-zinc-300 uppercase tracking-wider mb-2">
+                Badge Text
+              </label>
+              <input type="text" id="contentAboutBadge" placeholder="Unrivaled Excellence" class="w-full bg-[#1e222d] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-zinc-300 uppercase tracking-wider mb-2">
+                Main Headline
+              </label>
+              <input type="text" id="contentAboutHeadline" placeholder="Drive Luxury Live Freedom" class="w-full bg-[#1e222d] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-zinc-300 uppercase tracking-wider mb-2">
+              Description Paragraph
+            </label>
+            <textarea id="contentAboutDesc" rows="3" placeholder="Experience premium car rentals crafted for comfort..." class="w-full bg-[#1e222d] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500"></textarea>
+          </div>
+        </div>
+
+        <!-- Section 4: Fleet Section Header -->
+        <div class="bg-[#161822] border border-white/10 rounded-2xl p-6 space-y-6">
+          <div class="flex items-center gap-3 border-b border-white/5 pb-4">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
+              <i data-lucide="car" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h4 class="text-base font-bold text-white">Fleet Section Header</h4>
+              <p class="text-xs text-zinc-400">Manage the title and subtitle shown directly above vehicle listings.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-xs font-bold text-zinc-300 uppercase tracking-wider mb-2">
+                Badge Text
+              </label>
+              <input type="text" id="contentFleetBadge" placeholder="Curated Collection" class="w-full bg-[#1e222d] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-zinc-300 uppercase tracking-wider mb-2">
+                Fleet Headline
+              </label>
+              <input type="text" id="contentFleetHeadline" placeholder="Find Your Perfect Ride" class="w-full bg-[#1e222d] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-zinc-300 uppercase tracking-wider mb-2">
+              Description Paragraph
+            </label>
+            <textarea id="contentFleetDesc" rows="2" placeholder="Explore our handpicked collection..." class="w-full bg-[#1e222d] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500"></textarea>
+          </div>
+        </div>
+
+
+        <!-- Section 6: Services Section Header -->
+        <div class="bg-[#161822] border border-white/10 rounded-2xl p-6 space-y-6">
+          <div class="flex items-center gap-3 border-b border-white/5 pb-4">
+            <div class="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+              <i data-lucide="layers" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h4 class="text-base font-bold text-white">Services Section Header</h4>
+              <p class="text-xs text-zinc-400">Customize the subtitle and headline for the 3 Occasions/Wedding/Events cards.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div>
+              <label class="block text-xs font-bold text-zinc-300 uppercase tracking-wider mb-2">
+                Subtitle Tag
+              </label>
+              <input type="text" id="contentServicesSubtitle" placeholder="Our Services" class="w-full bg-[#1e222d] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-cyan-500">
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-bold text-zinc-300 uppercase tracking-wider mb-2">
+                Main Headline
+              </label>
+              <input type="text" id="contentServicesHeadline" placeholder="We offer latest model car rent services on self-drive with best rate..." class="w-full bg-[#1e222d] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-cyan-500">
+            </div>
+          </div>
+        </div>
+
+        <!-- Sticky / Bottom Save Button Bar -->
+        <div class="flex items-center justify-end gap-4 pt-4 border-t border-white/10">
+          <button onclick="saveContentAndTypography()" class="px-8 py-4 bg-purple-600 hover:bg-purple-500 text-white rounded-xl font-bold text-base shadow-xl shadow-purple-600/30 flex items-center gap-2 transition-all">
+            <i data-lucide="check-circle" class="w-5 h-5"></i> Save Typography & Site Content
+          </button>
+        </div>
+
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 11: ESTIMATE & FARE CALCULATOR MANAGEMENT -->
+      <!-- ============================================== -->
+      <div id="tabContent-calculator" class="tab-pane hidden space-y-8">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/20 border border-amber-500/30 rounded-full text-amber-400 text-xs font-bold uppercase tracking-wider mb-2">
+              <i data-lucide="calculator" class="w-3.5 h-3.5"></i> Live Pricing Engine
+            </div>
+            <h3 class="text-2xl font-black font-heading text-white">Quotation & Estimation Management</h3>
+            <p class="text-xs text-zinc-400 mt-1">Configure visibility controls, security deposit, duration slot discounts (e.g. 1 Day: 3900, 3 Days: 3700), locations, and add-ons.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <a href="index.html#calculator" target="_blank" class="px-4 py-2.5 bg-white/10 hover:bg-white/15 text-white font-bold text-xs rounded-xl transition-all flex items-center gap-1.5">
+              <i data-lucide="eye" class="w-4 h-4"></i> Preview Live Calculator
+            </a>
+          </div>
+        </div>
+
+        <!-- 1. Feature Visibility & Toggles ("Kiya Kiya Chaiye Aur Kiya Nahi") -->
+        <div class="bg-[#161822] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+          <div class="flex items-center justify-between border-b border-white/10 pb-4">
+            <div>
+              <h4 class="text-lg font-bold font-heading text-white flex items-center gap-2">
+                <i data-lucide="toggle-left" class="w-5 h-5 text-amber-400"></i>
+                <span>1. Calculator Feature & Display Controls (Enable / Disable)</span>
+              </h4>
+              <p class="text-xs text-zinc-400 mt-1">Control what appears or stays hidden on the public quotation form.</p>
+            </div>
+            <button onclick="saveCalculatorFeatures()" class="px-5 py-2.5 bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center gap-2">
+              <i data-lucide="save" class="w-4 h-4"></i> Save Feature Controls
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            
+            <!-- Toggle: Locations -->
+            <label class="p-4 bg-[#1e222f] border border-white/10 rounded-2xl flex items-start justify-between gap-3 cursor-pointer hover:border-white/20 transition-all">
+              <div>
+                <span class="text-sm font-bold text-white block">📍 Pickup & Drop Locations</span>
+                <span class="text-[11px] text-zinc-400 block mt-0.5">Show or hide the location selector dropdowns.</span>
+              </div>
+              <input type="checkbox" id="calcToggleLocations" class="w-5 h-5 rounded text-amber-500 focus:ring-amber-400 bg-zinc-800 border-zinc-600 mt-0.5">
+            </label>
+
+            <!-- Toggle: Addons -->
+            <label class="p-4 bg-[#1e222f] border border-white/10 rounded-2xl flex items-start justify-between gap-3 cursor-pointer hover:border-white/20 transition-all">
+              <div>
+                <span class="text-sm font-bold text-white block">🎁 Optional Add-ons Section</span>
+                <span class="text-[11px] text-zinc-400 block mt-0.5">Show doorstep delivery, wifi, takaful add-on checkboxes.</span>
+              </div>
+              <input type="checkbox" id="calcToggleAddons" class="w-5 h-5 rounded text-amber-500 focus:ring-amber-400 bg-zinc-800 border-zinc-600 mt-0.5">
+            </label>
+
+            <!-- Toggle: Quick Slots Bar -->
+            <label class="p-4 bg-[#1e222f] border border-white/10 rounded-2xl flex items-start justify-between gap-3 cursor-pointer hover:border-white/20 transition-all">
+              <div>
+                <span class="text-sm font-bold text-white block">⚡ Duration Slot Days Bar</span>
+                <span class="text-[11px] text-zinc-400 block mt-0.5">Show 1 Day, 3 Days, 7 Days quick buttons with discounts.</span>
+              </div>
+              <input type="checkbox" id="calcToggleSlotsBar" class="w-5 h-5 rounded text-amber-500 focus:ring-amber-400 bg-zinc-800 border-zinc-600 mt-0.5">
+            </label>
+
+            <!-- Toggle: Promo Code -->
+            <label class="p-4 bg-[#1e222f] border border-white/10 rounded-2xl flex items-start justify-between gap-3 cursor-pointer hover:border-white/20 transition-all">
+              <div>
+                <span class="text-sm font-bold text-white block">🏷️ Promo Code Input</span>
+                <span class="text-[11px] text-zinc-400 block mt-0.5">Allow clients to apply coupon promo codes.</span>
+              </div>
+              <input type="checkbox" id="calcTogglePromo" class="w-5 h-5 rounded text-amber-500 focus:ring-amber-400 bg-zinc-800 border-zinc-600 mt-0.5">
+            </label>
+
+            <!-- Toggle: Contact Details -->
+            <label class="p-4 bg-[#1e222f] border border-white/10 rounded-2xl flex items-start justify-between gap-3 cursor-pointer hover:border-white/20 transition-all">
+              <div>
+                <span class="text-sm font-bold text-white block">👤 Client Contact Inputs</span>
+                <span class="text-[11px] text-zinc-400 block mt-0.5">Show Name & WhatsApp number fields.</span>
+              </div>
+              <input type="checkbox" id="calcToggleContact" class="w-5 h-5 rounded text-amber-500 focus:ring-amber-400 bg-zinc-800 border-zinc-600 mt-0.5">
+            </label>
+
+            <!-- Toggle: Official Quote Button -->
+            <label class="p-4 bg-[#1e222f] border border-white/10 rounded-2xl flex items-start justify-between gap-3 cursor-pointer hover:border-white/20 transition-all">
+              <div>
+                <span class="text-sm font-bold text-white block">📩 Request Quotation Button</span>
+                <span class="text-[11px] text-zinc-400 block mt-0.5">Show red 'Request Official Quotation' button.</span>
+              </div>
+              <input type="checkbox" id="calcToggleOfficialBtn" class="w-5 h-5 rounded text-amber-500 focus:ring-amber-400 bg-zinc-800 border-zinc-600 mt-0.5">
+            </label>
+
+            <!-- Toggle: WhatsApp Button -->
+            <label class="p-4 bg-[#1e222f] border border-white/10 rounded-2xl flex items-start justify-between gap-3 cursor-pointer hover:border-white/20 transition-all">
+              <div>
+                <span class="text-sm font-bold text-white block">💬 WhatsApp Booking Button</span>
+                <span class="text-[11px] text-zinc-400 block mt-0.5">Show green 'Instant WhatsApp Booking' button.</span>
+              </div>
+              <input type="checkbox" id="calcToggleWhatsAppBtn" class="w-5 h-5 rounded text-amber-500 focus:ring-amber-400 bg-zinc-800 border-zinc-600 mt-0.5">
+            </label>
+
+            <!-- Toggle: Print Slip Button -->
+            <label class="p-4 bg-[#1e222f] border border-white/10 rounded-2xl flex items-start justify-between gap-3 cursor-pointer hover:border-white/20 transition-all">
+              <div>
+                <span class="text-sm font-bold text-white block">🖨️ Print / Save Slip Button</span>
+                <span class="text-[11px] text-zinc-400 block mt-0.5">Show 'Print / Save Calculation Slip' button.</span>
+              </div>
+              <input type="checkbox" id="calcTogglePrintBtn" class="w-5 h-5 rounded text-amber-500 focus:ring-amber-400 bg-zinc-800 border-zinc-600 mt-0.5">
+            </label>
+
+            <!-- Duration Selection Mode -->
+            <div class="p-4 bg-[#1e222f] border border-white/10 rounded-2xl">
+              <label class="text-sm font-bold text-white block mb-1">📅 Duration Mode</label>
+              <select id="calcDurationMode" class="w-full bg-[#161822] border border-white/15 rounded-xl px-3 py-2 text-white text-xs focus:outline-none">
+                <option value="both">Both (Date Pickers & Quick Slot Days)</option>
+                <option value="slots_only">Quick Slot Days Buttons Only</option>
+                <option value="dates_only">Calendar Date Pickers Only</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 2. Security Deposit Management -->
+        <div class="bg-[#161822] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+          <div class="flex items-center justify-between border-b border-white/10 pb-4">
+            <div>
+              <h4 class="text-lg font-bold font-heading text-white flex items-center gap-2">
+                <i data-lucide="shield-check" class="w-5 h-5 text-emerald-400"></i>
+                <span>2. Security Deposit (100% Refundable) Management</span>
+              </h4>
+              <p class="text-xs text-zinc-400 mt-1">Configure whether refundable deposit is required, its amount, and how it is billed.</p>
+            </div>
+            <button onclick="saveCalculatorSecurityDeposit()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center gap-2">
+              <i data-lucide="save" class="w-4 h-4"></i> Save Deposit Settings
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <label class="p-4 bg-[#1e222f] border border-white/10 rounded-2xl flex items-center justify-between cursor-pointer hover:border-white/20">
+              <div>
+                <span class="text-sm font-bold text-white block">Enable Security Deposit</span>
+                <span class="text-[11px] text-zinc-400 block">Show deposit line in estimation slip</span>
+              </div>
+              <input type="checkbox" id="secDepEnabled" class="w-5 h-5 rounded text-emerald-500 focus:ring-emerald-400 bg-zinc-800 border-zinc-600">
+            </label>
+
+            <div class="p-4 bg-[#1e222f] border border-white/10 rounded-2xl">
+              <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Deposit Amount (PKR)</label>
+              <input type="number" id="secDepAmount" class="w-full bg-[#161822] border border-white/15 rounded-xl px-3 py-2 text-white font-mono font-bold text-sm focus:outline-none" placeholder="50000">
+            </div>
+
+            <div class="p-4 bg-[#1e222f] border border-white/10 rounded-2xl">
+              <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Slip Display Label</label>
+              <input type="text" id="secDepLabel" class="w-full bg-[#161822] border border-white/15 rounded-xl px-3 py-2 text-white text-xs focus:outline-none" placeholder="Security Deposit (100% Refundable)">
+            </div>
+
+            <label class="p-4 bg-[#1e222f] border border-white/10 rounded-2xl flex items-center justify-between cursor-pointer hover:border-white/20">
+              <div>
+                <span class="text-sm font-bold text-white block">Include in Grand Total</span>
+                <span class="text-[11px] text-zinc-400 block">Add into Estimated Total amount</span>
+              </div>
+              <input type="checkbox" id="secDepIncludeInTotal" class="w-5 h-5 rounded text-emerald-500 focus:ring-emerald-400 bg-zinc-800 border-zinc-600">
+            </label>
+
+          </div>
+        </div>
+
+        <!-- 3. Duration Slot Days With Discount Amount ("1 Days : 3900, 3 Days : 3700") -->
+        <div class="bg-[#161822] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+            <div>
+              <h4 class="text-lg font-bold font-heading text-white flex items-center gap-2">
+                <i data-lucide="clock" class="w-5 h-5 text-rose-400"></i>
+                <span>3. Duration Slot Days & Tiered Discounts (1 Day : 3900, 3 Days : 3700)</span>
+              </h4>
+              <p class="text-xs text-zinc-400 mt-1">Configure day tiers and discounted amounts per day. Customers renting for longer durations automatically get these discounts.</p>
+            </div>
+            <button onclick="openCalculatorSlotModal('add')" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center gap-2 self-start sm:self-auto">
+              <i data-lucide="plus" class="w-4 h-4"></i> Add New Duration Slot
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-zinc-300">
+              <thead class="bg-[#1f2330] text-xs uppercase tracking-wider text-zinc-400 border-b border-white/10">
+                <tr>
+                  <th class="px-6 py-4">Slot Days</th>
+                  <th class="px-6 py-4">Display Label</th>
+                  <th class="px-6 py-4">Discount / Day (PKR)</th>
+                  <th class="px-6 py-4">Badge Text</th>
+                  <th class="px-6 py-4">Status</th>
+                  <th class="px-6 py-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="calculatorSlotsTableBody" class="divide-y divide-white/5">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 4. Locations Management ("Locations Add Karna Ka Option") -->
+        <div class="bg-[#161822] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+            <div>
+              <h4 class="text-lg font-bold font-heading text-white flex items-center gap-2">
+                <i data-lucide="map-pin" class="w-5 h-5 text-blue-400"></i>
+                <span>4. Pickup & Return Locations Management</span>
+              </h4>
+              <p class="text-xs text-zinc-400 mt-1">Add, edit, or remove pickup and return cities / neighborhoods displayed in the calculator.</p>
+            </div>
+            <button onclick="openCalculatorLocationModal('add')" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center gap-2 self-start sm:self-auto">
+              <i data-lucide="plus" class="w-4 h-4"></i> Add New Location
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-zinc-300">
+              <thead class="bg-[#1f2330] text-xs uppercase tracking-wider text-zinc-400 border-b border-white/10">
+                <tr>
+                  <th class="px-6 py-4">Location Name</th>
+                  <th class="px-6 py-4">Active</th>
+                  <th class="px-6 py-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="calculatorLocationsTableBody" class="divide-y divide-white/5">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 5. Add-ons Options Management -->
+        <div class="bg-[#161822] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+            <div>
+              <h4 class="text-lg font-bold font-heading text-white flex items-center gap-2">
+                <i data-lucide="package-plus" class="w-5 h-5 text-purple-400"></i>
+                <span>5. Optional Add-ons Options Management</span>
+              </h4>
+              <p class="text-xs text-zinc-400 mt-1">Configure VIP add-ons like doorstep delivery, wifi hotspot, takaful insurance, and motorway travel.</p>
+            </div>
+            <button onclick="openCalculatorAddonModal('add')" class="px-5 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center gap-2 self-start sm:self-auto">
+              <i data-lucide="plus" class="w-4 h-4"></i> Add New Add-on
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-zinc-300">
+              <thead class="bg-[#1f2330] text-xs uppercase tracking-wider text-zinc-400 border-b border-white/10">
+                <tr>
+                  <th class="px-6 py-4">Add-on Title</th>
+                  <th class="px-6 py-4">Description</th>
+                  <th class="px-6 py-4">Price (PKR)</th>
+                  <th class="px-6 py-4">Billing Rate</th>
+                  <th class="px-6 py-4">Default Selected</th>
+                  <th class="px-6 py-4">Status</th>
+                  <th class="px-6 py-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="calculatorAddonsTableBody" class="divide-y divide-white/5">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Tab 11.5: Blog Articles & Guides Management -->
+      <div id="tabContent-blogs" class="hidden space-y-6">
+        <div class="bg-[#161822] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-xl">
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-white/10">
+            <div>
+              <h3 class="text-xl font-bold font-heading text-white flex items-center gap-2">
+                <span>Karachi Car Rental Guides & Blog Articles</span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-sky-950 text-sky-300 border border-sky-800">SEO Engine Active</span>
+              </h3>
+              <p class="text-xs text-zinc-400 mt-1">Publish long-tail keyword guides (CNIC requirements, airport transfers, fuel economy) to drive free Google traffic and direct WhatsApp bookings.</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <a href="/blog" target="_blank" class="px-4 py-2.5 bg-white/10 hover:bg-white/15 text-white font-semibold text-xs rounded-xl transition-all flex items-center gap-2">
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i> View Public Blog
+              </a>
+              <button onclick="openBlogModalWithAi()" class="px-4 py-2.5 bg-gradient-to-r from-purple-600 to-sky-600 hover:from-purple-500 hover:to-sky-500 text-white font-bold text-xs rounded-xl transition-all shadow-lg flex items-center gap-2 cursor-pointer" title="Auto-write article using AI">
+                <i data-lucide="sparkles" class="w-4 h-4"></i> AI Auto-Writer
+              </button>
+              <button onclick="openBlogModal()" class="px-5 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-xl transition-all shadow-lg flex items-center gap-2 cursor-pointer">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i> Write New Article
+              </button>
+            </div>
+          </div>
+
+          <!-- Filter & Search Toolbar -->
+          <div class="py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="relative w-full sm:w-72">
+              <i data-lucide="search" class="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+              <input type="text" id="adminBlogSearchInput" placeholder="Filter articles by title..." oninput="filterAdminBlogs()" class="w-full pl-9 pr-4 py-2 bg-[#202430] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:ring-1 focus:ring-sky-500">
+            </div>
+            <div class="text-xs text-zinc-400 font-medium">
+              Showing <span id="adminBlogCountDisplay" class="font-bold text-white">0</span> article(s)
+            </div>
+          </div>
+
+          <!-- Articles Table -->
+          <div class="overflow-x-auto rounded-2xl border border-white/5 bg-[#141620]">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="border-b border-white/10 text-zinc-400 uppercase text-[10px] tracking-wider font-semibold">
+                  <th class="py-3 px-4">Article</th>
+                  <th class="py-3 px-4">Category</th>
+                  <th class="py-3 px-4">Author / Date</th>
+                  <th class="py-3 px-4">Status</th>
+                  <th class="py-3 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="blogsTableBody" class="divide-y divide-white/5 text-zinc-300">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 12: License & Security Management -->
+      <div id="tabContent-license" class="hidden space-y-6">
+        <!-- License Header / Overview Card -->
+        <div class="bg-[#161822] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div>
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center shadow-lg shadow-emerald-950">
+                  <i data-lucide="shield-check" class="w-6 h-6"></i>
+                </div>
+                <div>
+                  <h3 class="text-xl font-bold font-heading text-white flex items-center gap-2">
+                    <span>Domain License & Anti-Piracy Security</span>
+                    <span id="adminLicenseBadge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-950 text-emerald-300 border border-emerald-800">Active</span>
+                  </h3>
+                  <p class="text-xs text-zinc-400 mt-0.5">Enterprise Cryptographic License Protection System (HMAC-SHA256)</p>
+                </div>
+              </div>
+            </div>
+            
+            <button onclick="fetchAndRenderLicenseDetails()" class="px-4 py-2 bg-white/10 hover:bg-white/15 text-white font-semibold text-xs rounded-xl transition-all flex items-center gap-2 self-start lg:self-auto cursor-pointer">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Refresh Status
+            </button>
+          </div>
+
+          <!-- License Specs Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+            <div class="p-4 bg-[#1e222f] border border-white/10 rounded-2xl">
+              <span class="text-[10px] font-bold uppercase text-zinc-400 block mb-1">Licensed Domain</span>
+              <span id="adminLicDomain" class="text-sm font-mono font-bold text-amber-400">localhost</span>
+              <span class="text-[10px] text-zinc-500 block mt-1">Locked to this server domain</span>
+            </div>
+
+            <div class="p-4 bg-[#1e222f] border border-white/10 rounded-2xl">
+              <span class="text-[10px] font-bold uppercase text-zinc-400 block mb-1">License Plan</span>
+              <span id="adminLicType" class="text-sm font-bold text-emerald-400">Lifetime Access</span>
+              <span class="text-[10px] text-zinc-500 block mt-1">Authorized duration tier</span>
+            </div>
+
+            <div class="p-4 bg-[#1e222f] border border-white/10 rounded-2xl">
+              <span class="text-[10px] font-bold uppercase text-zinc-400 block mb-1">Validity / Days Left</span>
+              <span id="adminLicDaysLeft" class="text-sm font-bold text-white">Lifetime</span>
+              <span id="adminLicExpiry" class="text-[10px] text-zinc-500 block mt-1">Expires: 2099-12-31</span>
+            </div>
+
+            <div class="p-4 bg-[#1e222f] border border-white/10 rounded-2xl">
+              <span class="text-[10px] font-bold uppercase text-zinc-400 block mb-1">Current Server Host</span>
+              <span id="adminLicHost" class="text-sm font-mono text-zinc-300">localhost</span>
+              <span class="text-[10px] text-emerald-400 block mt-1">Verified & Binding</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- License Key Update / Renewal Card -->
+        <div class="bg-[#161822] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+          <div class="border-b border-white/10 pb-4">
+            <h4 class="text-lg font-bold font-heading text-white flex items-center gap-2">
+              <i data-lucide="key" class="w-5 h-5 text-amber-400"></i>
+              <span>Activate or Update License Key</span>
+            </h4>
+            <p class="text-xs text-zinc-400 mt-1">
+              If deploying on a new client domain or renewing subscription, generate a key with your local batch generator and paste it here.
+            </p>
+          </div>
+
+          <form id="adminLicenseForm" onsubmit="handleAdminUpdateLicense(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold uppercase text-zinc-400 mb-1.5 flex items-center justify-between">
+                <span>Enter C4R License Key</span>
+                <span class="text-[11px] text-zinc-500 font-normal">Format: C4R_...</span>
+              </label>
+              <textarea 
+                id="adminLicenseKeyInput" 
+                rows="3" 
+                required 
+                placeholder="C4R_eyJkIjoiZXhhbXBsZS5jb20iLCJ0IjoibGlmZXRpbWUi..."
+                class="w-full bg-[#1e222f] border border-white/15 rounded-2xl px-4 py-3 text-white font-mono text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none resize-none"
+              ></textarea>
+            </div>
+
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+              <div class="text-xs text-zinc-500">
+                <span>Active Server Domain: </span>
+                <strong class="text-amber-400 font-mono" id="adminCurrentDomainPrompt">localhost</strong>
+              </div>
+              <button 
+                type="submit" 
+                id="adminLicenseSubmitBtn"
+                class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-900/30 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <i data-lucide="check-circle" class="w-4 h-4"></i>
+                <span>Validate & Save License</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Security Protocol Info -->
+        <div class="bg-[#161822] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-xl">
+          <h4 class="text-base font-bold font-heading text-white mb-3 flex items-center gap-2">
+            <i data-lucide="info" class="w-4 h-4 text-blue-400"></i>
+            <span>How This Protection Works</span>
+          </h4>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-zinc-400 leading-relaxed">
+            <div class="p-4 bg-white/5 rounded-2xl border border-white/5">
+              <strong class="text-white block mb-1">1. Domain Locking</strong>
+              The license key is strictly tied to this authorized domain (and subdomains). Execution is instantly locked on unauthorized hosts.
+            </div>
+            <div class="p-4 bg-white/5 rounded-2xl border border-white/5">
+              <strong class="text-white block mb-1">2. Tamper-Proof Cryptography</strong>
+              Protected by HMAC-SHA256 signatures. Any manual database tampering or expiry alteration immediately revokes system access.
+            </div>
+            <div class="p-4 bg-white/5 rounded-2xl border border-white/5">
+              <strong class="text-white block mb-1">3. Private Keygen (Author Only)</strong>
+              License generation tooling resides exclusively on your private developer workstation and is never deployed to production.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- ==================================================== -->
+  <!-- MODALS -->
+  <!-- ==================================================== -->
+
+  <!-- Modal 1: Add / Edit Car Modal -->
+  <div id="carModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-[#181a24] border border-white/10 rounded-3xl p-6 sm:p-8 max-w-3xl w-full my-8 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
+        <h3 class="text-xl font-bold font-heading text-white" id="carModalTitle">Add Luxury Vehicle</h3>
+        <button onclick="closeCarModal()" class="text-zinc-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="carModalForm" onsubmit="handleCarModalSubmit(event)" class="space-y-5">
+        <input type="hidden" id="modalCarId">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Car Model / Name *</label>
+            <input type="text" id="modalCarName" placeholder="e.g. Sportage 2026" oninput="onCarNameInput(this.value)" required class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">
+              Google URL Slug <span class="text-zinc-500 normal-case font-normal">(Auto-generated)</span>
+            </label>
+            <div class="flex items-center bg-[#202430] border border-white/10 rounded-xl px-3 py-2 text-xs font-mono text-zinc-400">
+              <span class="text-zinc-500">/cars/</span>
+              <input type="text" id="modalCarSlug" oninput="this.dataset.manualEdited='true'" placeholder="sportage-2026" class="bg-transparent text-white font-mono flex-1 focus:outline-none ml-1">
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Brand *</label>
+            <select id="modalCarBrand" required class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
+              <!-- Dynamically populated from brands -->
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Category *</label>
+            <select id="modalCarCategory" required class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
+              <!-- Dynamically populated from categories -->
+            </select>
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Daily Price (PKR) *</label>
+            <input type="number" id="modalCarPrice" placeholder="5000" min="1" required class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white font-mono focus:outline-none">
+          </div>
+        </div>
+
+        <!-- Technical Specs -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 bg-[#14161f] rounded-xl">
+          <div>
+            <label class="block text-[10px] text-zinc-400 mb-1">Horsepower</label>
+            <input type="text" id="modalCarHp" placeholder="518 HP" class="w-full bg-[#202430] border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white">
+          </div>
+          <div>
+            <label class="block text-[10px] text-zinc-400 mb-1">0-100 km/h</label>
+            <input type="text" id="modalCarAccel" placeholder="3.2s" class="w-full bg-[#202430] border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white">
+          </div>
+          <div>
+            <label class="block text-[10px] text-zinc-400 mb-1">Top Speed</label>
+            <input type="text" id="modalCarSpeed" placeholder="296 km/h" class="w-full bg-[#202430] border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white">
+          </div>
+          <div>
+            <label class="block text-[10px] text-zinc-400 mb-1">Seats</label>
+            <input type="number" id="modalCarSeats" placeholder="2" min="1" max="10" class="w-full bg-[#202430] border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white">
+          </div>
+        </div>
+
+        <!-- Photo Upload & URL -->
+        <div class="space-y-3">
+          <label class="block text-xs font-bold uppercase text-zinc-400">Car Image (Upload File or Paste Web Link) *</label>
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
+            <div class="sm:col-span-8 space-y-2">
+              <input type="file" id="modalCarFileInput" accept="image/*" onchange="handleModalImageFile(event)" class="text-xs text-zinc-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-white/10 file:text-white file:font-semibold hover:file:bg-white/20">
+              <input type="text" id="modalCarImageUrl" oninput="handleModalImageUrl(this.value)" placeholder="Or paste image URL (https://... or /uploads/...)" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2 text-xs text-white font-mono focus:outline-none">
+            </div>
+            <div class="sm:col-span-4 h-24 bg-[#14161f] rounded-xl overflow-hidden border border-white/10 flex items-center justify-center">
+              <img id="modalCarPreviewImg" src="" class="w-full h-full object-cover">
+            </div>
+          </div>
+        </div>
+
+        <!-- Description & Featured -->
+        <div>
+          <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Description</label>
+          <textarea id="modalCarDesc" rows="2" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2 text-xs text-white focus:outline-none"></textarea>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <input type="checkbox" id="modalCarFeatured" class="w-4 h-4 rounded text-rose-600 focus:ring-rose-500 bg-zinc-800 border-zinc-600">
+          <label for="modalCarFeatured" class="text-xs font-semibold text-zinc-300 cursor-pointer">
+            Mark as "Top Pick" on Homepage
+          </label>
+        </div>
+
+        <div class="pt-4 border-t border-white/10 flex justify-end gap-3">
+          <button type="button" onclick="closeCarModal()" class="px-5 py-2.5 bg-zinc-800 text-white text-xs font-semibold rounded-xl">Cancel</button>
+          <button type="submit" class="px-6 py-2.5 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold rounded-xl shadow">Save Car</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Category Modal (Add/Edit) -->
+  <div id="categoryModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-[#181a24] border border-white/10 rounded-3xl p-6 max-w-md w-full shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
+        <h3 class="text-lg font-bold font-heading text-white" id="categoryModalTitle">Add Category</h3>
+        <button onclick="closeCategoryModal()" class="text-zinc-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="categoryModalForm" onsubmit="handleCategoryModalSubmit(event)" class="space-y-4">
+        <input type="hidden" id="modalCategoryId">
+        <div>
+          <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Category Name *</label>
+          <input type="text" id="modalCategoryName" placeholder="e.g. Electric & Hybrid" required class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Slug / Identifier *</label>
+          <input type="text" id="modalCategorySlug" placeholder="e.g. electric" required class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white font-mono focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Emoji Icon</label>
+          <input type="text" id="modalCategoryIcon" placeholder="⚡" maxlength="4" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Description</label>
+          <input type="text" id="modalCategoryDesc" placeholder="Eco-luxury whisper quiet drive" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
+        </div>
+        <div class="pt-4 border-t border-white/10 flex justify-end gap-3">
+          <button type="button" onclick="closeCategoryModal()" class="px-5 py-2.5 bg-zinc-800 text-white text-xs font-semibold rounded-xl">Cancel</button>
+          <button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl shadow">Save Category</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Review Modal (Add/Edit) -->
+  <div id="reviewModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-[#181a24] border border-white/10 rounded-3xl p-6 max-w-md w-full shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
+        <h3 class="text-lg font-bold font-heading text-white" id="reviewModalTitle">Add Client Review</h3>
+        <button onclick="closeReviewModal()" class="text-zinc-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="reviewModalForm" onsubmit="handleReviewModalSubmit(event)" class="space-y-4">
+        <input type="hidden" id="modalReviewId">
+        <div>
+          <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Client Name *</label>
+          <input type="text" id="modalReviewName" placeholder="e.g. Asad Qureshi" required class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">City / Location *</label>
+          <input type="text" id="modalReviewLocation" placeholder="e.g. DHA Phase 5, Lahore" required class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Rating (1 to 5 Stars)</label>
+          <select id="modalReviewRating" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
+            <option value="5">⭐⭐⭐⭐⭐ (5 Stars)</option>
+            <option value="4">⭐⭐⭐⭐ (4 Stars)</option>
+            <option value="3">⭐⭐⭐ (3 Stars)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Review Comment *</label>
+          <textarea id="modalReviewComment" rows="3" required placeholder="Write genuine client experience..." class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none"></textarea>
+        </div>
+        <div class="flex items-center gap-3">
+          <input type="checkbox" id="modalReviewActive" checked class="w-4 h-4 rounded text-rose-600 focus:ring-rose-500 bg-zinc-800 border-zinc-600">
+          <label for="modalReviewActive" class="text-xs font-semibold text-zinc-300 cursor-pointer">
+            Display this review as Active on website
+          </label>
+        </div>
+        <div class="pt-4 border-t border-white/10 flex justify-end gap-3">
+          <button type="button" onclick="closeReviewModal()" class="px-5 py-2.5 bg-zinc-800 text-white text-xs font-semibold rounded-xl">Cancel</button>
+          <button type="submit" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow">Save Review</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 4: Add / Edit Admin User Modal -->
+  <div id="userModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-[#181a24] border border-white/10 rounded-3xl p-6 max-w-md w-full shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
+        <h3 class="text-lg font-bold font-heading text-white" id="userModalTitle">Create New Admin User</h3>
+        <button type="button" onclick="closeUserModal()" class="text-zinc-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="userModalForm" onsubmit="handleUserModalSubmit(event)" class="space-y-4" autocomplete="off">
+        <input type="hidden" id="modalUserId">
+
+        <div>
+          <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Full Name *</label>
+          <input type="text" id="modalUserFullName" placeholder="e.g. Operations Manager" required class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-rose-500">
+        </div>
+
+        <div>
+          <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Username (For Login) *</label>
+          <input type="text" id="modalUserUsername" placeholder="e.g. manager1" required class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white font-mono focus:outline-none focus:ring-2 focus:ring-rose-500">
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-xs uppercase font-bold text-zinc-400" id="modalUserPasswordLabel">Password *</label>
+            <span class="text-[11px] text-zinc-500 hidden" id="modalUserPasswordHelp">(Leave blank to keep current)</span>
+          </div>
+          <div class="relative">
+            <input 
+              type="password" 
+              id="modalUserPassword" 
+              placeholder="Strong password" 
+              class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 pr-11 text-sm text-white font-mono focus:outline-none focus:ring-2 focus:ring-rose-500"
+            >
+            <button 
+              type="button" 
+              onclick="togglePasswordInput('modalUserPassword', 'modalEyeIcon')" 
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white p-1" 
+              title="Show / Hide Password">
+              <i data-lucide="eye" id="modalEyeIcon" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Role</label>
+          <select id="modalUserRole" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-rose-500">
+            <option value="Fleet Manager">Fleet Manager</option>
+            <option value="Reservation Concierge">Reservation Concierge</option>
+            <option value="Super Admin">Super Admin</option>
+          </select>
+        </div>
+
+        <!-- Account Status Toggle (Active / Disabled) -->
+        <div class="p-3 bg-[#202430] border border-white/10 rounded-xl flex items-center justify-between">
+          <div>
+            <span class="text-xs font-bold text-white block">Account Status</span>
+            <span class="text-[11px] text-zinc-400" id="modalUserStatusDesc">Allow user to log in and manage fleet</span>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="modalUserActive" checked class="sr-only peer">
+            <div class="w-11 h-6 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+          </label>
+        </div>
+
+        <div class="pt-4 border-t border-white/10 flex justify-end gap-3">
+          <button type="button" onclick="closeUserModal()" class="px-5 py-2.5 bg-zinc-800 text-white text-xs font-semibold rounded-xl hover:bg-zinc-700 transition-colors">Cancel</button>
+          <button type="submit" id="modalUserSubmitBtn" class="px-6 py-2.5 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold rounded-xl shadow transition-all">Create Admin Account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 4b: Admin User Role & Page Permissions Modal -->
+  <div id="userPermissionsModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-[#181a24] border border-white/10 rounded-3xl p-6 sm:p-8 max-w-4xl w-full my-8 shadow-2xl max-h-[90vh] flex flex-col">
+      <!-- Header -->
+      <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-4 shrink-0">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="p-1.5 rounded-lg bg-purple-500/20 text-purple-400 border border-purple-500/30">
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+            </span>
+            <h3 class="text-xl font-bold font-heading text-white">Page Access & Role Permissions</h3>
+          </div>
+          <p class="text-xs text-zinc-400 mt-1">Configure which pages and actions this admin user can View, Edit, or Delete.</p>
+        </div>
+        <button type="button" onclick="closeUserPermissionsModal()" class="text-zinc-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- In-Modal Feedback Alert Banner -->
+      <div id="permSaveAlert" class="hidden"></div>
+
+      <!-- Target User Info Banner & Quick Bulk Actions -->
+      <div class="bg-[#13151f] border border-white/10 rounded-2xl p-4 mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-rose-600 flex items-center justify-center font-bold text-white font-heading text-sm" id="permUserAvatar">
+            U
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-white text-sm" id="permUserName">User Name</span>
+              <span class="text-[11px] font-mono text-zinc-400" id="permUserUsername">(@username)</span>
+            </div>
+            <div class="text-[11px] text-purple-300 font-semibold mt-0.5" id="permUserRole">Role: Fleet Manager</div>
+          </div>
+        </div>
+
+        <!-- Quick Bulk Toggles -->
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-[11px] uppercase font-bold text-zinc-400">Quick:</span>
+          <button type="button" onclick="bulkSetPermissions('all')" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-600/30 transition-colors">
+            ✓ Select All
+          </button>
+          <button type="button" onclick="bulkSetPermissions('view_only')" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-blue-600/20 text-blue-300 border border-blue-500/30 hover:bg-blue-600/30 transition-colors">
+            👁 View Only
+          </button>
+          <button type="button" onclick="bulkSetPermissions('clear')" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-rose-600/20 text-rose-300 border border-rose-500/30 hover:bg-rose-600/30 transition-colors">
+            ✕ Clear All
+          </button>
+        </div>
+      </div>
+
+      <!-- Dynamic Matrix Table (Scrollable) -->
+      <div class="overflow-y-auto flex-1 border border-white/10 rounded-2xl bg-[#141620] mb-4">
+        <table class="w-full text-left text-xs text-zinc-300">
+          <thead class="bg-[#1c1f2d] uppercase tracking-wider text-zinc-400 border-b border-white/10 sticky top-0 z-10">
+            <tr>
+              <th class="px-5 py-3">
+                <label class="inline-flex items-center gap-2 cursor-pointer font-bold text-white hover:text-purple-300">
+                  <input type="checkbox" id="permMasterSelectAll" onchange="toggleMasterSelectAll(this.checked)" class="w-4 h-4 rounded text-purple-600 focus:ring-purple-500 bg-zinc-800 border-zinc-600 cursor-pointer">
+                  <span>Select All Pages</span>
+                </label>
+              </th>
+              <th class="px-4 py-3 text-center">
+                <label class="inline-flex items-center justify-center gap-1.5 cursor-pointer font-bold hover:text-emerald-300">
+                  <input type="checkbox" id="permColumnViewAll" onchange="toggleColumnPermissions('view', this.checked)" class="w-4 h-4 rounded text-emerald-500 focus:ring-emerald-400 bg-zinc-800 border-zinc-600 cursor-pointer">
+                  <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                  <span>View All</span>
+                </label>
+              </th>
+              <th class="px-4 py-3 text-center">
+                <label class="inline-flex items-center justify-center gap-1.5 cursor-pointer font-bold hover:text-blue-300">
+                  <input type="checkbox" id="permColumnEditAll" onchange="toggleColumnPermissions('edit', this.checked)" class="w-4 h-4 rounded text-blue-500 focus:ring-blue-400 bg-zinc-800 border-zinc-600 cursor-pointer">
+                  <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                  <span>Edit All</span>
+                </label>
+              </th>
+              <th class="px-4 py-3 text-center">
+                <label class="inline-flex items-center justify-center gap-1.5 cursor-pointer font-bold hover:text-rose-300">
+                  <input type="checkbox" id="permColumnDeleteAll" onchange="toggleColumnPermissions('delete', this.checked)" class="w-4 h-4 rounded text-rose-500 focus:ring-rose-400 bg-zinc-800 border-zinc-600 cursor-pointer">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                  <span>Delete All</span>
+                </label>
+              </th>
+              <th class="px-4 py-3 text-right">Row Quick Toggle</th>
+            </tr>
+          </thead>
+          <tbody id="permissionsTableBody" class="divide-y divide-white/5 font-medium">
+            <!-- Dynamically injected rows for every registered and newly detected tab -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Footer Buttons -->
+      <div class="pt-4 border-t border-white/10 flex items-center justify-between shrink-0">
+        <span class="text-[11px] text-zinc-500 italic">
+          * Changes apply immediately to this user account upon saving.
+        </span>
+        <div class="flex items-center gap-3">
+          <button type="button" onclick="closeUserPermissionsModal()" class="px-5 py-2.5 bg-zinc-800 text-white text-xs font-semibold rounded-xl hover:bg-zinc-700 transition-colors">
+            Cancel
+          </button>
+          <button type="button" onclick="saveUserPermissions()" id="btnSavePermissions" class="px-6 py-2.5 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-purple-600/30 flex items-center gap-2 transition-all">
+            <i data-lucide="save" class="w-4 h-4"></i> Save Permissions
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 5: Add / Edit Navigation Menu Modal -->
+  <div id="menuModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-[#181a24] border border-white/10 rounded-3xl p-6 max-w-md w-full shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
+        <h3 class="text-lg font-bold font-heading text-white" id="menuModalTitle">Add Menu Item</h3>
+        <button onclick="closeMenuModal()" class="text-zinc-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="menuModalForm" onsubmit="handleMenuModalSubmit(event)" class="space-y-4">
+        <input type="hidden" id="modalMenuId">
+        <div>
+          <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">Menu Label *</label>
+          <input type="text" id="modalMenuLabel" placeholder="e.g. Latest model cars" required class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs uppercase font-bold text-zinc-400 mb-1">URL / Anchor Link *</label>
+          <input type="text" id="modalMenuUrl" placeholder="e.g. #fleet or https://..." required class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
+        </div>
+        <div class="flex items-center gap-3">
+          <input type="checkbox" id="modalMenuHighlight" class="w-4 h-4 rounded text-rose-600 focus:ring-rose-500 bg-zinc-800 border-zinc-600">
+          <label for="modalMenuHighlight" class="text-xs font-semibold text-zinc-300 cursor-pointer">
+            Highlight this item (shown in rose/red button style)
+          </label>
+        </div>
+        <div class="pt-4 border-t border-white/10 flex justify-end gap-3">
+          <button type="button" onclick="closeMenuModal()" class="px-5 py-2.5 bg-zinc-800 text-white text-xs font-semibold rounded-xl">Cancel</button>
+          <button type="submit" class="px-6 py-2.5 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold rounded-xl shadow">Save Menu Item</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================================================== -->
+  <!-- SEO MODALS (Landing Page, Karachi Area, FAQs)        -->
+  <!-- ==================================================== -->
+
+  <!-- Modal 10a: SEO Landing Page Modal (Add / Edit) -->
+  <div id="seoPageModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-[#181a24] border border-white/10 rounded-3xl p-6 sm:p-8 max-w-3xl w-full my-8 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
+        <h3 class="text-xl font-bold font-heading text-white" id="seoPageModalTitle">Edit SEO Landing Page</h3>
+        <button type="button" onclick="closeSeoPageModal()" class="text-zinc-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="seoPageModalForm" onsubmit="handleSaveSeoPage(event)" class="space-y-4">
+        <input type="hidden" id="modalSeoPageId">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">URL Slug (e.g. karachi-airport-rent-a-car) *</label>
+            <input type="text" id="modalSeoSlug" required placeholder="karachi-airport-rent-a-car" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white font-mono focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Navigation / Short Title *</label>
+            <input type="text" id="modalSeoNavTitle" required placeholder="Airport Rent a Car" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none">
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">SEO Title Tag (&lt;title&gt;) *</label>
+            <input type="text" id="modalSeoTitle" required placeholder="Karachi Airport Rent a Car | Jinnah International Airport Transfers" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none">
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Meta Description *</label>
+            <textarea id="modalSeoMetaDesc" rows="2" required placeholder="150-160 characters summary..." class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2 text-xs text-white focus:outline-none"></textarea>
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Focus Target Keywords (Comma-separated)</label>
+            <input type="text" id="modalSeoKeywords" placeholder="Karachi airport rent a car, airport pickup car Karachi" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white font-mono focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">H1 Main Headline *</label>
+            <input type="text" id="modalSeoH1" required placeholder="Karachi Airport Rent a Car" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">H2 Subheading</label>
+            <input type="text" id="modalSeoH2" placeholder="Reliable Car Rental at Jinnah International Airport" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none">
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Main Overview Content</label>
+            <textarea id="modalSeoContent" rows="4" placeholder="Detailed service description and process..." class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none"></textarea>
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Key Highlights / Features (One per line)</label>
+            <textarea id="modalSeoHighlights" rows="3" placeholder="24/7 Meet & Greet at Terminal&#10;Live Flight Delay Tracking&#10;All Karachi Areas Drop-off" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2 text-xs text-white font-mono focus:outline-none"></textarea>
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Target Areas Covered (One per line or comma-separated)</label>
+            <textarea id="modalSeoTargetAreas" rows="2" placeholder="Jinnah Terminal 1&#10;Malir Cantt&#10;DHA Karachi&#10;Clifton" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2 text-xs text-white font-mono focus:outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Sitemap Priority (0.1 to 1.0)</label>
+            <input type="text" id="modalSeoPriority" value="0.9" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2 text-xs text-white font-mono focus:outline-none">
+          </div>
+          <div class="flex items-center gap-3 pt-6">
+            <input type="checkbox" id="modalSeoActive" class="w-4 h-4 rounded text-rose-600 bg-zinc-800 border-zinc-600">
+            <label for="modalSeoActive" class="text-xs font-semibold text-zinc-300 cursor-pointer">
+              Publish Live & Include in Sitemap
+            </label>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-white/10 flex justify-end gap-3">
+          <button type="button" onclick="closeSeoPageModal()" class="px-5 py-2.5 bg-zinc-800 text-white text-xs font-semibold rounded-xl">Cancel</button>
+          <button type="submit" class="px-6 py-2.5 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold rounded-xl shadow">Save Landing Page</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 10b: Karachi Area Modal (Add / Edit) -->
+  <div id="karachiAreaModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-[#181a24] border border-white/10 rounded-3xl p-6 max-w-md w-full shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
+        <h3 class="text-lg font-bold font-heading text-white" id="karachiAreaModalTitle">Add Karachi Area</h3>
+        <button type="button" onclick="closeKarachiAreaModal()" class="text-zinc-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="karachiAreaForm" onsubmit="handleSaveKarachiArea(event)" class="space-y-4">
+        <input type="hidden" id="modalAreaId">
+        <div>
+          <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Area Name (e.g. DHA Karachi Phase 1-8) *</label>
+          <input type="text" id="modalAreaName" required placeholder="DHA Karachi" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">SEO Title / Anchor *</label>
+          <input type="text" id="modalAreaTitle" required placeholder="Rent a Car DHA Karachi" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Short Description *</label>
+          <textarea id="modalAreaDesc" rows="2" required placeholder="Doorstep delivery of executive sedans and SUVs..." class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2 text-xs text-white focus:outline-none"></textarea>
+        </div>
+        <div class="pt-2 flex justify-end gap-3">
+          <button type="button" onclick="closeKarachiAreaModal()" class="px-4 py-2 bg-zinc-800 text-white text-xs font-semibold rounded-xl">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow">Save Area</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 10c: FAQ Modal (Add / Edit) -->
+  <div id="seoFaqModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-[#181a24] border border-white/10 rounded-3xl p-6 max-w-lg w-full shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
+        <h3 class="text-lg font-bold font-heading text-white" id="seoFaqModalTitle">Add FAQ Item</h3>
+        <button type="button" onclick="closeSeoFaqModal()" class="text-zinc-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="seoFaqForm" onsubmit="handleSaveSeoFaq(event)" class="space-y-4">
+        <input type="hidden" id="modalFaqId">
+        <div>
+          <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Question *</label>
+          <input type="text" id="modalFaqQuestion" required placeholder="e.g. Do you provide Karachi Airport pickup?" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Answer *</label>
+          <textarea id="modalFaqAnswer" rows="4" required placeholder="Clear answer here..." class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2 text-xs text-white focus:outline-none"></textarea>
+        </div>
+        <div class="pt-2 flex justify-end gap-3">
+          <button type="button" onclick="closeSeoFaqModal()" class="px-4 py-2 bg-zinc-800 text-white text-xs font-semibold rounded-xl">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold rounded-xl shadow">Save FAQ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Add / Edit Duration Slot Days -->
+  <div id="calculatorSlotModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-[#181a24] border border-white/10 rounded-3xl p-6 max-w-md w-full shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
+        <h3 class="text-lg font-bold font-heading text-white" id="calculatorSlotModalTitle">Add Duration Slot</h3>
+        <button type="button" onclick="closeCalculatorSlotModal()" class="text-zinc-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="calculatorSlotForm" onsubmit="handleSaveCalculatorSlot(event)" class="space-y-4">
+        <input type="hidden" id="modalSlotId">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Duration (Days) *</label>
+            <input type="number" id="modalSlotDays" min="1" required placeholder="e.g. 3" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none font-mono">
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Discount / Day (PKR) *</label>
+            <input type="number" id="modalSlotDiscount" min="0" required placeholder="e.g. 200" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none font-mono font-bold text-rose-400">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Display Label *</label>
+          <input type="text" id="modalSlotLabel" required placeholder="e.g. 3 Days (Weekend)" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Badge Text</label>
+          <input type="text" id="modalSlotBadge" placeholder="e.g. Save Rs. 600 / Popular" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none">
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="checkbox" id="modalSlotActive" checked class="w-4 h-4 rounded text-rose-600 focus:ring-rose-500 bg-zinc-800 border-zinc-600">
+          <label for="modalSlotActive" class="text-xs text-zinc-300 font-semibold cursor-pointer">Active in Calculator</label>
+        </div>
+        <div class="pt-2 flex justify-end gap-3">
+          <button type="button" onclick="closeCalculatorSlotModal()" class="px-4 py-2 bg-zinc-800 text-white text-xs font-semibold rounded-xl">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold rounded-xl shadow">Save Slot</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Add / Edit Calculator Location -->
+  <div id="calculatorLocationModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-[#181a24] border border-white/10 rounded-3xl p-6 max-w-md w-full shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
+        <h3 class="text-lg font-bold font-heading text-white" id="calculatorLocationModalTitle">Add Location</h3>
+        <button type="button" onclick="closeCalculatorLocationModal()" class="text-zinc-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="calculatorLocationForm" onsubmit="handleSaveCalculatorLocation(event)" class="space-y-4">
+        <input type="hidden" id="modalLocationId">
+        <div>
+          <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Location Name *</label>
+          <input type="text" id="modalLocationName" required placeholder="e.g. Karachi - Bahria Town / Malir" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none">
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="checkbox" id="modalLocationActive" checked class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 bg-zinc-800 border-zinc-600">
+          <label for="modalLocationActive" class="text-xs text-zinc-300 font-semibold cursor-pointer">Active in Calculator Dropdowns</label>
+        </div>
+        <div class="pt-2 flex justify-end gap-3">
+          <button type="button" onclick="closeCalculatorLocationModal()" class="px-4 py-2 bg-zinc-800 text-white text-xs font-semibold rounded-xl">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl shadow">Save Location</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Add / Edit Optional Add-on -->
+  <div id="calculatorAddonModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-[#181a24] border border-white/10 rounded-3xl p-6 max-w-md w-full shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
+        <h3 class="text-lg font-bold font-heading text-white" id="calculatorAddonModalTitle">Add Optional Add-on</h3>
+        <button type="button" onclick="closeCalculatorAddonModal()" class="text-zinc-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="calculatorAddonForm" onsubmit="handleSaveCalculatorAddon(event)" class="space-y-4">
+        <input type="hidden" id="modalAddonId">
+        <div>
+          <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Add-on Title *</label>
+          <input type="text" id="modalAddonTitle" required placeholder="e.g. Express Doorstep Delivery" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Description / Subtitle</label>
+          <input type="text" id="modalAddonDesc" placeholder="e.g. Trained protocol driver" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Price (PKR) *</label>
+            <input type="number" id="modalAddonPrice" min="0" required placeholder="e.g. 5000" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none font-mono font-bold text-purple-400">
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Billing Type</label>
+            <select id="modalAddonType" class="w-full bg-[#202430] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none">
+              <option value="daily">Per Day (Daily)</option>
+              <option value="flat">Fixed (One-Time Flat)</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex items-center justify-between pt-1">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="modalAddonDefaultChecked" class="w-4 h-4 rounded text-purple-600 focus:ring-purple-500 bg-zinc-800 border-zinc-600">
+            <span class="text-xs text-zinc-300 font-semibold">Pre-selected by default</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="modalAddonActive" checked class="w-4 h-4 rounded text-purple-600 focus:ring-purple-500 bg-zinc-800 border-zinc-600">
+            <span class="text-xs text-zinc-300 font-semibold">Active</span>
+          </label>
+        </div>
+        <div class="pt-2 flex justify-end gap-3">
+          <button type="button" onclick="closeCalculatorAddonModal()" class="px-4 py-2 bg-zinc-800 text-white text-xs font-semibold rounded-xl">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold rounded-xl shadow">Save Add-on</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Add / Edit Blog Article -->
+  <div id="blogModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-[#181a24] border border-white/10 rounded-3xl p-6 sm:p-8 max-w-3xl w-full shadow-2xl max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
+        <div>
+          <h3 class="text-lg font-bold font-heading text-white" id="blogModalTitle">Write New Article</h3>
+          <p class="text-xs text-zinc-400 mt-0.5">Target high-intent Google searches in Karachi with expert guides.</p>
+        </div>
+        <button type="button" onclick="closeBlogModal()" class="text-zinc-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- AI Content Writer Toolbar with Topic Autocomplete -->
+      <div class="mb-5 p-4 rounded-2xl bg-gradient-to-r from-purple-950/40 via-sky-950/40 to-emerald-950/40 border border-purple-500/30 space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <span class="p-2 rounded-xl bg-purple-600/30 text-purple-300 border border-purple-500/40 shrink-0">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+            </span>
+            <div>
+              <div class="font-bold text-white text-xs flex items-center gap-1.5">
+                <span>AI Blog Writer & Topic Suggester</span>
+                <span class="px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 text-[10px] font-mono">GPT/Gemini</span>
+              </div>
+              <div class="text-[11px] text-zinc-400">Type what you want to write about (AI autocompletes suggestions) & auto-generates complete article data.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Topic Input with Autocomplete & Fleet Car Selector -->
+        <div class="relative">
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+            <div class="relative flex-1">
+              <input 
+                type="text" 
+                id="aiBlogTopicInput" 
+                placeholder="Type topic / title (e.g. Yaris fuel economy, Airport pickup guide, Alto daily rates...)" 
+                autocomplete="off"
+                oninput="handleAiBlogTopicInput(this.value)"
+                onfocus="handleAiBlogTopicInput(this.value)"
+                class="w-full bg-[#161824] border border-purple-500/40 rounded-xl pl-9 pr-4 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-purple-400"
+              >
+              <i data-lucide="sparkles" class="w-4 h-4 text-purple-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+              <select id="aiBlogCarSelect" onchange="handleAiCarSelectChange(this.value)" class="bg-[#1c1f2e] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-purple-400">
+                <option value="">-- Or Pick Fleet Car --</option>
+              </select>
+              <button type="button" onclick="triggerAiBlogGenerateFromTopic()" id="btnAiBlogGenerate" class="px-4 py-2.5 bg-gradient-to-r from-purple-600 to-sky-600 hover:from-purple-500 hover:to-sky-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-purple-600/30 flex items-center justify-center gap-1.5 shrink-0 transition-all">
+                <i data-lucide="wand-2" class="w-3.5 h-3.5"></i> Auto-Generate
+              </button>
+            </div>
+          </div>
+
+          <!-- Autocomplete Dropdown List -->
+          <div id="aiBlogSuggestionsDropdown" class="hidden absolute top-full left-0 right-0 sm:right-auto sm:w-3/4 mt-1.5 bg-[#1a1d2d] border border-purple-500/40 rounded-xl shadow-2xl z-30 max-h-60 overflow-y-auto divide-y divide-white/5">
+            <!-- Dynamic suggestion items -->
+          </div>
+        </div>
+      </div>
+
+      <form id="blogForm" onsubmit="handleSaveBlog(event)" class="space-y-5">
+        <input type="hidden" id="modalBlogId">
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Article Title *</label>
+            <input type="text" id="modalBlogTitle" required placeholder="e.g. Documents Required for Self-Drive Car Rental in Karachi" oninput="autoGenerateBlogSlug(this.value)" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-sky-500">
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Category *</label>
+            <input type="text" id="modalBlogCategory" required placeholder="e.g. Rental Guides" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">URL Slug (e.g. /blog/my-guide)</label>
+            <input type="text" id="modalBlogSlug" placeholder="auto-generated-from-title" oninput="this.dataset.custom='true'" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-sky-400 font-mono focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Estimated Read Time</label>
+            <input type="text" id="modalBlogReadTime" placeholder="e.g. 5 min read" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Author Name</label>
+            <input type="text" id="modalBlogAuthor" placeholder="e.g. Car4Rent Editorial Team" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Featured Media (Image or Video Link)</label>
+            <div class="flex flex-wrap gap-2">
+              <input type="text" id="modalBlogImage" placeholder="Paste Image/Video URL, YouTube, Facebook, Instagram, TikTok..." oninput="handleBlogMediaUrlChange(this.value)" class="flex-1 min-w-[180px] bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-sky-500">
+              <label class="px-3 py-2 bg-sky-600/20 hover:bg-sky-600/30 border border-sky-500/30 text-sky-300 text-xs font-semibold rounded-xl cursor-pointer flex items-center gap-1 shrink-0" title="Upload Image (JPG, PNG, WebP)">
+                <i data-lucide="image" class="w-3.5 h-3.5"></i> Image
+                <input type="file" accept="image/*" class="hidden" onchange="handleBlogMediaUpload(this, 'image')">
+              </label>
+              <label class="px-3 py-2 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/30 text-purple-300 text-xs font-semibold rounded-xl cursor-pointer flex items-center gap-1 shrink-0" title="Upload Video (MP4, WebM, MOV)">
+                <i data-lucide="video" class="w-3.5 h-3.5"></i> Video
+                <input type="file" accept="video/mp4,video/webm,video/quicktime,video/*" class="hidden" onchange="handleBlogMediaUpload(this, 'video')">
+              </label>
+            </div>
+            <!-- Optional Video Cover/Poster Image -->
+            <div id="modalBlogPosterContainer" class="mt-2 flex items-center gap-2">
+              <input type="text" id="modalBlogPoster" placeholder="Optional: Custom Cover / Thumbnail Image (for cards like YouTube)" class="flex-1 bg-[#1a1e29] border border-white/10 rounded-lg px-3 py-1.5 text-[11px] text-zinc-300 focus:outline-none focus:border-sky-500/50">
+              <label class="px-2.5 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 text-[11px] font-medium rounded-lg cursor-pointer flex items-center gap-1 shrink-0" title="Upload Custom Video Thumbnail">
+                <i data-lucide="camera" class="w-3 h-3"></i> Thumbnail
+                <input type="file" accept="image/*" class="hidden" onchange="handleBlogPosterUpload(this)">
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Media Preview Player -->
+        <div id="modalBlogMediaPreviewContainer" class="rounded-2xl overflow-hidden bg-black/40 border border-white/10 aspect-video relative flex items-center justify-center max-h-80 transition-all duration-200">
+          <div id="modalBlogMediaPlaceholder" class="text-zinc-500 text-xs flex flex-col items-center gap-1.5 p-4 text-center">
+            <i data-lucide="play-circle" class="w-8 h-8 opacity-40"></i>
+            <span>Image or Video Preview Player will appear here</span>
+            <span class="text-[10px] text-zinc-500">Supports YouTube, Facebook, Instagram, TikTok, MP4 Video, WebP & JPG Images</span>
+          </div>
+          <img id="modalBlogImagePreview" src="" alt="Preview" class="hidden w-full h-full object-cover">
+          <video id="modalBlogVideoPreview" src="" controls playsinline preload="metadata" class="hidden w-full h-full object-contain bg-black"></video>
+          <iframe id="modalBlogIframePreview" src="" class="hidden w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Short Excerpt (Summary for Cards & Snippet) *</label>
+          <textarea id="modalBlogExcerpt" rows="2" required placeholder="A brief summary of what the reader will learn in this rental guide..." class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Full Article Content (HTML / Text) *</label>
+          <textarea id="modalBlogContent" rows="8" required placeholder="Write your full guide here. Supports <h2>, <h3>, <p>, <ul>, <li> tags..." class="w-full bg-[#202430] border border-white/10 rounded-xl p-4 text-xs text-white font-mono focus:outline-none focus:ring-1 focus:ring-sky-500"></textarea>
+        </div>
+
+        <!-- SEO Metadata Box -->
+        <div class="p-4 bg-[#141620] border border-white/10 rounded-2xl space-y-3">
+          <div class="text-xs font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1.5">
+            <i data-lucide="target" class="w-3.5 h-3.5"></i> Google Search Engine Optimization (SEO)
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-zinc-400 mb-1">Custom Meta Title</label>
+            <input type="text" id="modalBlogMetaTitle" placeholder="Custom Google title tag (leave blank to use Article Title)" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2 text-xs text-white focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-zinc-400 mb-1">Meta Description</label>
+            <input type="text" id="modalBlogMetaDesc" placeholder="150-160 characters summary for Google search snippet" class="w-full bg-[#202430] border border-white/10 rounded-xl px-4 py-2 text-xs text-white focus:outline-none">
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-2">
+          <div class="flex items-center gap-4">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="modalBlogPublished" checked class="w-4 h-4 rounded text-sky-600 focus:ring-sky-500 bg-zinc-800 border-zinc-600">
+              <span class="text-xs text-zinc-300 font-semibold">Published (Visible on site)</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="modalBlogFeatured" class="w-4 h-4 rounded text-amber-500 focus:ring-amber-400 bg-zinc-800 border-zinc-600">
+              <span class="text-xs text-zinc-300 font-semibold">Featured Top Story</span>
+            </label>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button type="button" onclick="closeBlogModal()" class="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-semibold rounded-xl">Cancel</button>
+            <button type="submit" class="px-6 py-2.5 bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold rounded-xl shadow-lg">Save Article</button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastNotification" class="custom-toast fixed bottom-6 right-6 z-[99999] flex items-center gap-3 bg-zinc-900/95 text-white px-5 py-3 rounded-full shadow-2xl border border-zinc-700/80 backdrop-blur-md transition-all duration-300 transform opacity-0 translate-y-6 pointer-events-none" style="display: none; position: fixed; bottom: 24px; right: 24px; z-index: 99999; background: rgba(24, 24, 27, 0.95); border: 1px solid rgba(63, 63, 70, 0.8); border-radius: 9999px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+    <div id="toastIconWrap" class="shrink-0 flex items-center justify-center">
+      <svg class="w-5 h-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
+    </div>
+    <span id="toastMessage" class="text-sm font-semibold tracking-wide text-zinc-100">Notification</span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/data.js?v=2.9"></script>
+  <script src="js/admin.js?v=3.2"></script>
+</body>
+</html>

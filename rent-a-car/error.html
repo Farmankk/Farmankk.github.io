@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">Error | Car4Rent Karachi</title>
+  <link rel="icon" id="siteFavicon" type="image/x-icon" href="/favicon.ico">
+  
+  <!-- Fonts -->
+  <link rel="stylesheet" href="/css/fonts.css">
+  
+  <!-- Tailwind CSS -->
+  <script src="/js/tailwind.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            heading: ['Syne', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif']
+          },
+          colors: {
+            brand: {
+              black: '#090a0c',
+              card: '#12141a',
+              rose: '#e11d48',
+              emerald: '#10b981'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="/js/lucide.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #090a0c;
+    }
+    .font-heading {
+      font-family: 'Syne', sans-serif;
+    }
+    .hero-glow {
+      background: radial-gradient(circle at center, rgba(225, 29, 72, 0.14) 0%, rgba(9, 10, 12, 0) 70%);
+    }
+    .card-glass {
+      background: rgba(18, 20, 26, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+  </style>
+</head>
+<body class="bg-[#090a0c] text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-rose-600 selection:text-white relative overflow-x-hidden">
+
+  <!-- Ambient Glow Accents -->
+  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[700px] h-[500px] hero-glow pointer-events-none -z-10 blur-3xl"></div>
+  <div class="fixed -bottom-32 -right-32 w-96 h-96 bg-rose-600/10 rounded-full pointer-events-none -z-10 blur-3xl"></div>
+  <div class="fixed -top-32 -left-32 w-96 h-96 bg-emerald-500/10 rounded-full pointer-events-none -z-10 blur-3xl"></div>
+
+  <!-- Minimal Header -->
+  <header class="w-full max-w-6xl mx-auto px-4 sm:px-6 py-6 flex items-center justify-between">
+    <a href="/" id="errorHeaderBrandLink" class="flex items-center gap-3 group">
+      <img id="errorBrandLogo" src="/uploads/logo.jpg" alt="CAR 4 RENT" class="h-10 sm:h-12 w-auto max-w-[240px] object-contain group-hover:opacity-90 transition-opacity">
+    </a>
+
+    <a href="tel:+923023650000" class="flex items-center gap-2 px-4 py-2 rounded-full card-glass hover:border-white/20 transition-all text-xs font-semibold text-zinc-300">
+      <i data-lucide="phone" class="w-3.5 h-3.5 text-emerald-400"></i>
+      <span class="hidden sm:inline">24/7 Helpline:</span> 0302-3650000
+    </a>
+  </header>
+
+  <!-- Main Error Card Section -->
+  <main class="flex-1 flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-xl text-center">
+      
+      <!-- Status Badge -->
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full card-glass text-xs font-bold uppercase tracking-wider mb-6 text-rose-400 border border-rose-500/20">
+        <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+        <span id="badgeText">SYSTEM ALERT</span>
+      </div>
+
+      <!-- Giant Stylized Error Code -->
+      <div class="relative select-none mb-3">
+        <span id="errorCodeDisplay" class="font-heading font-black text-8xl sm:text-9xl text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-600 tracking-tighter drop-shadow-2xl">
+          {{ERROR_CODE}}
+        </span>
+      </div>
+
+      <!-- Error Title -->
+      <h1 id="errorTitleDisplay" class="font-heading font-extrabold text-2xl sm:text-3xl text-white tracking-tight mb-4">
+        {{ERROR_TITLE}}
+      </h1>
+
+      <!-- Detailed Reason Box (Highlighting permission or path cause) -->
+      <div class="card-glass rounded-2xl p-5 sm:p-6 mb-8 text-left shadow-2xl border border-white/10 relative overflow-hidden">
+        <div class="absolute top-0 left-0 bottom-0 w-1.5 bg-rose-600"></div>
+        <div class="flex items-start gap-3.5">
+          <div id="reasonIconWrap" class="w-9 h-9 rounded-xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-400 shrink-0 mt-0.5">
+            <i id="reasonIcon" data-lucide="shield-alert" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="text-xs font-bold uppercase tracking-wider text-rose-400 mb-1">
+              System Notice &bull; Access Restriction
+            </div>
+            <p id="errorReasonDisplay" class="text-sm text-zinc-300 leading-relaxed">
+              {{ERROR_REASON}}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Primary Action Buttons -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a href="/" class="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white font-heading font-bold text-sm tracking-wide shadow-lg shadow-rose-900/30 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+          <i data-lucide="home" class="w-4 h-4"></i>
+          <span>Return to Homepage</span>
+        </a>
+
+        <a href="/#fleet" class="w-full sm:w-auto px-7 py-3.5 rounded-2xl card-glass hover:bg-white/10 text-white font-heading font-bold text-sm tracking-wide active:scale-[0.98] transition-all flex items-center justify-center gap-2 border border-white/15">
+          <i data-lucide="car" class="w-4 h-4 text-emerald-400"></i>
+          <span>Browse Available Fleet</span>
+        </a>
+
+        <a href="https://wa.me/923023650000?text=Hi%20Car4Rent%20Karachi,%20I%20encountered%20an%20error%20on%20your%20website" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-5 py-3.5 rounded-2xl bg-emerald-600/20 border border-emerald-500/30 hover:bg-emerald-600/30 text-emerald-300 font-bold text-sm active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+          <i data-lucide="message-circle" class="w-4 h-4 text-emerald-400"></i>
+          <span>WhatsApp Concierge</span>
+        </a>
+      </div>
+
+      <!-- Quick Helpful Links -->
+      <div class="mt-10 pt-6 border-t border-white/5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-zinc-500">
+        <a href="/karachi-airport-rent-a-car" class="hover:text-zinc-300 transition-colors">Airport Protocol</a>
+        <span>&bull;</span>
+        <a href="/rent-a-car-with-driver-karachi" class="hover:text-zinc-300 transition-colors">With Driver</a>
+        <span>&bull;</span>
+        <a href="/rent-a-car-without-driver-karachi" class="hover:text-zinc-300 transition-colors">Self Drive</a>
+        <span>&bull;</span>
+        <a href="/admin" class="hover:text-zinc-300 transition-colors">Admin Portal</a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Minimal Footer -->
+  <footer class="w-full max-w-6xl mx-auto px-4 sm:px-6 py-6 text-center text-xs text-zinc-600 border-t border-white/5">
+    <p>&copy; 2026 CAR 4 RENT (Pvt. Ltd.). All rights reserved &bull; Karachi, Pakistan</p>
+  </footer>
+
+  <!-- Client-side Fallback & Dynamic Query Reader -->
+  <script>
+    (function() {
+      // Initialize icons
+      if (window.lucide) lucide.createIcons();
+
+      const elCode = document.getElementById('errorCodeDisplay');
+      const elTitle = document.getElementById('errorTitleDisplay');
+      const elReason = document.getElementById('errorReasonDisplay');
+      const elBadge = document.getElementById('badgeText');
+      const pageTitle = document.getElementById('pageTitle');
+      const icon = document.getElementById('reasonIcon');
+
+      // Check if server already injected values, otherwise read from URL query parameters
+      let currentCode = (elCode.textContent || '').trim();
+      if (currentCode.includes('{{ERROR_CODE}}') || !currentCode) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const codeParam = urlParams.get('code') || '404';
+        const reasonParam = urlParams.get('reason');
+
+        if (codeParam === '403') {
+          elCode.textContent = '403';
+          elTitle.textContent = 'Access Restricted';
+          elReason.textContent = reasonParam || 'You do not have permission to access this protected system area or directory.';
+          elBadge.textContent = 'RESTRICTED AREA';
+          pageTitle.textContent = '403 Forbidden | Car4Rent';
+        } else if (codeParam === '500') {
+          elCode.textContent = '500';
+          elTitle.textContent = 'Internal Server Error';
+          elReason.textContent = reasonParam || 'A temporary server error occurred while processing your request. Please try again or contact concierge.';
+          elBadge.textContent = 'SERVER NOTICE';
+          pageTitle.textContent = '500 Server Error | Car4Rent';
+        } else {
+          elCode.textContent = '404';
+          elTitle.textContent = 'Page or Vehicle Not Found';
+          elReason.textContent = reasonParam || 'The requested page, vehicle or link does not exist, has been retired, or you do not have permission to view it.';
+          elBadge.textContent = 'PAGE NOT FOUND';
+          pageTitle.textContent = '404 Not Found | Car4Rent';
+        }
+        if (window.lucide) lucide.createIcons();
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
+PassengerAppRoot "/home2/carrentc/domains/car4rent.com.pk/public_html"
+PassengerBaseURI "/"
+PassengerNodejs "/home2/carrentc/nodevenv/domains/car4rent.com.pk/public_html/19/bin/node"
+PassengerAppType node
+PassengerStartupFile server.js
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
+
+# ===================================================
+# ENTERPRISE SECURITY FIREWALL (.htaccess)
+# ===================================================
+
+# 1. Disable Directory Indexing, Disable MultiViews & Set Upload Size Limit (10MB)
+Options -Indexes -MultiViews
+LimitRequestBody 10485760
+
+# 2. Block Direct Access to Database & Sensitive Directories + SEO 301 Redirects
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Prevent internal ErrorDocument sub-requests from entering rewrite loops
+    RewriteCond %{ENV:REDIRECT_STATUS} !^$
+    RewriteRule .* - [L]
+
+    RewriteRule ^database(/.*)?$ - [F,L,NC]
+    RewriteRule ^node_modules(/.*)?$ - [F,L,NC]
+    RewriteRule ^plan_seo(/.*)?$ - [F,L,NC]
+
+    # Legacy WordPress & RSS Feed Permanent 301 Redirects (Google Search Console Cleanup)
+    RewriteRule ^wp-(.*)$ / [R=301,L,NC]
+    RewriteRule ^feed/?(.*)$ / [R=301,L,NC]
+    RewriteRule ^comments/feed/?(.*)$ / [R=301,L,NC]
+    RewriteRule ^(.*)/feed/?$ / [R=301,L,NC]
+
+    # Clean URLs: Auto-strip .html from address bar (301 Permanent Redirect)
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/([^.]+)\.html [NC]
+    RewriteCond %1 !^google [NC]
+    RewriteCond %1 !^error [NC]
+    RewriteRule ^ /%1 [R=301,L,NE]
+
+    # Clean URLs: Redirect /index to root /
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/index [NC]
+    RewriteRule ^ / [R=301,L]
+
+    # Clean URLs: Internal Rewrite (Serve .html without showing extension, exclude dynamic SSR routes)
+    RewriteCond %{REQUEST_URI} !^/(blog|cars|car|api) [NC]
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}\.html -f
+    RewriteRule ^(.*)$ $1.html [L]
+</IfModule>
+
+# 2.1 Custom Luxury Branded Error Documents
+ErrorDocument 404 /error.html
+ErrorDocument 403 /error.html
+ErrorDocument 500 /error.html
+
+# 3. Block Sensitive File Extensions from Being Downloaded
+<FilesMatch "\.(json|bat|env|md|lock|log|sh|config|bak|sql)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# 4. Block Hidden Files (e.g. .git, .env)
+<FilesMatch "^\.">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# 5. HTTP Security Headers
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# 6. High-Performance Browser Caching (Lighthouse 100 Cache Lifetime)
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/html "access plus 0 seconds"
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresByType text/css "access plus 1 hour"
+    ExpiresByType application/javascript "access plus 1 hour"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+</IfModule>
+
+# 7. Gzip Compression (Speed & Bandwidth Savings)
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json
+</IfModule>
+
+<IfModule mod_headers.c>
+    # 1. HTML & JSON must never be cached stale by browsers
+    <FilesMatch "\.(html|htm|json)$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires "0"
+    </FilesMatch>
+
+    # 2. Permanent Fonts (woff2, ttf)
+    <FilesMatch "\.(woff2?|ttf|otf|eot)$">
+        Header set Cache-Control "max-age=31536000, public, immutable"
+    </FilesMatch>
+
+    # 3. Dynamic Uploads (Logos, banners, avatars) must immediately revalidate
+    <FilesMatch "(logo|seo-car|hero-car|banner|avatar)\.(jpe?g|png|webp|svg|ico)$">
+        Header set Cache-Control "no-cache, must-revalidate"
+        Header set Pragma "no-cache"
+    </FilesMatch>
+
+    # 4. General Static Media & Scripts
+    <FilesMatch "\.(ico|jpe?g|png|webp|svg)$">
+        Header set Cache-Control "public, max-age=86400, must-revalidate"
+    </FilesMatch>
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "public, max-age=3600, must-revalidate"
+    </FilesMatch>
+</IfModule>

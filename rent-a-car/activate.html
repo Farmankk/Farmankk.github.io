@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>License Activation Required | Car4Rent</title>
+  <script src="/js/tailwind.min.js"></script>
+  <script src="/js/lucide.min.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-[#0b0c10] text-zinc-100 min-h-screen flex items-center justify-center p-4 font-sans selection:bg-rose-600 selection:text-white">
+
+  <div class="max-w-xl w-full bg-[#13161f] border border-white/10 rounded-3xl p-8 sm:p-10 shadow-2xl relative overflow-hidden">
+    <!-- Top glow accent -->
+    <div class="absolute -top-24 -left-24 w-60 h-60 bg-rose-600/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-24 -right-24 w-60 h-60 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="relative z-10 text-center">
+      <!-- Shield Icon -->
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-rose-600 to-rose-400 text-white flex items-center justify-center mx-auto mb-6 shadow-lg shadow-rose-900/40">
+        <i data-lucide="shield-alert" class="w-8 h-8"></i>
+      </div>
+
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-rose-950/60 text-rose-300 border border-rose-800/40 mb-3">
+        <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+        Software License Inactive
+      </span>
+
+      <h1 class="text-2xl sm:text-3xl font-black font-heading text-white tracking-tight">
+        Domain Activation Required
+      </h1>
+
+      <p class="text-xs sm:text-sm text-zinc-400 mt-2.5 leading-relaxed max-w-md mx-auto">
+        This software installation is locked and protected. A valid cryptographically signed license key is required to activate this domain.
+      </p>
+
+      <!-- Domain badge -->
+      <div class="mt-6 p-3.5 bg-black/40 border border-white/10 rounded-2xl flex items-center justify-between text-xs">
+        <span class="text-zinc-400 flex items-center gap-2">
+          <i data-lucide="globe" class="w-4 h-4 text-zinc-500"></i> Current Host Domain:
+        </span>
+        <strong id="displayHostDomain" class="font-mono text-amber-400 text-sm font-bold tracking-wide">
+          localhost
+        </strong>
+      </div>
+
+      <!-- Form -->
+      <form id="activationForm" onsubmit="handleActivation(event)" class="mt-6 text-left space-y-4">
+        <div>
+          <label class="block text-xs uppercase font-bold text-zinc-300 mb-1.5 flex items-center justify-between">
+            <span>Activation License Key</span>
+            <span class="text-[10px] text-zinc-500 font-normal">Format: C4R_...</span>
+          </label>
+          <textarea 
+            id="licenseKeyInput" 
+            rows="3"
+            placeholder="Paste your authorized C4R license key here..." 
+            required
+            class="w-full bg-[#1a1e2b] border border-white/15 rounded-2xl px-4 py-3 text-white text-xs font-mono focus:ring-2 focus:ring-rose-500 focus:border-rose-500 focus:outline-none transition-all placeholder:text-zinc-600 resize-none"
+          ></textarea>
+        </div>
+
+        <div id="activationError" class="hidden p-3 rounded-xl bg-rose-950/50 border border-rose-800/50 text-rose-300 text-xs flex items-start gap-2">
+          <i data-lucide="alert-circle" class="w-4 h-4 shrink-0 mt-0.5"></i>
+          <span id="activationErrorText">Invalid key</span>
+        </div>
+
+        <div id="activationSuccess" class="hidden p-4 rounded-xl bg-emerald-950/60 border border-emerald-800/50 text-emerald-200 text-xs flex items-center gap-2.5">
+          <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400 shrink-0"></i>
+          <div>
+            <strong class="font-bold block text-emerald-100">License Activated Successfully!</strong>
+            <span class="text-emerald-300/80">Unlocking system and redirecting now...</span>
+          </div>
+        </div>
+
+        <button 
+          type="submit" 
+          id="activateBtn"
+          class="w-full py-3.5 bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white font-bold rounded-2xl text-sm shadow-lg shadow-rose-900/30 hover:shadow-rose-900/50 transition-all flex items-center justify-center gap-2 cursor-pointer"
+        >
+          <i data-lucide="key-round" class="w-4 h-4"></i>
+          <span>Activate License & Unlock System</span>
+        </button>
+      </form>
+
+      <!-- Footer Help -->
+      <div class="mt-8 pt-6 border-t border-white/10 text-center text-xs text-zinc-500">
+        <p>Do not have an activation key? Contact your software vendor / developer:</p>
+        <div class="mt-2 flex items-center justify-center gap-3">
+          <a href="https://wa.me/923023650000" target="_blank" class="inline-flex items-center gap-1 text-emerald-400 hover:text-emerald-300 font-semibold transition-colors">
+            <i data-lucide="message-circle" class="w-3.5 h-3.5"></i> WhatsApp Support
+          </a>
+          <span class="text-zinc-700">&bull;</span>
+          <span class="text-zinc-400">Enterprise Anti-Piracy Security System</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const host = window.location.hostname || 'localhost';
+      const el = document.getElementById('displayHostDomain');
+      if (el) el.textContent = host;
+
+      if (window.lucide) lucide.createIcons();
+    });
+
+    async function handleActivation(e) {
+      e.preventDefault();
+      const key = document.getElementById('licenseKeyInput').value.trim();
+      const errBox = document.getElementById('activationError');
+      const errText = document.getElementById('activationErrorText');
+      const successBox = document.getElementById('activationSuccess');
+      const btn = document.getElementById('activateBtn');
+
+      errBox.classList.add('hidden');
+      successBox.classList.add('hidden');
+
+      if (!key) return;
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="inline-block animate-spin mr-2">⟳</span> Verifying License...';
+
+      try {
+        const res = await fetch('/api/activate-license', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ key })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          successBox.classList.remove('hidden');
+          btn.innerHTML = '✓ Activated!';
+          btn.classList.replace('from-rose-600', 'from-emerald-600');
+          btn.classList.replace('to-rose-700', 'to-emerald-700');
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 1500);
+        } else {
+          errText.textContent = data.error || data.reason || 'Invalid license key for this domain.';
+          errBox.classList.remove('hidden');
+          btn.disabled = false;
+          btn.innerHTML = '<i data-lucide="key-round" class="w-4 h-4"></i><span>Activate License & Unlock System</span>';
+          if (window.lucide) lucide.createIcons();
+        }
+      } catch (err) {
+        errText.textContent = 'Server connection failed: ' + err.message;
+        errBox.classList.remove('hidden');
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="key-round" class="w-4 h-4"></i><span>Activate License & Unlock System</span>';
+        if (window.lucide) lucide.createIcons();
+      }
+    }
+  </script>
+</body>
+</html>
