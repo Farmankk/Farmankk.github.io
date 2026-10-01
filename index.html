@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farman Yousaf | Senior Full Stack PHP Developer & ERP Architect</title>
+  <meta name="description" content="Senior Full Stack PHP Developer with 6+ years of experience architecting enterprise ERP systems, CRM modules, custom e-commerce integrations, and POS hardware connectivity.">
+  <meta name="author" content="Farman Yousaf">
+
+  <!-- OpenGraph / Meta -->
+  <meta property="og:title" content="Farman Yousaf - Senior Full Stack PHP Developer">
+  <meta property="og:description" content="Specialist in Enterprise ERPs, Core PHP (OOP), MySQL, WordPress, Shopify, and API Integrations.">
+  <meta property="og:type" content="website">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            },
+            accent: {
+              cyan: '#06b6d4',
+              emerald: '#10b981',
+              purple: '#8b5cf6',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts & Lucide Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .glow-effect {
+      background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.15), transparent 70%);
+    }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card:hover {
+      border-color: rgba(99, 102, 241, 0.4);
+    }
+    .tag-badge {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-weight: 500;
+      letter-spacing: 0.025em;
+    }
+  </style>
+</head>
+
+<body class="bg-slate-950 text-slate-100 antialiased selection:bg-brand-500 selection:text-white relative overflow-x-hidden min-h-screen">
+
+  <!-- Ambient Glow Backdrops -->
+  <div class="fixed top-0 left-1/4 w-96 h-96 bg-brand-600/15 rounded-full blur-3xl pointer-events-none -z-10"></div>
+  <div class="fixed top-1/3 right-10 w-96 h-96 bg-accent-cyan/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+  <div class="fixed bottom-10 left-10 w-96 h-96 bg-accent-purple/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+
+  <!-- Navigation Bar -->
+  <header class="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/80 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <!-- Brand Logo -->
+      <a href="#hero" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-accent-cyan flex items-center justify-center font-bold text-white shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform">
+          FY
+        </div>
+        <div class="leading-tight">
+          <span class="block font-bold text-base tracking-wide text-white group-hover:text-brand-500 transition-colors">Farman Yousaf</span>
+          <span class="block text-xs font-mono text-slate-400">Sr. Full Stack Engineer</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+        <a href="#about" class="hover:text-white transition-colors">About</a>
+        <a href="#skills" class="hover:text-white transition-colors">Skills</a>
+        <a href="#experience" class="hover:text-white transition-colors">Experience</a>
+        <a href="#projects" class="hover:text-white transition-colors">Projects</a>
+        <a href="#contact" class="hover:text-white transition-colors">Contact</a>
+      </nav>
+
+      <!-- CTA Buttons -->
+      <div class="flex items-center gap-3">
+        <a href="./Farman_Yousaf_Resume.pdf" download="Farman_Yousaf_Resume.pdf" class="inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+          <i data-lucide="download" class="w-4 h-4 text-brand-500"></i>
+          <span>CV / Resume</span>
+        </a>
+        <a href="#contact" class="inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white shadow-lg shadow-brand-600/30 transition">
+          <span>Hire Me</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="hero" class="relative pt-16 pb-20 md:pt-28 md:pb-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="grid lg:grid-cols-12 gap-12 items-center">
+      <div class="lg:col-span-8 space-y-6">
+        <!-- Status Badge -->
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 border border-brand-500/30 text-brand-100 text-xs font-medium">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Available for High-Impact Projects & Remote Roles</span>
+        </div>
+
+        <!-- Main Title -->
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.15]">
+          Engineering High-Performance <br>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-brand-500 to-accent-cyan">
+            Enterprise ERPs & Web Systems
+          </span>
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="text-slate-400 text-base sm:text-lg max-w-2xl leading-relaxed">
+          I'm <strong class="text-slate-200">Farman Yousaf</strong>, a Senior Full Stack PHP Developer with 
+          <span class="text-slate-200 font-semibold">6+ years of experience</span> architecting mission-critical ERP solutions, 
+          custom CRM modules, high-concurrency database optimizations, and seamless hardware/POS integrations.
+        </p>
+
+        <!-- Quick Contacts Pills -->
+        <div class="flex flex-wrap gap-4 pt-2 text-xs sm:text-sm font-mono text-slate-300">
+          <div class="flex items-center gap-2 bg-slate-900/90 border border-slate-800 px-3 py-1.5 rounded-md">
+            <i data-lucide="map-pin" class="w-4 h-4 text-rose-400"></i>
+            Karachi, Pakistan
+          </div>
+          <a href="mailto:farmankk10@gmail.com" class="flex items-center gap-2 bg-slate-900/90 border border-slate-800 hover:border-brand-500 px-3 py-1.5 rounded-md transition-colors">
+            <i data-lucide="mail" class="w-4 h-4 text-amber-400"></i>
+            farmankk10@gmail.com
+          </a>
+          <a href="tel:+923233848440" class="flex items-center gap-2 bg-slate-900/90 border border-slate-800 hover:border-brand-500 px-3 py-1.5 rounded-md transition-colors">
+            <i data-lucide="phone" class="w-4 h-4 text-emerald-400"></i>
+            +92 323 3848440
+          </a>
+        </div>
+
+        <!-- Action CTAs -->
+        <div class="flex flex-wrap items-center gap-4 pt-4">
+          <a href="#projects" class="px-6 py-3.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-sm shadow-xl shadow-brand-600/30 flex items-center gap-2 transition hover:-translate-y-0.5">
+            <i data-lucide="briefcase" class="w-4 h-4"></i>
+            Explore Selected Work
+          </a>
+          <a href="https://wa.me/923233848440?text=Hi%20Farman,%20I%20reviewed%20your%20portfolio%20and%20would%20like%20to%20discuss%20an%20opportunity." target="_blank" class="px-6 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold text-sm flex items-center gap-2 transition hover:-translate-y-0.5">
+            <i data-lucide="message-square" class="w-4 h-4 text-emerald-400"></i>
+            Chat on WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <!-- Hero Card / Quick Specs -->
+      <div class="lg:col-span-4">
+        <div class="glass-card p-6 sm:p-8 rounded-2xl relative shadow-2xl space-y-6">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+            <span class="text-xs uppercase tracking-wider font-mono text-slate-400">Primary Core Tech</span>
+            <span class="px-2 py-0.5 text-xs rounded bg-brand-500/20 text-brand-300 font-mono">v8.x Ready</span>
+          </div>
+
+          <div class="space-y-4 font-mono text-sm">
+            <div class="flex items-center justify-between text-slate-300">
+              <span class="flex items-center gap-2"><i data-lucide="cpu" class="w-4 h-4 text-brand-500"></i> Backend</span>
+              <span class="text-white font-semibold">Core PHP (OOP) / REST</span>
+            </div>
+            <div class="flex items-center justify-between text-slate-300">
+              <span class="flex items-center gap-2"><i data-lucide="database" class="w-4 h-4 text-accent-cyan"></i> Database</span>
+              <span class="text-white font-semibold">MySQL / MS SQL Server</span>
+            </div>
+            <div class="flex items-center justify-between text-slate-300">
+              <span class="flex items-center gap-2"><i data-lucide="layers" class="w-4 h-4 text-amber-400"></i> Architecture</span>
+              <span class="text-white font-semibold">Custom ERP / CRM</span>
+            </div>
+            <div class="flex items-center justify-between text-slate-300">
+              <span class="flex items-center gap-2"><i data-lucide="shopping-cart" class="w-4 h-4 text-emerald-400"></i> E-Commerce</span>
+              <span class="text-white font-semibold">Shopify / WooCommerce</span>
+            </div>
+            <div class="flex items-center justify-between text-slate-300">
+              <span class="flex items-center gap-2"><i data-lucide="printer" class="w-4 h-4 text-purple-400"></i> POS Hardware</span>
+              <span class="text-white font-semibold">FBR / ESC-POS / Barcode</span>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-800 grid grid-cols-2 gap-4 text-center">
+            <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800">
+              <div class="text-2xl font-bold text-white">6+</div>
+              <div class="text-xs text-slate-400">Years Experience</div>
+            </div>
+            <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800">
+              <div class="text-2xl font-bold text-brand-400">20+</div>
+              <div class="text-xs text-slate-400">Major Modules</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Metrics Bar -->
+  <section class="border-y border-slate-800/80 bg-slate-900/40 py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+        <div>
+          <div class="text-3xl sm:text-4xl font-extrabold text-white">6+ <span class="text-brand-500 font-mono text-2xl">YRS</span></div>
+          <div class="text-xs sm:text-sm text-slate-400 mt-1">Full-Stack Development</div>
+        </div>
+        <div>
+          <div class="text-3xl sm:text-4xl font-extrabold text-accent-cyan">100%</div>
+          <div class="text-xs sm:text-sm text-slate-400 mt-1">Production Reliability</div>
+        </div>
+        <div>
+          <div class="text-3xl sm:text-4xl font-extrabold text-emerald-400">5+</div>
+          <div class="text-xs sm:text-sm text-slate-400 mt-1">Hardware / POS Protocols</div>
+        </div>
+        <div>
+          <div class="text-3xl sm:text-4xl font-extrabold text-purple-400">FBR</div>
+          <div class="text-xs sm:text-sm text-slate-400 mt-1">Certified Tax Integrations</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="grid lg:grid-cols-12 gap-12 items-center">
+      <div class="lg:col-span-5 space-y-6">
+        <div class="text-xs font-mono uppercase tracking-widest text-brand-500">Expertise & Background</div>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+          Bridging Complex Business Logic with Robust Code.
+        </h2>
+        <p class="text-slate-400 leading-relaxed text-sm sm:text-base">
+          As a Senior Full Stack PHP Developer with over half a decade in enterprise software engineering, I specialize in architecting scalable backend solutions that power end-to-end enterprise workflows: General Ledger, Double-Entry Accounting, Multi-warehouse Inventory, Manufacturing Bill of Materials (BOM), CRM, and Automated Payroll systems.
+        </p>
+        <p class="text-slate-400 leading-relaxed text-sm sm:text-base">
+          Beyond traditional web apps, I possess deep hands-on expertise in **Hardware and Third-Party System Integration**, including government compliance (FBR real-time fiscal invoicing), direct POS connectivity, thermal receipt and label printing engines, and bi-directional synchronization with Shopify and WooCommerce.
+        </p>
+      </div>
+
+      <div class="lg:col-span-7 grid sm:grid-cols-2 gap-4">
+        <!-- Card 1 -->
+        <div class="glass-card p-6 rounded-xl space-y-3">
+          <div class="w-10 h-10 rounded-lg bg-brand-500/10 text-brand-400 flex items-center justify-center">
+            <i data-lucide="layers" class="w-5 h-5"></i>
+          </div>
+          <h3 class="font-semibold text-white text-base">Custom ERP & CRM Architecture</h3>
+          <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+            Engineered full lifecycle ERP systems covering General Accounting, Multi-Currency Inventory, Manufacturing, and HRM.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="glass-card p-6 rounded-xl space-y-3">
+          <div class="w-10 h-10 rounded-lg bg-accent-cyan/10 text-accent-cyan flex items-center justify-center">
+            <i data-lucide="printer" class="w-5 h-5"></i>
+          </div>
+          <h3 class="font-semibold text-white text-base">Hardware & POS Connectivity</h3>
+          <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+            Integration with ESC/POS thermal printers, barcode scanners, digital weight scales, and camera scanner streams.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="glass-card p-6 rounded-xl space-y-3">
+          <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+            <i data-lucide="zap" class="w-5 h-5"></i>
+          </div>
+          <h3 class="font-semibold text-white text-base">REST APIs & Courier Gateways</h3>
+          <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+            High-throughput API micro-services, automated courier booking (TCS, Trax, Leopard), and secure payment gateway integrations.
+          </p>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="glass-card p-6 rounded-xl space-y-3">
+          <div class="w-10 h-10 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center">
+            <i data-lucide="database" class="w-5 h-5"></i>
+          </div>
+          <h3 class="font-semibold text-white text-base">Database Tuning & Scalability</h3>
+          <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+            Expert query optimization, schema indexing, stored procedures, and high-speed data stream batch imports in MySQL & MSSQL.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technical Skills Matrix -->
+  <section id="skills" class="py-24 bg-slate-900/30 border-t border-slate-800/80 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto space-y-12">
+      <div class="text-center max-w-2xl mx-auto space-y-3">
+        <span class="text-xs font-mono uppercase tracking-widest text-brand-500">Tech Stack & Tools</span>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">Technical Mastery</h2>
+        <p class="text-slate-400 text-sm sm:text-base">A battle-tested set of languages, frameworks, databases, and enterprise toolchains.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Category 1: Backend & Core -->
+        <div class="glass-card p-6 rounded-xl space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 rounded-lg bg-brand-500/10 text-brand-400">
+              <i data-lucide="server" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-bold text-white text-base">Backend & Architecture</h3>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <span class="tag-badge bg-brand-950 text-brand-300 border border-brand-800">Core PHP (OOP)</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">RESTful APIs</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">MVC .NET</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">Java SE</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">C#</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">Modular Micro-services</span>
+          </div>
+        </div>
+
+        <!-- Category 2: Databases -->
+        <div class="glass-card p-6 rounded-xl space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 rounded-lg bg-accent-cyan/10 text-accent-cyan">
+              <i data-lucide="database" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-bold text-white text-base">Databases & Performance</h3>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <span class="tag-badge bg-cyan-950 text-cyan-300 border border-cyan-800">MySQL</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">MS SQL Server</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">Query Optimization</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">Navicat</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">ACID Transactions</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">Batch Stream Processing</span>
+          </div>
+        </div>
+
+        <!-- Category 3: Frontend -->
+        <div class="glass-card p-6 rounded-xl space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 rounded-lg bg-emerald-500/10 text-emerald-400">
+              <i data-lucide="monitor" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-bold text-white text-base">Frontend & UI</h3>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <span class="tag-badge bg-emerald-950 text-emerald-300 border border-emerald-800">JavaScript (ES6+)</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">Bootstrap 5</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">Tailwind CSS</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">jQuery & Ajax</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">HTML5 / Semantic UI</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">CSS3 Animations</span>
+          </div>
+        </div>
+
+        <!-- Category 4: CMS & E-commerce -->
+        <div class="glass-card p-6 rounded-xl space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 rounded-lg bg-amber-500/10 text-amber-400">
+              <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-bold text-white text-base">CMS & E-Commerce</h3>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <span class="tag-badge bg-amber-950 text-amber-300 border border-amber-800">WordPress</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">WooCommerce</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">Shopify Integration</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">Custom WP Plugins</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">Theme Development</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">Webhook Handlers</span>
+          </div>
+        </div>
+
+        <!-- Category 5: Business Applications -->
+        <div class="glass-card p-6 rounded-xl space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 rounded-lg bg-purple-500/10 text-purple-400">
+              <i data-lucide="briefcase" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-bold text-white text-base">Business Applications</h3>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <span class="tag-badge bg-purple-950 text-purple-300 border border-purple-800">ERP & CRM</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">Accounts & GL</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">Inventory & BOM</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">HRM & Payroll</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">School Systems</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">Manufacturing Workflows</span>
+          </div>
+        </div>
+
+        <!-- Category 6: Integrations & Hardware -->
+        <div class="glass-card p-6 rounded-xl space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 rounded-lg bg-rose-500/10 text-rose-400">
+              <i data-lucide="cpu" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-bold text-white text-base">Integrations & Hardware</h3>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <span class="tag-badge bg-rose-950 text-rose-300 border border-rose-800">FBR Fiscal Integration</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">POS Hardware</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">Barcode Scanners</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">Thermal Printers</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">Payment Gateways</span>
+            <span class="tag-badge bg-slate-800 text-slate-300">Courier APIs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience Timeline -->
+  <section id="experience" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="space-y-12">
+      <div class="text-center max-w-2xl mx-auto space-y-3">
+        <span class="text-xs font-mono uppercase tracking-widest text-brand-500">Career Trajectory</span>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">Professional Experience</h2>
+        <p class="text-slate-400 text-sm sm:text-base">Demonstrated track record of delivering high-stakes enterprise projects.</p>
+      </div>
+
+      <div class="relative border-l-2 border-slate-800 ml-4 md:ml-32 space-y-12">
+        <!-- Job 1 -->
+        <div class="relative pl-8 md:pl-10 group">
+          <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-slate-950 border-2 border-brand-500 group-hover:scale-125 transition-transform"></div>
+          
+          <div class="flex flex-col md:flex-row md:items-baseline justify-between gap-1 mb-2">
+            <h3 class="text-xl font-bold text-white group-hover:text-brand-400 transition-colors">
+              Senior Full Stack PHP Developer
+            </h3>
+            <span class="font-mono text-xs text-brand-400 font-semibold bg-brand-950/80 px-2.5 py-1 rounded border border-brand-800/60 inline-block w-fit">
+              May 2020 – Present
+            </span>
+          </div>
+
+          <div class="text-sm font-semibold text-slate-300 mb-4 flex items-center gap-2">
+            <i data-lucide="building" class="w-4 h-4 text-slate-400"></i>
+            3DM Solutions Pvt. Ltd
+          </div>
+
+          <ul class="space-y-2.5 text-sm text-slate-400 list-disc list-outside ml-4 leading-relaxed">
+            <li>Architected and scaled full-stack web applications using PHP (OOP), MySQL, JavaScript, WordPress, Shopify, and third-party APIs.</li>
+            <li>Spearheaded customized ERP functionality covering double-entry accounts, inventory tracking, CRM, payroll, and manufacturing BOM.</li>
+            <li>Implemented direct POS connectivity with FBR compliance, barcode scanners, thermal receipt printers, and label-printing hardware.</li>
+            <li>Built custom WordPress plugins, WooCommerce checkout extensions, and Shopify synchronization pipelines tailored to high-volume commerce clients.</li>
+            <li>Engineered REST APIs connecting courier services, payment gateways, and third-party business microservices.</li>
+          </ul>
+        </div>
+
+        <!-- Job 2 -->
+        <div class="relative pl-8 md:pl-10 group">
+          <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-slate-950 border-2 border-slate-600 group-hover:border-accent-cyan group-hover:scale-125 transition-transform"></div>
+          
+          <div class="flex flex-col md:flex-row md:items-baseline justify-between gap-1 mb-2">
+            <h3 class="text-xl font-bold text-white group-hover:text-accent-cyan transition-colors">
+              PHP Developer
+            </h3>
+            <span class="font-mono text-xs text-slate-400 bg-slate-900 px-2.5 py-1 rounded border border-slate-800 inline-block w-fit">
+              Sept 2019 – April 2020
+            </span>
+          </div>
+
+          <div class="text-sm font-semibold text-slate-300 mb-4 flex items-center gap-2">
+            <i data-lucide="building" class="w-4 h-4 text-slate-400"></i>
+            Sprint Work Pvt. Ltd
+          </div>
+
+          <ul class="space-y-2.5 text-sm text-slate-400 list-disc list-outside ml-4 leading-relaxed">
+            <li>Built and maintained HRM and automated payroll calculation systems using Core PHP and MySQL.</li>
+            <li>Optimized backend data flow, database transactions, and secure credential handling.</li>
+          </ul>
+        </div>
+
+        <!-- Job 3 -->
+        <div class="relative pl-8 md:pl-10 group">
+          <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-slate-950 border-2 border-slate-600 group-hover:border-emerald-400 group-hover:scale-125 transition-transform"></div>
+          
+          <div class="flex flex-col md:flex-row md:items-baseline justify-between gap-1 mb-2">
+            <h3 class="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">
+              Junior Web Developer
+            </h3>
+            <span class="font-mono text-xs text-slate-400 bg-slate-900 px-2.5 py-1 rounded border border-slate-800 inline-block w-fit">
+              July 2018 – May 2019
+            </span>
+          </div>
+
+          <div class="text-sm font-semibold text-slate-300 mb-4 flex items-center gap-2">
+            <i data-lucide="building" class="w-4 h-4 text-slate-400"></i>
+            MK Technologies Pvt. Ltd
+          </div>
+
+          <ul class="space-y-2.5 text-sm text-slate-400 list-disc list-outside ml-4 leading-relaxed">
+            <li>Developed front-end and back-end modules for comprehensive School Management Systems (ERP).</li>
+            <li>Collaborated with senior software architects to improve SQL query structure and system responsiveness.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Showcase Section -->
+  <section id="projects" class="py-24 bg-slate-900/30 border-t border-slate-800/80 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto space-y-12">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <span class="text-xs font-mono uppercase tracking-widest text-brand-500">Portfolio</span>
+          <h2 class="text-3xl sm:text-4xl font-bold text-white tracking-tight mt-1">Featured Enterprise Projects</h2>
+          <p class="text-slate-400 text-sm sm:text-base mt-2">Production-grade software architectures developed and deployed for industry leaders.</p>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="flex flex-wrap gap-2 text-xs font-medium" id="project-filters">
+          <button onclick="filterProjects('all')" class="filter-btn active px-3.5 py-2 rounded-lg bg-brand-600 text-white transition">All Projects</button>
+          <button onclick="filterProjects('erp')" class="filter-btn px-3.5 py-2 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">ERP & CRM</button>
+          <button onclick="filterProjects('hardware')" class="filter-btn px-3.5 py-2 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Hardware & POS</button>
+          <button onclick="filterProjects('ecommerce')" class="filter-btn px-3.5 py-2 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">E-Commerce & APIs</button>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="projects-grid">
+        <!-- Project 1: Finac ERP -->
+        <div class="project-card erp hardware glass-card rounded-2xl p-6 flex flex-col justify-between space-y-6">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="tag-badge bg-brand-950 text-brand-300 border border-brand-800">ERP & CRM</span>
+              <span class="text-xs font-mono text-slate-400">3DM Solutions</span>
+            </div>
+            <h3 class="text-xl font-bold text-white hover:text-brand-400 transition-colors">
+              Finac ERP Software & CRM Suite
+            </h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              Comprehensive enterprise ERP featuring General Ledger, Inventory Tracking, Manufacturing BOM, CRM, and automated Payroll processing. Integrated direct with courier APIs and real-time POS connectivity.
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            <div class="flex flex-wrap gap-1.5">
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Core PHP (OOP)</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">MySQL</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Bootstrap 5</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">REST APIs</span>
+            </div>
+            <div class="pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 font-mono">
+              <span>Status: <strong class="text-emerald-400">Live Enterprise</strong></span>
+              <span class="flex items-center gap-1 text-brand-400"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Production</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 2: FBR & POS Hardware Middleware -->
+        <div class="project-card hardware glass-card rounded-2xl p-6 flex flex-col justify-between space-y-6">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="tag-badge bg-rose-950 text-rose-300 border border-rose-800">Hardware & POS</span>
+              <span class="text-xs font-mono text-slate-400">3DM Solutions</span>
+            </div>
+            <h3 class="text-xl font-bold text-white hover:text-brand-400 transition-colors">
+              POS Hardware & FBR Tax Middleware
+            </h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              Integrated real-time fiscal invoice reporting with government FBR systems. Connected ESC/POS thermal receipt printers, barcode scanners, and mobile camera barcode scanners directly with billing software.
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            <div class="flex flex-wrap gap-1.5">
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">FBR API</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">ESC/POS</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">PHP Sockets</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Barcode Engine</span>
+            </div>
+            <div class="pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 font-mono">
+              <span>Hardware: <strong class="text-white">Thermal & Scanners</strong></span>
+              <span class="flex items-center gap-1 text-emerald-400"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> FBR Certified</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 3: School Management ERP -->
+        <div class="project-card erp glass-card rounded-2xl p-6 flex flex-col justify-between space-y-6">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="tag-badge bg-accent-cyan/20 text-accent-cyan border border-cyan-800">School ERP</span>
+              <span class="text-xs font-mono text-slate-400">MK Technologies</span>
+            </div>
+            <h3 class="text-xl font-bold text-white hover:text-brand-400 transition-colors">
+              Comprehensive School Management ERP
+            </h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              Multi-role portal catering to administrators, teachers, students, accountants, and parents. Features automated student billing, fee collection slips, grade reports, and digital attendance tracking.
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            <div class="flex flex-wrap gap-1.5">
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Core PHP</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">MySQL</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">jQuery/Ajax</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">PDF Reports</span>
+            </div>
+            <div class="pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 font-mono">
+              <span>Users: <strong class="text-white">5,000+ Students</strong></span>
+              <span class="flex items-center gap-1 text-brand-400"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Deployed</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 4: WooCommerce & Shopify Sync -->
+        <div class="project-card ecommerce glass-card rounded-2xl p-6 flex flex-col justify-between space-y-6">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="tag-badge bg-emerald-950 text-emerald-300 border border-emerald-800">E-Commerce Sync</span>
+              <span class="text-xs font-mono text-slate-400">Enterprise Connector</span>
+            </div>
+            <h3 class="text-xl font-bold text-white hover:text-brand-400 transition-colors">
+              Omnichannel E-Commerce & Courier Automation
+            </h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              Bi-directional inventory and order synchronization between Shopify/WooCommerce stores and centralized back-office ERP with real-time webhook listeners and courier booking (TCS, Trax).
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            <div class="flex flex-wrap gap-1.5">
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">WordPress</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Shopify API</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Webhooks</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Courier APIs</span>
+            </div>
+            <div class="pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 font-mono">
+              <span>Latency: <strong class="text-emerald-400">&lt; 2s Sync</strong></span>
+              <span class="flex items-center gap-1 text-emerald-400"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Live</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 5: Travel & Tour Booking System -->
+        <div class="project-card erp glass-card rounded-2xl p-6 flex flex-col justify-between space-y-6">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="tag-badge bg-purple-950 text-purple-300 border border-purple-800">Booking Engine</span>
+              <span class="text-xs font-mono text-slate-400">Aptech Capstone</span>
+            </div>
+            <h3 class="text-xl font-bold text-white hover:text-brand-400 transition-colors">
+              Travel & Tour Booking Engine
+            </h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              Dynamic travel-package reservation and ticket management system architected in MVC .NET, featuring multi-role authentication for tour operators, booking agents, and customers.
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            <div class="flex flex-wrap gap-1.5">
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">MVC .NET</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">C#</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">MS SQL Server</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Razor</span>
+            </div>
+            <div class="pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 font-mono">
+              <span>Architecture: <strong class="text-white">MVC Pattern</strong></span>
+              <span class="flex items-center gap-1 text-purple-400"><i data-lucide="award" class="w-3.5 h-3.5"></i> Distinction</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 6: Attendance Management System -->
+        <div class="project-card erp glass-card rounded-2xl p-6 flex flex-col justify-between space-y-6">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="tag-badge bg-amber-950 text-amber-300 border border-amber-800">Desktop / SE</span>
+              <span class="text-xs font-mono text-slate-400">Java SE</span>
+            </div>
+            <h3 class="text-xl font-bold text-white hover:text-brand-400 transition-colors">
+              Enterprise Attendance Tracker
+            </h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              Standalone Java SE desktop application engineered with biometric record integration, automated timesheet generation, and fine-grained role controls for administrators and staff.
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            <div class="flex flex-wrap gap-1.5">
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Java SE</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Swing / AWT</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">JDBC</span>
+              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">MySQL</span>
+            </div>
+            <div class="pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 font-mono">
+              <span>Interface: <strong class="text-white">Desktop Client</strong></span>
+              <span class="flex items-center gap-1 text-amber-400"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Verified</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Education & Credentials -->
+  <section class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="space-y-12">
+      <div class="text-center max-w-2xl mx-auto space-y-3">
+        <span class="text-xs font-mono uppercase tracking-widest text-brand-500">Qualifications</span>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">Education & Certifications</h2>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="glass-card p-6 rounded-2xl space-y-3 border-t-2 border-t-brand-500">
+          <span class="text-xs font-mono text-brand-400 font-semibold">Dec 2018</span>
+          <h3 class="text-lg font-bold text-white">ACCP Pro</h3>
+          <p class="text-xs text-slate-400 font-medium">Aptech Certified Computer Professional</p>
+          <p class="text-xs text-slate-400 pt-2 border-t border-slate-800">
+            Intensive program covering OOP, database architecture, multi-tier web development, e-commerce, and enterprise system design.
+          </p>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl space-y-3 border-t-2 border-t-accent-cyan">
+          <span class="text-xs font-mono text-accent-cyan font-semibold">Sept 2018</span>
+          <h3 class="text-lg font-bold text-white">Intermediate — D.A.E & C.I.T</h3>
+          <p class="text-xs text-slate-400 font-medium">Hasani College of Technology, Karachi</p>
+          <p class="text-xs text-slate-400 pt-2 border-t border-slate-800">
+            Diploma of Associate Engineering in Computer Information Technology.
+          </p>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl space-y-3 border-t-2 border-t-emerald-400">
+          <span class="text-xs font-mono text-emerald-400 font-semibold">March 2014</span>
+          <h3 class="text-lg font-bold text-white">Matriculation — Computer Science</h3>
+          <p class="text-xs text-slate-400 font-medium">Mirpur Khas Board, Sindh</p>
+          <p class="text-xs text-slate-400 pt-2 border-t border-slate-800">
+            Secondary education with foundational specialization in Computer Science.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact & Hire Me Section -->
+  <section id="contact" class="py-24 bg-slate-900/40 border-t border-slate-800/80 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-5xl mx-auto space-y-12">
+      <div class="text-center max-w-2xl mx-auto space-y-3">
+        <span class="text-xs font-mono uppercase tracking-widest text-brand-500">Get In Touch</span>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">Let's Build Something Exceptional</h2>
+        <p class="text-slate-400 text-sm sm:text-base">Whether you need an enterprise ERP architect, an integration engineer, or a senior full-stack developer, I'm ready to contribute.</p>
+      </div>
+
+      <div class="grid md:grid-cols-12 gap-8">
+        <!-- Direct Contact Cards -->
+        <div class="md:col-span-5 space-y-4">
+          <a href="mailto:farmankk10@gmail.com" class="glass-card p-5 rounded-xl flex items-center gap-4 hover:border-brand-500 transition group block">
+            <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <i data-lucide="mail" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <div class="text-xs font-mono text-slate-400 uppercase tracking-wider">Email Me</div>
+              <div class="text-sm font-semibold text-white group-hover:text-brand-400 transition-colors">farmankk10@gmail.com</div>
+            </div>
+          </a>
+
+          <a href="https://wa.me/923233848440?text=Hi%20Farman,%20I%20saw%20your%20portfolio..." target="_blank" class="glass-card p-5 rounded-xl flex items-center gap-4 hover:border-emerald-500 transition group block">
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <i data-lucide="message-circle" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <div class="text-xs font-mono text-slate-400 uppercase tracking-wider">WhatsApp Direct</div>
+              <div class="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">+92 323 3848440</div>
+            </div>
+          </a>
+
+          <div class="glass-card p-5 rounded-xl flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-brand-500/10 text-brand-400 flex items-center justify-center">
+              <i data-lucide="map-pin" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <div class="text-xs font-mono text-slate-400 uppercase tracking-wider">Location</div>
+              <div class="text-sm font-semibold text-white">Karachi, Pakistan (Open to Remote Worldwide)</div>
+            </div>
+          </div>
+
+          <div class="glass-card p-5 rounded-xl flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
+              <i data-lucide="file-text" class="w-6 h-6"></i>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs font-mono text-slate-400 uppercase tracking-wider">Formal Resume</div>
+              <a href="./Farman_Yousaf_Resume.pdf" download="Farman_Yousaf_Resume.pdf" class="text-xs font-semibold text-brand-400 hover:underline flex items-center gap-1 mt-0.5">
+                Download PDF Resume <i data-lucide="download" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Message Form -->
+        <div class="md:col-span-7 glass-card p-6 sm:p-8 rounded-2xl">
+          <form onsubmit="handleFormSubmit(event)" class="space-y-4">
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-mono text-slate-300 mb-1.5">Your Name</label>
+                <input type="text" id="contact-name" required placeholder="John Doe" class="w-full px-4 py-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-brand-500">
+              </div>
+              <div>
+                <label class="block text-xs font-mono text-slate-300 mb-1.5">Your Email</label>
+                <input type="email" id="contact-email" required placeholder="john@example.com" class="w-full px-4 py-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-brand-500">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-mono text-slate-300 mb-1.5">Project Type / Subject</label>
+              <input type="text" id="contact-subject" placeholder="Enterprise ERP, Custom API, or Full-Time Role" class="w-full px-4 py-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-brand-500">
+            </div>
+
+            <div>
+              <label class="block text-xs font-mono text-slate-300 mb-1.5">Message / Requirements</label>
+              <textarea id="contact-message" rows="4" required placeholder="Tell me about your project scope, timeline, and goals..." class="w-full px-4 py-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-brand-500"></textarea>
+            </div>
+
+            <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-semibold text-sm shadow-xl shadow-brand-600/30 flex items-center justify-center gap-2 transition">
+              <i data-lucide="send" class="w-4 h-4"></i>
+              <span>Send Message to Farman</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 py-8 px-4 text-center text-xs text-slate-500 font-mono">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        &copy; <span id="year"></span> Farman Yousaf. All rights reserved.
+      </div>
+      <div class="flex items-center gap-6 text-slate-400">
+        <a href="mailto:farmankk10@gmail.com" class="hover:text-white transition">Email</a>
+        <a href="https://wa.me/923233848440" target="_blank" class="hover:text-white transition">WhatsApp</a>
+        <a href="./Farman_Yousaf_Resume.pdf" download="Farman_Yousaf_Resume.pdf" class="hover:text-white transition">Download CV</a>
+        <a href="#hero" class="hover:text-white transition">Back to Top &uarr;</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Auto update year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Project filtering
+    function filterProjects(category) {
+      const cards = document.querySelectorAll('.project-card');
+      const buttons = document.querySelectorAll('.filter-btn');
+
+      buttons.forEach(btn => {
+        btn.classList.remove('bg-brand-600', 'text-white');
+        btn.classList.add('bg-slate-800', 'text-slate-300');
+      });
+
+      const activeBtn = event.target;
+      activeBtn.classList.add('bg-brand-600', 'text-white');
+      activeBtn.classList.remove('bg-slate-800', 'text-slate-300');
+
+      cards.forEach(card => {
+        if (category === 'all') {
+          card.style.display = 'flex';
+        } else if (card.classList.contains(category)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Direct form submit to mailto
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('contact-name').value;
+      const email = document.getElementById('contact-email').value;
+      const subject = document.getElementById('contact-subject').value || 'Project Inquiry';
+      const message = document.getElementById('contact-message').value;
+
+      const mailtoUrl = `mailto:farmankk10@gmail.com?subject=${encodeURIComponent(subject + ' - ' + name)}&body=${encodeURIComponent("Sender: " + name + "\nEmail: " + email + "\n\nMessage:\n" + message)}`;
+      window.location.href = mailtoUrl;
+    }
+  </script>
+</body>
+</html>
