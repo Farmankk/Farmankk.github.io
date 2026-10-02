@@ -555,54 +555,7 @@
       </div>
 
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="projects-grid">
-        <!-- Project 1: Finac ERP -->
-        <div class="project-card erp hardware glass-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5">
-          <div class="space-y-4">
-            <!-- Thumbnail Preview -->
-            <div class="relative h-44 w-full rounded-xl overflow-hidden bg-white group cursor-pointer border border-slate-700/60 p-2 flex items-center justify-center" onclick="openGallery('finac-erp')">
-              <img src="assets/projects/finac-cloud-erp.png" alt="Finac Cloud ERP Solution" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300">
-              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none"></div>
-              <div class="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-md bg-slate-950/85 backdrop-blur-md text-[11px] font-mono text-slate-300 border border-slate-700/60 flex items-center gap-1.5">
-                <i data-lucide="image" class="w-3.5 h-3.5 text-brand-400"></i>
-                <span>1 Screen</span>
-              </div>
-              <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-xs text-slate-300 pointer-events-none">
-                <span class="font-mono text-[11px] text-brand-300">Cloud ERP Solution</span>
-                <span class="flex items-center gap-1 text-[11px] font-medium text-white group-hover:text-brand-400 transition-colors">
-                  View Showcase <i data-lucide="maximize-2" class="w-3 h-3"></i>
-                </span>
-              </div>
-            </div>
-
-            <div class="flex items-center justify-between">
-              <span class="tag-badge bg-brand-950 text-brand-300 border border-brand-800">Cloud ERP</span>
-              <span class="text-xs font-mono text-slate-400">Enterprise Suite</span>
-            </div>
-            <h3 class="text-xl font-bold text-white hover:text-brand-400 transition-colors cursor-pointer" onclick="openGallery('finac-erp')">
-              Finac — Cloud ERP Solution & CRM Suite
-            </h3>
-            <p class="text-sm text-slate-400 leading-relaxed">
-              Comprehensive enterprise cloud ERP featuring multi-branch double-entry financial accounting, inventory tracking, manufacturing Bill of Materials (BOM), CRM pipelines, and integrated POS hardware connectivity.
-            </p>
-          </div>
-
-          <div class="space-y-4">
-            <div class="flex flex-wrap gap-1.5">
-              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Core PHP (OOP)</span>
-              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">MySQL</span>
-              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Cloud ERP Architecture</span>
-              <span class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">REST APIs</span>
-            </div>
-            <div class="pt-3 border-t border-slate-800">
-              <button onclick="openGallery('finac-erp')" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-brand-600/20 hover:bg-brand-600 text-brand-300 hover:text-white border border-brand-500/40 font-semibold text-xs tracking-wide transition shadow-lg shadow-brand-600/10">
-                <i data-lucide="image" class="w-4 h-4"></i>
-                <span>View Cloud ERP Showcase (1)</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Project 2: Custom Glass Cutting Optimizer & Sales Order ERP -->
+        <!-- Project 1: Custom Glass Cutting Optimizer & Sales Order ERP -->
         <div class="project-card erp glass-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5 border border-cyan-500/30">
           <div class="space-y-4">
             <!-- Thumbnail Preview -->
@@ -1252,17 +1205,6 @@
 
     // Project Galleries Data
     const projectGalleries = {
-      'finac-erp': {
-        title: 'Finac — Cloud ERP Solution & CRM Suite',
-        category: 'Enterprise Cloud ERP & Financial Architecture',
-        images: [
-          {
-            src: 'assets/projects/finac-cloud-erp.png',
-            title: 'Finac — Cloud ERP Solution Official Architecture',
-            desc: 'Multi-branch enterprise cloud ERP platform providing unified general ledger, supply chain operations, inventory valuation, automated payroll, and point-of-sale connectivity.'
-          }
-        ]
-      },
       'al-qasr': {
         title: 'Custom Glass Cutting Optimizer & Sales Order Production ERP',
         category: 'Proprietary 2D Cutting Stock Algorithm & Autonomous Engineering',
