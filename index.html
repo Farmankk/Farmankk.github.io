@@ -476,7 +476,6 @@
           </div>
 
           <ul class="space-y-2.5 text-sm text-slate-400 list-disc list-outside ml-4 leading-relaxed">
-            <li>Architected industrial 2D Glass Cutting Optimization algorithms, multi-layer glass specs (DGU, Laminated), and automated manufacturing sales order pipelines.</li>
             <li>Architected and scaled full-stack web applications using PHP (OOP), MySQL, JavaScript, WordPress, Shopify, and third-party APIs.</li>
             <li>Spearheaded customized ERP functionality covering double-entry accounts, inventory tracking, CRM, payroll, and manufacturing BOM.</li>
             <li>Implemented direct POS connectivity with barcode scanners, thermal receipt printers, and label-printing hardware.</li>
@@ -608,29 +607,29 @@
           <div class="space-y-4">
             <!-- Thumbnail Preview -->
             <div class="relative h-44 w-full rounded-xl overflow-hidden bg-slate-900 group cursor-pointer border border-slate-800" onclick="openGallery('al-qasr')">
-              <img src="assets/projects/erp-pakistan-sg.jpg" alt="Custom Glass Cutting Optimizer & ERP" class="w-full h-full object-contain p-4 bg-white group-hover:scale-105 transition-transform duration-300">
-              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none"></div>
+              <img src="assets/projects/glass-optimizer-1.png" alt="Custom Glass Cutting Optimizer & ERP" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent pointer-events-none"></div>
               <div class="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-md bg-slate-950/85 backdrop-blur-md text-[11px] font-mono text-cyan-300 border border-cyan-700/60 flex items-center gap-1.5">
-                <i data-lucide="images" class="w-3.5 h-3.5 text-accent-cyan"></i>
-                <span>4 Modules</span>
+                <i data-lucide="video" class="w-3.5 h-3.5 text-accent-cyan"></i>
+                <span>2 Videos + 2 Screens</span>
               </div>
               <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-xs text-slate-300 pointer-events-none">
                 <span class="font-mono text-[11px] text-accent-cyan">2D Cutting Stock & Costing Engine</span>
                 <span class="flex items-center gap-1 text-[11px] font-medium text-white group-hover:text-accent-cyan transition-colors">
-                  View Screenshots <i data-lucide="maximize-2" class="w-3 h-3"></i>
+                  Play Video & Gallery <i data-lucide="play" class="w-3 h-3 fill-current"></i>
                 </span>
               </div>
             </div>
 
             <div class="flex items-center justify-between">
-              <span class="tag-badge bg-cyan-950 text-cyan-300 border border-cyan-800">Industrial Glass ERP</span>
-              <span class="text-xs font-mono text-slate-400">Pakistan Safety Glass (PSG)</span>
+              <span class="tag-badge bg-cyan-950 text-cyan-300 border border-cyan-800">Proprietary R&D</span>
+              <span class="text-xs font-mono text-slate-400">Autonomous Engineering</span>
             </div>
             <h3 class="text-xl font-bold text-white hover:text-accent-cyan transition-colors cursor-pointer" onclick="openGallery('al-qasr')">
               Custom Glass Cutting Optimizer & Sales Order Production ERP
             </h3>
             <p class="text-sm text-slate-400 leading-relaxed">
-              Industrial architectural glass manufacturing engine powered by an advanced 2D Cutting Stock Optimization algorithm. Analyzes multi-layer glass specs (Single, DGU, Laminated), processes (Tempering, Polishing, Beveling, Hole Drilling), and calculates real-time glass costing, wastage %, and reusable offcut remnant stock. Operators can interactively customize cut lines on jumbo stock sheets, automatically generating production tickets and Glass Sales Orders directly from the optimizer.
+              Industrial architectural glass manufacturing engine engineered from scratch with an advanced 2D Cutting Stock Optimization algorithm. Analyzes multi-layer glass specs (Single, DGU, Laminated), processes (Tempering, Polishing, Beveling, Hole Drilling), and calculates real-time glass costing, wastage %, and reusable offcut remnant stock. Operators can interactively customize cut lines on jumbo stock sheets, automatically generating production tickets and Glass Sales Orders directly from the optimizer.
             </p>
           </div>
 
@@ -647,8 +646,8 @@
             </div>
             <div class="pt-3 border-t border-slate-800">
               <button onclick="openGallery('al-qasr')" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-cyan-600/20 hover:bg-cyan-600 text-cyan-300 hover:text-white border border-cyan-500/40 font-semibold text-xs tracking-wide transition shadow-lg shadow-cyan-600/10">
-                <i data-lucide="images" class="w-4 h-4"></i>
-                <span>View Optimizer & Production Workflow (4)</span>
+                <i data-lucide="play-circle" class="w-4 h-4"></i>
+                <span>Watch Demos & Workflow Architecture (4)</span>
               </button>
             </div>
           </div>
@@ -1179,6 +1178,9 @@
         <!-- Current Image -->
         <img id="modalMainImage" src="" alt="Project Screenshot" class="max-h-[52vh] max-w-full object-contain rounded-lg shadow-2xl transition duration-200">
 
+        <!-- Current Video (if video item) -->
+        <video id="modalMainVideo" controls playsinline class="hidden max-h-[52vh] max-w-full rounded-lg shadow-2xl transition duration-200 bg-black"></video>
+
         <!-- Next Button -->
         <button onclick="nextGalleryImage()" class="absolute right-3 sm:right-5 z-20 p-2.5 sm:p-3 rounded-full bg-slate-900/80 hover:bg-brand-600 text-white border border-slate-700 transition shadow-xl hover:scale-105" title="Next (Right Arrow)">
           <i data-lucide="chevron-right" class="w-5 h-5 sm:w-6 sm:h-6"></i>
@@ -1278,27 +1280,29 @@
       },
       'al-qasr': {
         title: 'Custom Glass Cutting Optimizer & Sales Order Production ERP',
-        category: 'Industrial 2D Cutting Stock Optimization & Glass Manufacturing Architecture',
+        category: 'Proprietary 2D Cutting Stock Algorithm & Autonomous Engineering',
         images: [
           {
-            src: 'assets/projects/erp-pakistan-sg.jpg',
-            title: 'Glass Specification, Multi-Layer & Process Configuration',
-            desc: 'Comprehensive architectural glass order intake capturing exact thickness (5mm-19mm), tint, coating, multi-layer structural configurations (Single, Double Glazing / DGU, Laminated), and value-added treatment workflows (Tempering, Polishing, Beveling, Hole Drilling).'
+            src: 'assets/projects/glass-optimizer-1.png',
+            title: '2D Cutting Stock Layout, Sheet Statistics & Reusable Leftovers',
+            desc: 'Interactive 2D visual glass cutting layout showing stock sheet utilization (2440x3660mm, 12MM Clear Glass), cut sequences, used area (89%) vs. wasted area (11%), and automated Reusable Leftover table preserving offcut pieces into stock.'
           },
           {
-            src: 'assets/projects/alqasr-1.jpg',
-            title: 'Advanced 2D Cutting Stock Algorithm & Sheet Yield Optimizer',
-            desc: 'Heavy-duty 2D bin packing mathematical algorithm that computes optimal guillotine cut patterns across jumbo stock glass sheets, minimizing raw material wastage and drastically boosting workshop yield efficiency.'
+            src: 'assets/projects/glass-order-2.png',
+            title: 'Glass Items Specifications, Multi-Layer & Process Treatment Ledger',
+            desc: 'Order booking ledger analyzing glass specs, multi-layer assemblies (Single, DGU, Laminated), processing steps (CNC-Cuts, Edge Polishing, Tempering, Hole Drilling), dimensions, square meters, rates, and automatic chargeable wastage computation.'
           },
           {
-            src: 'assets/projects/erp-royal-plastic.jpg',
-            title: 'Interactive Cut Customizer & Reusable Offcut Remnant Engine',
-            desc: 'Allows operators to interactively tailor cut lines according to workshop requirements. Leftover glass segments are dynamically evaluated: unusable trim is calculated as wastage %, while viable remnant pieces are cataloged into reusable stock for future jobs.'
+            src: 'assets/projects/glass-optimizer-demo.mp4',
+            isVideo: true,
+            title: '🎥 Video Demo: Customize Glass Optimizer & 2D Cutting Stock Engine',
+            desc: 'Full video walkthrough showing live 2D cutting algorithm in action: generating guillotine cuts, customizing cut lines, rotating panels, calculating kerf/blade thickness, and saving reusable offcut remnants to stock.'
           },
           {
-            src: 'assets/projects/erp-maj.jpg',
-            title: 'Direct Glass Sales Order Generation & Perimeter Costing Engine',
-            desc: 'Calculates square footage, linear feet perimeter polishing/edging charges, hole count costs, and hardware/argon gas fillings — instantly transforming optimized cutting batches into verified Glass Sales Orders and workshop cutting slips.'
+            src: 'assets/projects/glass-sales-order-demo.mp4',
+            isVideo: true,
+            title: '🎥 Video Demo: Glass Sales Order Production & Booking Workflow',
+            desc: 'Comprehensive walkthrough demonstrating how optimized cutting patterns directly generate verified Glass Sales Orders, calculate process fees, manage multi-layer specifications, and output production workshop slips.'
           }
         ]
       },
@@ -1569,10 +1573,18 @@
     function renderThumbnails(images) {
       const container = document.getElementById('modalThumbnails');
       container.innerHTML = images.map((img, idx) => `
-        <button onclick="setGalleryImage(${idx})" class="thumb-btn shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 border-slate-700 hover:border-brand-400 transition" data-index="${idx}">
-          <img src="${img.src}" alt="${img.title}" class="w-full h-full object-cover">
+        <button onclick="setGalleryImage(${idx})" class="thumb-btn relative shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 border-slate-700 hover:border-brand-400 transition bg-slate-950 flex items-center justify-center" data-index="${idx}">
+          ${img.isVideo ? `
+            <div class="absolute inset-0 bg-slate-950/90 flex flex-col items-center justify-center text-cyan-400">
+              <i data-lucide="play" class="w-4 h-4 fill-cyan-400 text-cyan-400"></i>
+              <span class="text-[9px] font-mono font-bold tracking-tight text-white mt-0.5">VIDEO</span>
+            </div>
+          ` : `
+            <img src="${img.src}" alt="${img.title}" class="w-full h-full object-cover">
+          `}
         </button>
       `).join('');
+      lucide.createIcons();
     }
 
     function updateModalView() {
@@ -1581,8 +1593,25 @@
 
       const current = gallery.images[activeImageIndex];
       const mainImg = document.getElementById('modalMainImage');
-      mainImg.src = current.src;
-      mainImg.alt = current.title;
+      const mainVid = document.getElementById('modalMainVideo');
+
+      if (current.isVideo) {
+        mainImg.classList.add('hidden');
+        mainVid.classList.remove('hidden');
+        if (mainVid.src !== current.src) {
+          mainVid.src = current.src;
+          mainVid.load();
+        }
+      } else {
+        if (mainVid) {
+          mainVid.pause();
+          mainVid.src = '';
+          mainVid.classList.add('hidden');
+        }
+        mainImg.classList.remove('hidden');
+        mainImg.src = current.src;
+        mainImg.alt = current.title;
+      }
 
       document.getElementById('modalImageCaption').textContent = current.title;
       document.getElementById('modalImageSubtext').textContent = current.desc;
@@ -1621,6 +1650,11 @@
     }
 
     function closeGallery() {
+      const mainVid = document.getElementById('modalMainVideo');
+      if (mainVid) {
+        mainVid.pause();
+        mainVid.src = '';
+      }
       const modal = document.getElementById('galleryModal');
       modal.classList.add('hidden');
       modal.classList.remove('flex');
