@@ -78,10 +78,25 @@
       from { opacity: 0; transform: scale(0.96); }
       to { opacity: 1; transform: scale(1); }
     }
+    .animate-slide-down {
+      animation: slideDown 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
     .thumb-active {
       border-color: #6366f1 !important;
       transform: scale(1.05);
       box-shadow: 0 0 12px rgba(99, 102, 241, 0.6);
+    }
+    /* Hide scrollbar for clean horizontal swipe on mobile */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
   </style>
 </head>
@@ -94,16 +109,16 @@
   <div class="fixed bottom-10 left-10 w-96 h-96 bg-accent-purple/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
 
   <!-- Navigation Bar -->
-  <header class="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/80 transition-all">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+  <header class="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/90 border-b border-slate-800/80 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
       <!-- Brand Logo -->
-      <a href="#hero" class="flex items-center gap-3 group">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-accent-cyan flex items-center justify-center font-bold text-white shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform">
+      <a href="#hero" class="flex items-center gap-2.5 sm:gap-3 group shrink-0">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-accent-cyan flex items-center justify-center font-bold text-sm sm:text-base text-white shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform">
           FY
         </div>
         <div class="leading-tight">
-          <span class="block font-bold text-base tracking-wide text-white group-hover:text-brand-500 transition-colors">Farman Yousaf</span>
-          <span class="block text-xs font-mono text-slate-400">Sr. Full Stack Engineer</span>
+          <span class="block font-bold text-sm sm:text-base tracking-wide text-white group-hover:text-brand-500 transition-colors">Farman Yousaf</span>
+          <span class="block text-[11px] sm:text-xs font-mono text-slate-400">Sr. Full Stack Engineer</span>
         </div>
       </a>
 
@@ -116,84 +131,125 @@
         <a href="#contact" class="hover:text-white transition-colors">Contact</a>
       </nav>
 
-      <!-- CTA Buttons -->
-      <div class="flex items-center gap-3">
-        <a href="https://github.com/Farmankk" target="_blank" title="GitHub Profile" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition">
+      <!-- CTA Buttons & Mobile Menu Toggle -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="https://github.com/Farmankk" target="_blank" title="GitHub Profile" class="hidden sm:inline-flex p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition">
           <i data-lucide="github" class="w-4 h-4"></i>
         </a>
-        <a href="./Farman_Yousaf_Resume.pdf" download="Farman_Yousaf_Resume.pdf" class="inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+        <a href="./Farman_Yousaf_Resume.pdf" download="Farman_Yousaf_Resume.pdf" class="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
           <i data-lucide="download" class="w-4 h-4 text-brand-500"></i>
-          <span>CV / Resume</span>
+          <span>Resume</span>
         </a>
-        <a href="#contact" class="inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white shadow-lg shadow-brand-600/30 transition">
+        <a href="#contact" class="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white shadow-lg shadow-brand-600/30 transition">
           <span>Hire Me</span>
-          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+        </a>
+        <!-- Mobile Menu Toggle Button -->
+        <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center justify-center" aria-label="Toggle Navigation Menu">
+          <i id="mobileMenuIcon" data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Slide-Down Menu Drawer -->
+    <div id="mobileMenu" class="hidden md:hidden border-t border-slate-800/80 bg-slate-950/95 backdrop-blur-2xl px-4 py-4 space-y-4 animate-slide-down">
+      <nav class="flex flex-col space-y-1.5 text-sm font-medium text-slate-200">
+        <a href="#about" onclick="toggleMobileMenu()" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800/80 text-slate-300 hover:text-white transition">
+          <i data-lucide="user" class="w-4 h-4 text-brand-400"></i>
+          <span>About Expertise</span>
+        </a>
+        <a href="#skills" onclick="toggleMobileMenu()" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800/80 text-slate-300 hover:text-white transition">
+          <i data-lucide="code-2" class="w-4 h-4 text-accent-cyan"></i>
+          <span>Technical Skills</span>
+        </a>
+        <a href="#experience" onclick="toggleMobileMenu()" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800/80 text-slate-300 hover:text-white transition">
+          <i data-lucide="briefcase" class="w-4 h-4 text-emerald-400"></i>
+          <span>Experience Timeline</span>
+        </a>
+        <a href="#projects" onclick="toggleMobileMenu()" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800/80 text-slate-300 hover:text-white transition">
+          <i data-lucide="layout-grid" class="w-4 h-4 text-purple-400"></i>
+          <span>Featured Projects</span>
+        </a>
+        <a href="#contact" onclick="toggleMobileMenu()" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800/80 text-slate-300 hover:text-white transition">
+          <i data-lucide="send" class="w-4 h-4 text-amber-400"></i>
+          <span>Contact & Hire Me</span>
+        </a>
+      </nav>
+
+      <div class="pt-3 border-t border-slate-800/80 grid grid-cols-2 gap-2 text-xs font-medium">
+        <a href="./Farman_Yousaf_Resume.pdf" download="Farman_Yousaf_Resume.pdf" class="flex items-center justify-center gap-2 p-2.5 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 hover:border-brand-500 transition">
+          <i data-lucide="download" class="w-4 h-4 text-brand-400"></i>
+          <span>Download CV</span>
+        </a>
+        <a href="https://wa.me/923233848440?text=Hi%20Farman,%20I%20reviewed%20your%20portfolio..." target="_blank" class="flex items-center justify-center gap-2 p-2.5 rounded-lg bg-emerald-950/60 border border-emerald-800/80 text-emerald-300 hover:bg-emerald-900/60 transition">
+          <i data-lucide="message-square" class="w-4 h-4 text-emerald-400"></i>
+          <span>WhatsApp</span>
         </a>
       </div>
     </div>
   </header>
 
   <!-- Hero Section -->
-  <section id="hero" class="relative pt-16 pb-20 md:pt-28 md:pb-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-    <div class="grid lg:grid-cols-12 gap-12 items-center">
-      <div class="lg:col-span-8 space-y-6">
+  <section id="hero" class="relative pt-10 pb-14 sm:pt-16 sm:pb-20 md:pt-28 md:pb-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      <div class="lg:col-span-8 space-y-5 sm:space-y-6">
         <!-- Status Badge -->
-        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 border border-brand-500/30 text-brand-100 text-xs font-medium">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>Available for High-Impact Projects & Remote Roles</span>
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 border border-brand-500/30 text-brand-100 text-[11px] sm:text-xs font-medium max-w-full">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+          <span class="truncate">Available for High-Impact Projects & Remote Roles</span>
         </div>
 
         <!-- Main Title -->
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.15]">
-          Engineering High-Performance <br>
+        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.2] sm:leading-[1.15]">
+          Engineering High-Performance <br class="hidden sm:inline">
           <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-brand-500 to-accent-cyan">
             Enterprise ERPs & Web Systems
           </span>
         </h1>
 
         <!-- Subtitle -->
-        <p class="text-slate-400 text-base sm:text-lg max-w-2xl leading-relaxed">
+        <p class="text-slate-400 text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed">
           I'm <strong class="text-slate-200">Farman Yousaf</strong>, a Senior Full Stack PHP Developer with 
           <span class="text-slate-200 font-semibold">6+ years of experience</span> architecting mission-critical ERP solutions, 
           custom CRM modules, high-concurrency database optimizations, and seamless hardware/POS integrations.
         </p>
 
         <!-- Quick Contacts Pills -->
-        <div class="flex flex-wrap gap-4 pt-2 text-xs sm:text-sm font-mono text-slate-300">
-          <div class="flex items-center gap-2 bg-slate-900/90 border border-slate-800 px-3 py-1.5 rounded-md">
-            <i data-lucide="map-pin" class="w-4 h-4 text-rose-400"></i>
-            Karachi, Pakistan
+        <div class="flex flex-wrap gap-2 sm:gap-3 pt-1 sm:pt-2 text-xs font-mono text-slate-300">
+          <div class="flex items-center gap-1.5 bg-slate-900/90 border border-slate-800 px-2.5 py-1.5 rounded-lg">
+            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-rose-400"></i>
+            <span>Karachi, Pakistan</span>
           </div>
-          <a href="mailto:farmankk10@gmail.com" class="flex items-center gap-2 bg-slate-900/90 border border-slate-800 hover:border-brand-500 px-3 py-1.5 rounded-md transition-colors">
-            <i data-lucide="mail" class="w-4 h-4 text-amber-400"></i>
-            farmankk10@gmail.com
+          <a href="mailto:farmankk10@gmail.com" class="flex items-center gap-1.5 bg-slate-900/90 border border-slate-800 hover:border-brand-500 px-2.5 py-1.5 rounded-lg transition-colors">
+            <i data-lucide="mail" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span>farmankk10@gmail.com</span>
           </a>
-          <a href="tel:+923233848440" class="flex items-center gap-2 bg-slate-900/90 border border-slate-800 hover:border-brand-500 px-3 py-1.5 rounded-md transition-colors">
-            <i data-lucide="phone" class="w-4 h-4 text-emerald-400"></i>
-            +92 323 3848440
+          <a href="tel:+923233848440" class="flex items-center gap-1.5 bg-slate-900/90 border border-slate-800 hover:border-brand-500 px-2.5 py-1.5 rounded-lg transition-colors">
+            <i data-lucide="phone" class="w-3.5 h-3.5 text-emerald-400"></i>
+            <span>+92 323 3848440</span>
           </a>
-          <a href="https://github.com/Farmankk" target="_blank" class="flex items-center gap-2 bg-slate-900/90 border border-slate-800 hover:border-brand-500 px-3 py-1.5 rounded-md transition-colors">
-            <i data-lucide="github" class="w-4 h-4 text-white"></i>
-            github.com/Farmankk
+          <a href="https://github.com/Farmankk" target="_blank" class="flex items-center gap-1.5 bg-slate-900/90 border border-slate-800 hover:border-brand-500 px-2.5 py-1.5 rounded-lg transition-colors">
+            <i data-lucide="github" class="w-3.5 h-3.5 text-white"></i>
+            <span>github.com/Farmankk</span>
           </a>
         </div>
 
         <!-- Action CTAs -->
-        <div class="flex flex-wrap items-center gap-4 pt-4">
-          <a href="#projects" class="px-6 py-3.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-sm shadow-xl shadow-brand-600/30 flex items-center gap-2 transition hover:-translate-y-0.5">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-2 sm:pt-4">
+          <a href="#projects" class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-sm shadow-xl shadow-brand-600/30 flex items-center justify-center gap-2 transition hover:-translate-y-0.5">
             <i data-lucide="briefcase" class="w-4 h-4"></i>
-            Explore Selected Work
+            <span>Explore Selected Work</span>
           </a>
-          <a href="https://wa.me/923233848440?text=Hi%20Farman,%20I%20reviewed%20your%20portfolio%20and%20would%20like%20to%20discuss%20an%20opportunity." target="_blank" class="px-6 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold text-sm flex items-center gap-2 transition hover:-translate-y-0.5">
+          <a href="https://wa.me/923233848440?text=Hi%20Farman,%20I%20reviewed%20your%20portfolio%20and%20would%20like%20to%20discuss%20an%20opportunity." target="_blank" class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold text-sm flex items-center justify-center gap-2 transition hover:-translate-y-0.5">
             <i data-lucide="message-square" class="w-4 h-4 text-emerald-400"></i>
-            Chat on WhatsApp
+            <span>Chat on WhatsApp</span>
           </a>
         </div>
       </div>
 
       <!-- Hero Card / Quick Specs -->
       <div class="lg:col-span-4">
-        <div class="glass-card p-6 sm:p-8 rounded-2xl relative shadow-2xl space-y-6">
+        <div class="glass-card p-5 sm:p-8 rounded-2xl relative shadow-2xl space-y-5 sm:space-y-6">
           <div class="flex items-center justify-between border-b border-slate-800 pb-4">
             <span class="text-xs uppercase tracking-wider font-mono text-slate-400">Primary Core Tech</span>
             <span class="px-2 py-0.5 text-xs rounded bg-brand-500/20 text-brand-300 font-mono">v8.x Ready</span>
@@ -448,21 +504,21 @@
   </section>
 
   <!-- Experience Timeline -->
-  <section id="experience" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-    <div class="space-y-12">
+  <section id="experience" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="space-y-10 sm:space-y-12">
       <div class="text-center max-w-2xl mx-auto space-y-3">
         <span class="text-xs font-mono uppercase tracking-widest text-brand-500">Career Trajectory</span>
         <h2 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">Professional Experience</h2>
         <p class="text-slate-400 text-sm sm:text-base">Demonstrated track record of delivering high-stakes enterprise projects.</p>
       </div>
 
-      <div class="relative border-l-2 border-slate-800 ml-4 md:ml-32 space-y-12">
+      <div class="relative border-l-2 border-slate-800 ml-2 sm:ml-6 md:ml-28 space-y-10 sm:space-y-12">
         <!-- Job 1 -->
-        <div class="relative pl-8 md:pl-10 group">
+        <div class="relative pl-6 sm:pl-8 md:pl-10 group">
           <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-slate-950 border-2 border-brand-500 group-hover:scale-125 transition-transform"></div>
           
           <div class="flex flex-col md:flex-row md:items-baseline justify-between gap-1 mb-2">
-            <h3 class="text-xl font-bold text-white group-hover:text-brand-400 transition-colors">
+            <h3 class="text-lg sm:text-xl font-bold text-white group-hover:text-brand-400 transition-colors">
               Senior Full Stack PHP Developer
             </h3>
             <span class="font-mono text-xs text-brand-400 font-semibold bg-brand-950/80 px-2.5 py-1 rounded border border-brand-800/60 inline-block w-fit">
@@ -470,12 +526,12 @@
             </span>
           </div>
 
-          <div class="text-sm font-semibold text-slate-300 mb-4 flex items-center gap-2">
+          <div class="text-xs sm:text-sm font-semibold text-slate-300 mb-3 flex items-center gap-2">
             <i data-lucide="building" class="w-4 h-4 text-slate-400"></i>
-            3DM Solutions Pvt. Ltd
+            <span>3DM Solutions Pvt. Ltd</span>
           </div>
 
-          <ul class="space-y-2.5 text-sm text-slate-400 list-disc list-outside ml-4 leading-relaxed">
+          <ul class="space-y-2 text-xs sm:text-sm text-slate-400 list-disc list-outside ml-3.5 sm:ml-4 leading-relaxed">
             <li>Architected and scaled full-stack web applications using PHP (OOP), MySQL, JavaScript, WordPress, Shopify, and third-party APIs.</li>
             <li>Spearheaded customized ERP functionality covering double-entry accounts, inventory tracking, CRM, payroll, and manufacturing BOM.</li>
             <li>Implemented direct POS connectivity with barcode scanners, thermal receipt printers, and label-printing hardware.</li>
@@ -485,11 +541,11 @@
         </div>
 
         <!-- Job 2 -->
-        <div class="relative pl-8 md:pl-10 group">
+        <div class="relative pl-6 sm:pl-8 md:pl-10 group">
           <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-slate-950 border-2 border-slate-600 group-hover:border-accent-cyan group-hover:scale-125 transition-transform"></div>
           
           <div class="flex flex-col md:flex-row md:items-baseline justify-between gap-1 mb-2">
-            <h3 class="text-xl font-bold text-white group-hover:text-accent-cyan transition-colors">
+            <h3 class="text-lg sm:text-xl font-bold text-white group-hover:text-accent-cyan transition-colors">
               PHP Developer
             </h3>
             <span class="font-mono text-xs text-slate-400 bg-slate-900 px-2.5 py-1 rounded border border-slate-800 inline-block w-fit">
@@ -497,23 +553,23 @@
             </span>
           </div>
 
-          <div class="text-sm font-semibold text-slate-300 mb-4 flex items-center gap-2">
+          <div class="text-xs sm:text-sm font-semibold text-slate-300 mb-3 flex items-center gap-2">
             <i data-lucide="building" class="w-4 h-4 text-slate-400"></i>
-            Sprint Work Pvt. Ltd
+            <span>Sprint Work Pvt. Ltd</span>
           </div>
 
-          <ul class="space-y-2.5 text-sm text-slate-400 list-disc list-outside ml-4 leading-relaxed">
+          <ul class="space-y-2 text-xs sm:text-sm text-slate-400 list-disc list-outside ml-3.5 sm:ml-4 leading-relaxed">
             <li>Built and maintained HRM and automated payroll calculation systems using Core PHP and MySQL.</li>
             <li>Optimized backend data flow, database transactions, and secure credential handling.</li>
           </ul>
         </div>
 
         <!-- Job 3 -->
-        <div class="relative pl-8 md:pl-10 group">
+        <div class="relative pl-6 sm:pl-8 md:pl-10 group">
           <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-slate-950 border-2 border-slate-600 group-hover:border-emerald-400 group-hover:scale-125 transition-transform"></div>
           
           <div class="flex flex-col md:flex-row md:items-baseline justify-between gap-1 mb-2">
-            <h3 class="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">
+            <h3 class="text-lg sm:text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">
               Junior Web Developer
             </h3>
             <span class="font-mono text-xs text-slate-400 bg-slate-900 px-2.5 py-1 rounded border border-slate-800 inline-block w-fit">
@@ -521,12 +577,12 @@
             </span>
           </div>
 
-          <div class="text-sm font-semibold text-slate-300 mb-4 flex items-center gap-2">
+          <div class="text-xs sm:text-sm font-semibold text-slate-300 mb-3 flex items-center gap-2">
             <i data-lucide="building" class="w-4 h-4 text-slate-400"></i>
-            MK Technologies Pvt. Ltd
+            <span>MK Technologies Pvt. Ltd</span>
           </div>
 
-          <ul class="space-y-2.5 text-sm text-slate-400 list-disc list-outside ml-4 leading-relaxed">
+          <ul class="space-y-2 text-xs sm:text-sm text-slate-400 list-disc list-outside ml-3.5 sm:ml-4 leading-relaxed">
             <li>Developed front-end and back-end modules for comprehensive School Management Systems (ERP).</li>
             <li>Collaborated with senior software architects to improve SQL query structure and system responsiveness.</li>
           </ul>
@@ -536,8 +592,8 @@
   </section>
 
   <!-- Projects Showcase Section -->
-  <section id="projects" class="py-24 bg-slate-900/30 border-t border-slate-800/80 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto space-y-12">
+  <section id="projects" class="py-16 sm:py-24 bg-slate-900/30 border-t border-slate-800/80 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto space-y-8 sm:space-y-12">
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <span class="text-xs font-mono uppercase tracking-widest text-brand-500">Portfolio</span>
@@ -546,11 +602,11 @@
         </div>
 
         <!-- Filter Controls -->
-        <div class="flex flex-wrap gap-2 text-xs font-medium" id="project-filters">
-          <button onclick="filterProjects('all')" class="filter-btn active px-3.5 py-2 rounded-lg bg-brand-600 text-white transition">All Projects</button>
-          <button onclick="filterProjects('erp')" class="filter-btn px-3.5 py-2 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">ERP & CRM</button>
-          <button onclick="filterProjects('hardware')" class="filter-btn px-3.5 py-2 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Hardware & POS</button>
-          <button onclick="filterProjects('ecommerce')" class="filter-btn px-3.5 py-2 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">E-Commerce & APIs</button>
+        <div class="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 w-full sm:w-auto no-scrollbar" id="project-filters">
+          <button onclick="filterProjects('all')" class="filter-btn active shrink-0 whitespace-nowrap px-3.5 py-2 rounded-lg bg-brand-600 text-white transition text-xs font-medium">All Projects</button>
+          <button onclick="filterProjects('erp')" class="filter-btn shrink-0 whitespace-nowrap px-3.5 py-2 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition text-xs font-medium">ERP & CRM</button>
+          <button onclick="filterProjects('hardware')" class="filter-btn shrink-0 whitespace-nowrap px-3.5 py-2 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition text-xs font-medium">Hardware & POS</button>
+          <button onclick="filterProjects('ecommerce')" class="filter-btn shrink-0 whitespace-nowrap px-3.5 py-2 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition text-xs font-medium">E-Commerce & APIs</button>
         </div>
       </div>
 
@@ -956,37 +1012,37 @@
   </section>
 
   <!-- Education & Credentials -->
-  <section class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-    <div class="space-y-12">
+  <section class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="space-y-10 sm:space-y-12">
       <div class="text-center max-w-2xl mx-auto space-y-3">
         <span class="text-xs font-mono uppercase tracking-widest text-brand-500">Qualifications</span>
         <h2 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">Education & Certifications</h2>
       </div>
 
-      <div class="grid md:grid-cols-3 gap-6">
-        <div class="glass-card p-6 rounded-2xl space-y-3 border-t-2 border-t-brand-500">
+      <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-6">
+        <div class="glass-card p-5 sm:p-6 rounded-2xl space-y-3 border-t-2 border-t-brand-500">
           <span class="text-xs font-mono text-brand-400 font-semibold">Dec 2018</span>
-          <h3 class="text-lg font-bold text-white">ACCP Pro</h3>
+          <h3 class="text-base sm:text-lg font-bold text-white">ACCP Pro</h3>
           <p class="text-xs text-slate-400 font-medium">Aptech Certified Computer Professional</p>
-          <p class="text-xs text-slate-400 pt-2 border-t border-slate-800">
+          <p class="text-xs text-slate-400 pt-2 border-t border-slate-800 leading-relaxed">
             Intensive program covering OOP, database architecture, multi-tier web development, e-commerce, and enterprise system design.
           </p>
         </div>
 
-        <div class="glass-card p-6 rounded-2xl space-y-3 border-t-2 border-t-accent-cyan">
+        <div class="glass-card p-5 sm:p-6 rounded-2xl space-y-3 border-t-2 border-t-accent-cyan">
           <span class="text-xs font-mono text-accent-cyan font-semibold">Sept 2018</span>
-          <h3 class="text-lg font-bold text-white">Intermediate — D.A.E & C.I.T</h3>
+          <h3 class="text-base sm:text-lg font-bold text-white">Intermediate — D.A.E & C.I.T</h3>
           <p class="text-xs text-slate-400 font-medium">Hasani College of Technology, Karachi</p>
-          <p class="text-xs text-slate-400 pt-2 border-t border-slate-800">
+          <p class="text-xs text-slate-400 pt-2 border-t border-slate-800 leading-relaxed">
             Diploma of Associate Engineering in Computer Information Technology.
           </p>
         </div>
 
-        <div class="glass-card p-6 rounded-2xl space-y-3 border-t-2 border-t-emerald-400">
+        <div class="glass-card p-5 sm:p-6 rounded-2xl space-y-3 border-t-2 border-t-emerald-400 sm:col-span-2 md:col-span-1">
           <span class="text-xs font-mono text-emerald-400 font-semibold">March 2014</span>
-          <h3 class="text-lg font-bold text-white">Matriculation — Computer Science</h3>
+          <h3 class="text-base sm:text-lg font-bold text-white">Matriculation — Computer Science</h3>
           <p class="text-xs text-slate-400 font-medium">Mirpur Khas Board, Sindh</p>
-          <p class="text-xs text-slate-400 pt-2 border-t border-slate-800">
+          <p class="text-xs text-slate-400 pt-2 border-t border-slate-800 leading-relaxed">
             Secondary education with foundational specialization in Computer Science.
           </p>
         </div>
@@ -995,82 +1051,83 @@
   </section>
 
   <!-- Contact & Hire Me Section -->
-  <section id="contact" class="py-24 bg-slate-900/40 border-t border-slate-800/80 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-5xl mx-auto space-y-12">
+  <section id="contact" class="py-16 sm:py-24 bg-slate-900/40 border-t border-slate-800/80 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-5xl mx-auto space-y-10 sm:space-y-12">
       <div class="text-center max-w-2xl mx-auto space-y-3">
         <span class="text-xs font-mono uppercase tracking-widest text-brand-500">Get In Touch</span>
         <h2 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">Let's Build Something Exceptional</h2>
         <p class="text-slate-400 text-sm sm:text-base">Whether you need an enterprise ERP architect, an integration engineer, or a senior full-stack developer, I'm ready to contribute.</p>
       </div>
 
-      <div class="grid md:grid-cols-12 gap-8">
+      <div class="grid md:grid-cols-12 gap-6 sm:gap-8">
         <!-- Direct Contact Cards -->
-        <div class="md:col-span-5 space-y-4">
-          <a href="mailto:farmankk10@gmail.com" class="glass-card p-5 rounded-xl flex items-center gap-4 hover:border-brand-500 transition group block">
-            <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <i data-lucide="mail" class="w-6 h-6"></i>
+        <div class="md:col-span-5 space-y-3 sm:space-y-4">
+          <a href="mailto:farmankk10@gmail.com" class="glass-card p-4 sm:p-5 rounded-xl flex items-center gap-3.5 sm:gap-4 hover:border-brand-500 transition group block">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center group-hover:scale-110 transition-transform shrink-0">
+              <i data-lucide="mail" class="w-5 h-5 sm:w-6 sm:h-6"></i>
             </div>
-            <div>
-              <div class="text-xs font-mono text-slate-400 uppercase tracking-wider">Email Me</div>
-              <div class="text-sm font-semibold text-white group-hover:text-brand-400 transition-colors">farmankk10@gmail.com</div>
-            </div>
-          </a>
-
-          <a href="https://wa.me/923233848440?text=Hi%20Farman,%20I%20saw%20your%20portfolio..." target="_blank" class="glass-card p-5 rounded-xl flex items-center gap-4 hover:border-emerald-500 transition group block">
-            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <i data-lucide="message-circle" class="w-6 h-6"></i>
-            </div>
-            <div>
-              <div class="text-xs font-mono text-slate-400 uppercase tracking-wider">WhatsApp Direct</div>
-              <div class="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">+92 323 3848440</div>
+            <div class="min-w-0">
+              <div class="text-[11px] sm:text-xs font-mono text-slate-400 uppercase tracking-wider">Email Me</div>
+              <div class="text-xs sm:text-sm font-semibold text-white group-hover:text-brand-400 transition-colors truncate">farmankk10@gmail.com</div>
             </div>
           </a>
 
-          <div class="glass-card p-5 rounded-xl flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-brand-500/10 text-brand-400 flex items-center justify-center">
-              <i data-lucide="map-pin" class="w-6 h-6"></i>
+          <a href="https://wa.me/923233848440?text=Hi%20Farman,%20I%20saw%20your%20portfolio..." target="_blank" class="glass-card p-4 sm:p-5 rounded-xl flex items-center gap-3.5 sm:gap-4 hover:border-emerald-500 transition group block">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center group-hover:scale-110 transition-transform shrink-0">
+              <i data-lucide="message-circle" class="w-5 h-5 sm:w-6 sm:h-6"></i>
             </div>
-            <div>
-              <div class="text-xs font-mono text-slate-400 uppercase tracking-wider">Location</div>
-              <div class="text-sm font-semibold text-white">Karachi, Pakistan (Open to Remote Worldwide)</div>
+            <div class="min-w-0">
+              <div class="text-[11px] sm:text-xs font-mono text-slate-400 uppercase tracking-wider">WhatsApp Direct</div>
+              <div class="text-xs sm:text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors truncate">+92 323 3848440</div>
+            </div>
+          </a>
+
+          <div class="glass-card p-4 sm:p-5 rounded-xl flex items-center gap-3.5 sm:gap-4">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-brand-500/10 text-brand-400 flex items-center justify-center shrink-0">
+              <i data-lucide="map-pin" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+            </div>
+            <div class="min-w-0">
+              <div class="text-[11px] sm:text-xs font-mono text-slate-400 uppercase tracking-wider">Location</div>
+              <div class="text-xs sm:text-sm font-semibold text-white truncate">Karachi, Pakistan (Remote Worldwide)</div>
             </div>
           </div>
 
-          <div class="glass-card p-5 rounded-xl flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
-              <i data-lucide="file-text" class="w-6 h-6"></i>
+          <div class="glass-card p-4 sm:p-5 rounded-xl flex items-center gap-3.5 sm:gap-4">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center shrink-0">
+              <i data-lucide="file-text" class="w-5 h-5 sm:w-6 sm:h-6"></i>
             </div>
-            <div class="flex-1">
-              <div class="text-xs font-mono text-slate-400 uppercase tracking-wider">Formal Resume</div>
+            <div class="flex-1 min-w-0">
+              <div class="text-[11px] sm:text-xs font-mono text-slate-400 uppercase tracking-wider">Formal Resume</div>
               <a href="./Farman_Yousaf_Resume.pdf" download="Farman_Yousaf_Resume.pdf" class="text-xs font-semibold text-brand-400 hover:underline flex items-center gap-1 mt-0.5">
-                Download PDF Resume <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                <span>Download PDF Resume</span>
+                <i data-lucide="download" class="w-3.5 h-3.5"></i>
               </a>
             </div>
           </div>
         </div>
 
         <!-- Quick Message Form -->
-        <div class="md:col-span-7 glass-card p-6 sm:p-8 rounded-2xl">
+        <div class="md:col-span-7 glass-card p-5 sm:p-8 rounded-2xl">
           <form onsubmit="handleFormSubmit(event)" class="space-y-4">
             <div class="grid sm:grid-cols-2 gap-4">
               <div>
                 <label class="block text-xs font-mono text-slate-300 mb-1.5">Your Name</label>
-                <input type="text" id="contact-name" required placeholder="John Doe" class="w-full px-4 py-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-brand-500">
+                <input type="text" id="contact-name" required placeholder="John Doe" class="w-full px-3.5 sm:px-4 py-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-brand-500">
               </div>
               <div>
                 <label class="block text-xs font-mono text-slate-300 mb-1.5">Your Email</label>
-                <input type="email" id="contact-email" required placeholder="john@example.com" class="w-full px-4 py-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-brand-500">
+                <input type="email" id="contact-email" required placeholder="john@example.com" class="w-full px-3.5 sm:px-4 py-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-brand-500">
               </div>
             </div>
 
             <div>
               <label class="block text-xs font-mono text-slate-300 mb-1.5">Project Type / Subject</label>
-              <input type="text" id="contact-subject" placeholder="Enterprise ERP, Custom API, or Full-Time Role" class="w-full px-4 py-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-brand-500">
+              <input type="text" id="contact-subject" placeholder="Enterprise ERP, Custom API, or Full-Time Role" class="w-full px-3.5 sm:px-4 py-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-brand-500">
             </div>
 
             <div>
               <label class="block text-xs font-mono text-slate-300 mb-1.5">Message / Requirements</label>
-              <textarea id="contact-message" rows="4" required placeholder="Tell me about your project scope, timeline, and goals..." class="w-full px-4 py-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-brand-500"></textarea>
+              <textarea id="contact-message" rows="4" required placeholder="Tell me about your project scope, timeline, and goals..." class="w-full px-3.5 sm:px-4 py-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-brand-500"></textarea>
             </div>
 
             <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-semibold text-sm shadow-xl shadow-brand-600/30 flex items-center justify-center gap-2 transition">
@@ -1089,7 +1146,7 @@
       <div>
         &copy; <span id="year"></span> Farman Yousaf. All rights reserved.
       </div>
-      <div class="flex items-center gap-6 text-slate-400">
+      <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-slate-400">
         <a href="https://github.com/Farmankk" target="_blank" class="hover:text-white transition">GitHub</a>
         <a href="mailto:farmankk10@gmail.com" class="hover:text-white transition">Email</a>
         <a href="https://wa.me/923233848440" target="_blank" class="hover:text-white transition">WhatsApp</a>
@@ -1100,51 +1157,51 @@
   </footer>
 
   <!-- Interactive Screenshot Gallery Modal -->
-  <div id="galleryModal" class="fixed inset-0 z-[100] bg-slate-950/90 backdrop-blur-md hidden flex-col items-center justify-center p-2 sm:p-6" onclick="handleBackdropClick(event)">
-    <div class="relative w-full max-w-5xl bg-slate-900/95 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] animate-scale-in" onclick="event.stopPropagation()">
+  <div id="galleryModal" class="fixed inset-0 z-[100] bg-slate-950/90 backdrop-blur-md hidden flex-col items-center justify-center p-2 sm:p-4 md:p-6" onclick="handleBackdropClick(event)">
+    <div class="relative w-full max-w-5xl bg-slate-900/95 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[96vh] sm:max-h-[92vh] animate-scale-in" onclick="event.stopPropagation()">
       <!-- Modal Header -->
-      <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-800 bg-slate-950/70">
-        <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-lg bg-brand-500/20 text-brand-400 flex items-center justify-center">
+      <div class="flex items-center justify-between px-3.5 sm:px-5 py-2.5 sm:py-3.5 border-b border-slate-800 bg-slate-950/70 shrink-0">
+        <div class="flex items-center gap-2.5 sm:gap-3 min-w-0 pr-2">
+          <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-brand-500/20 text-brand-400 flex items-center justify-center shrink-0">
             <i data-lucide="image" class="w-4 h-4"></i>
           </div>
-          <div>
-            <h3 id="modalProjectTitle" class="text-base sm:text-lg font-bold text-white leading-tight">Project Title</h3>
-            <p id="modalCategory" class="text-xs font-mono text-slate-400">Category</p>
+          <div class="min-w-0">
+            <h3 id="modalProjectTitle" class="text-sm sm:text-base md:text-lg font-bold text-white leading-tight truncate">Project Title</h3>
+            <p id="modalCategory" class="text-[11px] sm:text-xs font-mono text-slate-400 truncate">Category</p>
           </div>
         </div>
-        <div class="flex items-center gap-3">
-          <span id="modalCounter" class="text-xs font-mono px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700">1 / 4</span>
-          <button onclick="closeGallery()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition" title="Close (Esc)">
-            <i data-lucide="x" class="w-5 h-5"></i>
+        <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+          <span id="modalCounter" class="text-[11px] sm:text-xs font-mono px-2 py-0.5 sm:px-2.5 sm:py-1 rounded bg-slate-800 text-slate-300 border border-slate-700">1 / 4</span>
+          <button onclick="closeGallery()" class="p-1.5 sm:p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition" title="Close (Esc)">
+            <i data-lucide="x" class="w-4 h-4 sm:w-5 sm:h-5"></i>
           </button>
         </div>
       </div>
 
       <!-- Modal Main Stage -->
-      <div class="relative flex-1 min-h-[300px] max-h-[58vh] bg-slate-950/80 flex items-center justify-center overflow-hidden p-2 sm:p-4 select-none">
+      <div id="modalStage" class="relative flex-1 h-[36vh] sm:h-[48vh] md:h-[54vh] bg-slate-950/90 flex items-center justify-center overflow-hidden p-2 sm:p-4 select-none touch-pan-y">
         <!-- Prev Button -->
-        <button onclick="prevGalleryImage()" class="absolute left-3 sm:left-5 z-20 p-2.5 sm:p-3 rounded-full bg-slate-900/80 hover:bg-brand-600 text-white border border-slate-700 transition shadow-xl hover:scale-105" title="Previous (Left Arrow)">
-          <i data-lucide="chevron-left" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+        <button onclick="prevGalleryImage()" class="absolute left-2 sm:left-4 z-20 p-2 sm:p-3 rounded-full bg-slate-900/80 hover:bg-brand-600 text-white border border-slate-700 transition shadow-xl hover:scale-105 active:scale-95" title="Previous (Left Arrow / Swipe Right)">
+          <i data-lucide="chevron-left" class="w-4 h-4 sm:w-6 sm:h-6"></i>
         </button>
 
         <!-- Current Image -->
-        <img id="modalMainImage" src="" alt="Project Screenshot" class="max-h-[52vh] max-w-full object-contain rounded-lg shadow-2xl transition duration-200">
+        <img id="modalMainImage" src="" alt="Project Screenshot" class="max-h-full max-w-full object-contain rounded-lg shadow-2xl transition duration-200">
 
         <!-- Current Video (if video item) -->
-        <video id="modalMainVideo" controls playsinline class="hidden max-h-[52vh] max-w-full rounded-lg shadow-2xl transition duration-200 bg-black"></video>
+        <video id="modalMainVideo" controls playsinline class="hidden max-h-full max-w-full rounded-lg shadow-2xl transition duration-200 bg-black"></video>
 
         <!-- Next Button -->
-        <button onclick="nextGalleryImage()" class="absolute right-3 sm:right-5 z-20 p-2.5 sm:p-3 rounded-full bg-slate-900/80 hover:bg-brand-600 text-white border border-slate-700 transition shadow-xl hover:scale-105" title="Next (Right Arrow)">
-          <i data-lucide="chevron-right" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+        <button onclick="nextGalleryImage()" class="absolute right-2 sm:right-4 z-20 p-2 sm:p-3 rounded-full bg-slate-900/80 hover:bg-brand-600 text-white border border-slate-700 transition shadow-xl hover:scale-105 active:scale-95" title="Next (Right Arrow / Swipe Left)">
+          <i data-lucide="chevron-right" class="w-4 h-4 sm:w-6 sm:h-6"></i>
         </button>
       </div>
 
       <!-- Caption & Info Bar -->
-      <div class="px-5 py-3 border-t border-slate-800 bg-slate-950/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div class="space-y-0.5">
-          <h4 id="modalImageCaption" class="text-sm font-semibold text-white">Image Caption</h4>
-          <p id="modalImageSubtext" class="text-xs text-slate-400">Detailed explanation of the feature and architecture.</p>
+      <div class="px-3.5 sm:px-5 py-2 sm:py-3 border-t border-slate-800 bg-slate-950/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 shrink-0">
+        <div class="space-y-0.5 min-w-0 max-h-16 sm:max-h-none overflow-y-auto">
+          <h4 id="modalImageCaption" class="text-xs sm:text-sm font-semibold text-white truncate">Image Caption</h4>
+          <p id="modalImageSubtext" class="text-[11px] sm:text-xs text-slate-400 line-clamp-2 sm:line-clamp-none leading-snug">Detailed explanation of the feature and architecture.</p>
         </div>
         <div id="modalActionContainer" class="flex items-center gap-2 shrink-0">
           <!-- Live link button injected if available -->
@@ -1152,7 +1209,7 @@
       </div>
 
       <!-- Thumbnails Strip -->
-      <div id="modalThumbnails" class="px-4 py-3 bg-slate-900/90 border-t border-slate-800/80 flex items-center gap-2.5 overflow-x-auto">
+      <div id="modalThumbnails" class="px-3 sm:px-4 py-2 sm:py-3 bg-slate-900/90 border-t border-slate-800/80 flex items-center gap-2 sm:gap-2.5 overflow-x-auto no-scrollbar shrink-0">
         <!-- Thumbnails generated by JS -->
       </div>
     </div>
@@ -1165,6 +1222,35 @@
 
     // Auto update year
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Mobile Navigation Drawer Toggle
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobileMenu');
+      const icon = document.getElementById('mobileMenuIcon');
+      if (!menu) return;
+      const isHidden = menu.classList.contains('hidden');
+      if (isHidden) {
+        menu.classList.remove('hidden');
+        if (icon) icon.setAttribute('data-lucide', 'x');
+      } else {
+        menu.classList.add('hidden');
+        if (icon) icon.setAttribute('data-lucide', 'menu');
+      }
+      lucide.createIcons();
+    }
+
+    // Auto-close mobile menu on desktop resize
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 768) {
+        const menu = document.getElementById('mobileMenu');
+        if (menu && !menu.classList.contains('hidden')) {
+          menu.classList.add('hidden');
+          const icon = document.getElementById('mobileMenuIcon');
+          if (icon) icon.setAttribute('data-lucide', 'menu');
+          lucide.createIcons();
+        }
+      }
+    });
 
     // Project filtering
     function filterProjects(category) {
@@ -1500,11 +1586,11 @@
     function renderThumbnails(images) {
       const container = document.getElementById('modalThumbnails');
       container.innerHTML = images.map((img, idx) => `
-        <button onclick="setGalleryImage(${idx})" class="thumb-btn relative shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 border-slate-700 hover:border-brand-400 transition bg-slate-950 flex items-center justify-center" data-index="${idx}">
+        <button onclick="setGalleryImage(${idx})" class="thumb-btn relative shrink-0 w-14 h-10 sm:w-16 sm:h-12 rounded-lg overflow-hidden border-2 border-slate-700 hover:border-brand-400 transition bg-slate-950 flex items-center justify-center" data-index="${idx}">
           ${img.isVideo ? `
             <div class="absolute inset-0 bg-slate-950/90 flex flex-col items-center justify-center text-cyan-400">
-              <i data-lucide="play" class="w-4 h-4 fill-cyan-400 text-cyan-400"></i>
-              <span class="text-[9px] font-mono font-bold tracking-tight text-white mt-0.5">VIDEO</span>
+              <i data-lucide="play" class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-cyan-400 text-cyan-400"></i>
+              <span class="text-[8px] sm:text-[9px] font-mono font-bold tracking-tight text-white mt-0.5">VIDEO</span>
             </div>
           ` : `
             <img src="${img.src}" alt="${img.title}" class="w-full h-full object-cover">
@@ -1592,6 +1678,38 @@
     function handleBackdropClick(e) {
       if (e.target.id === 'galleryModal') {
         closeGallery();
+      }
+    }
+
+    // Mobile Touch Swipe Navigation for Gallery Modal
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
+
+    const modalStage = document.getElementById('modalStage');
+    if (modalStage) {
+      modalStage.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+      }, { passive: true });
+
+      modalStage.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        touchEndY = e.changedTouches[0].screenY;
+        handleSwipeGesture();
+      }, { passive: true });
+    }
+
+    function handleSwipeGesture() {
+      const dx = touchEndX - touchStartX;
+      const dy = touchEndY - touchStartY;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+        if (dx < 0) {
+          nextGalleryImage(); // Swipe left -> next
+        } else {
+          prevGalleryImage(); // Swipe right -> prev
+        }
       }
     }
 
